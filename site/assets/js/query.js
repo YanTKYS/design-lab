@@ -60,7 +60,7 @@ function toRow(app) {
  * デザイン側はこの値を表示するだけで、検索ロジックを持たない。
  */
 export function buildModel(state) {
-  const { keyword, status, sort, detail, notice } = state;
+  const { keyword, status, sort, detail, notice, screen = 'list' } = state;
   const keywordMatched = filterApplications(APPLICATIONS, { keyword });
   const rows = sortApplications(filterApplications(keywordMatched, { status }), sort).map(toRow);
   const countBy = (value) => keywordMatched.filter((a) => a.status === value).length;
@@ -68,7 +68,8 @@ export function buildModel(state) {
 
   return {
     system: SYSTEM,
-    nav: NAV_ITEMS.map((item) => ({ ...item, current: item.id === 'applications' })),
+    screen,
+    nav: NAV_ITEMS.map((item) => ({ ...item, current: item.id === (screen === 'form' ? 'new' : 'applications') })),
     keyword,
     status,
     sort,

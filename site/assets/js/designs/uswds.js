@@ -3,9 +3,10 @@
 // 並べ替え列を強調する罫線つきの表、狭い幅での縦積み表、モーダルでの詳細表示が特徴。
 // 米国政府固有の識別要素（国旗・.gov 表記）は、日本の自治体向けの内容に置き換えている。
 
-import { html } from '../html.js';
+import { attr, html } from '../html.js';
 import { icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { formPage } from './uswds.form.js';
 
 function banner(ctx) {
   const open = Boolean(ctx.ui.banner);
@@ -47,7 +48,7 @@ function header(model, ctx) {
       <div class="usa-nav-container">
         <div class="usa-navbar">
           <div class="usa-logo">
-            <a href="${ctx.href({ detail: null })}" data-action="nav" data-target="applications">
+            <a href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">
               <span class="usa-logo__org">${model.system.org}</span>${model.system.name}
             </a>
           </div>
@@ -66,10 +67,10 @@ function header(model, ctx) {
                 <li class="usa-nav__primary-item">
                   <a
                     class="usa-nav-link ${item.current ? 'usa-current' : ''}"
-                    href="${item.current ? ctx.href({ detail: null }) : '#'}"
+                    href="${ctx.navHref(item)}"
                     data-action="nav"
                     data-target="${item.id}"
-                    ${item.current ? 'aria-current="page"' : ''}
+                    ${attr('aria-current', item.current && 'page')}
                     ><span>${item.label}</span></a
                   >
                 </li>`,
@@ -215,26 +216,36 @@ export default {
     actions: '角丸4pxの青いボタンとアウトラインボタン。行の詳細はアウトライン、通知の閉じるは装飾のないボタン。',
     hierarchy: 'セリフ体の見出しと主要操作を上段に、検索→表の順。詳細は一覧の上に重ねるモーダルで表示する。',
   },
+  formTraits: {
+    layout: '1列で、入力欄の幅を絞る（約30rem）。「申請者の情報」「申請の内容」「確認事項」をセリフ体の凡例で区切る。',
+    label: '先頭に「＊は必須項目です」の注記を置き、必須のラベルの右に赤い「＊」。ラベル→ヒント→エラー→入力欄の順。',
+    errors: 'エラー項目は左に赤い帯、入力欄は太い赤枠。上部に赤いアラート（件数と項目名）を出し、最初のエラー項目へフォーカスする。',
+    confirm: '分割式のステップインジケーター（1/3 入力）。確認は罫線だけの項目表で、青い「申請する」とアウトラインの「修正する」を並べる。',
+  },
+  errorFocus: 'field',
   render(model, ctx) {
+    const overlay = model.screen === 'list' && model.detail;
     return html`
       <div class="ds-uswds">
-        <div class="usa-app" ${model.detail ? 'inert' : ''}>
+        <div class="usa-app" ${overlay ? 'inert' : ''}>
           ${banner(ctx)} ${header(model, ctx)}
           <div class="usa-section">
             <div class="grid-container">
-              ${alert(model)}
-              <div class="usa-page-head">
-                <h2 class="usa-page-title" tabindex="-1" data-focus="heading">申請一覧</h2>
-                <button type="button" class="usa-button" data-action="new">${icon('add', { size: 20, stroke: 2.25 })}新規申請</button>
-              </div>
-              ${searchArea(model, ctx)} ${table(model)}
+              ${model.screen === 'form'
+                ? formPage(model, ctx, alert(model))
+                : html`${alert(model)}
+                    <div class="usa-page-head">
+                      <h2 class="usa-page-title" tabindex="-1" data-focus="heading">申請一覧</h2>
+                      <button type="button" class="usa-button" data-action="new">${icon('add', { size: 20, stroke: 2.25 })}新規申請</button>
+                    </div>
+                    ${searchArea(model, ctx)} ${table(model)}`}
             </div>
           </div>
           <div class="usa-identifier">
             <div class="grid-container"><p>${model.system.org}（架空の自治体）　申請管理システム</p></div>
           </div>
         </div>
-        ${modal(model, ctx)}
+        ${model.screen === 'list' ? modal(model, ctx) : ''}
       </div>`;
   },
 };

@@ -1,24 +1,7 @@
-import { expect, test as base } from '@playwright/test';
+import { expect, test } from './fixtures.mjs';
 
 const DESIGNS = ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'];
 const TOTAL = 24;
-
-/** コンソールエラー・ページエラー・失敗したリクエストを検出したらテストを失敗させる。 */
-const test = base.extend({
-  page: async ({ page }, use) => {
-    const problems = [];
-    page.on('console', (msg) => {
-      if (msg.type() === 'error' || msg.type() === 'warning') problems.push(`console.${msg.type()}: ${msg.text()}`);
-    });
-    page.on('pageerror', (error) => problems.push(`pageerror: ${error.message}`));
-    page.on('response', (res) => {
-      if (res.status() >= 400) problems.push(`HTTP ${res.status()}: ${res.url()}`);
-    });
-    page.on('requestfailed', (req) => problems.push(`request failed: ${req.url()}`));
-    await use(page);
-    expect(problems, 'ブラウザのエラー').toEqual([]);
-  },
-});
 
 const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const rows = (scope) => scope.locator('.pane__root [data-id]');
@@ -87,19 +70,25 @@ test.describe('各デザインの表示と機能', () => {
       await expect(p.locator('[data-action="open-detail"][data-id="2026-01041"]')).toBeFocused();
     });
 
-    test(`${id}: 新規申請と未実装画面の通知`, async ({ page }) => {
+    test(`${id}: 新規申請で入力フォームへ移り、未実装の画面は通知する`, async ({ page }) => {
       await page.goto(`?design=${id}`);
       const p = pane(page);
       await p.locator('[data-action="new"]').first().click();
-      await expect(p.locator('.pane__root')).toContainText('新規申請フォームは未実装です');
-      await expect(page.locator('#lab-live')).toContainText('新規申請');
-      await p.locator('[data-action="dismiss-notice"]').click();
-      await expect(p.locator('.pane__root')).not.toContainText('新規申請フォームは未実装です');
+      await expect(p.locator('[data-form="entry"]')).toBeVisible();
+      expect(query(page).get('screen')).toBe('form');
+      await expect(page.locator('#lab-screen')).toHaveValue('form');
+      await expect(p.locator('[data-focus="heading"]')).toBeFocused();
 
       const reports = p.locator('[data-action="nav"][data-target="reports"]');
       if (!(await reports.isVisible())) await p.locator('[data-action="toggle-ui"]').first().click();
       await reports.click();
       await expect(p.locator('.pane__root')).toContainText('「集計」画面');
+      await p.locator('[data-action="dismiss-notice"]').click();
+      await expect(p.locator('.pane__root')).not.toContainText('「集計」画面');
+
+      await p.locator('[data-action="nav"][data-target="applications"]').first().click();
+      await expect(rows(p)).toHaveCount(TOTAL);
+      expect(query(page).get('screen')).toBeNull();
     });
   }
 });

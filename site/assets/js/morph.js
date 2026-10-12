@@ -10,18 +10,32 @@ function syncAttributes(from, to) {
   }
 }
 
-function syncFormState(from, to) {
+/** 子要素を差分更新する前に、新しい側のフォーム値を読み取る（子ノードは更新時に移動されるため）。 */
+function readFormState(to) {
+  if (to instanceof HTMLTextAreaElement) return { value: to.value };
+  if (to instanceof HTMLSelectElement) {
+    const selected = to.querySelector('option[selected]');
+    return { value: selected ? selected.value : to.options[0]?.value ?? '' };
+  }
+  if (to instanceof HTMLInputElement) {
+    return { value: to.getAttribute('value') ?? '', checked: to.hasAttribute('checked') };
+  }
+  return null;
+}
+
+function syncFormState(from, desired) {
+  if (!desired) return;
   if (from instanceof HTMLInputElement) {
     if (from.type === 'checkbox' || from.type === 'radio') {
-      from.checked = to.hasAttribute('checked');
-    } else if (from !== document.activeElement && from.value !== (to.getAttribute('value') ?? '')) {
+      from.checked = desired.checked;
+    } else if (from !== document.activeElement && from.value !== desired.value) {
       // フォーカス中の入力欄は利用者の入力（IME 変換中を含む）を優先する
-      from.value = to.getAttribute('value') ?? '';
+      from.value = desired.value;
     }
+  } else if (from instanceof HTMLTextAreaElement) {
+    if (from !== document.activeElement && from.value !== desired.value) from.value = desired.value;
   } else if (from instanceof HTMLSelectElement) {
-    const selected = to.querySelector('option[selected]');
-    const value = selected ? selected.value : to.options[0]?.value ?? '';
-    if (from.value !== value) from.value = value;
+    if (from.value !== desired.value) from.value = desired.value;
   }
 }
 
@@ -35,24 +49,52 @@ function morphNode(from, to) {
     return;
   }
   syncAttributes(from, to);
-  morphChildren(from, to);
-  syncFormState(from, to);
+  const desired = readFormState(to);
+  // textarea の中身は value で同期する（子のテキストを差し替えると入力済みの値が壊れるため触らない）
+  if (!(from instanceof HTMLTextAreaElement)) morphChildren(from, to);
+  syncFormState(from, desired);
 }
 
+/** id を持つ要素は id で対応づける（前後に要素が増減しても、入力中の欄を作り直さない）。 */
+const keyOf = (node) => (node.nodeType === Node.ELEMENT_NODE && node.id) || null;
+
 export function morphChildren(parent, next) {
-  const oldChildren = [...parent.childNodes];
   const newChildren = [...next.childNodes];
-  newChildren.forEach((child, i) => {
-    const current = oldChildren[i];
-    if (!current) {
-      parent.appendChild(child);
-    } else if (sameKind(current, child)) {
-      morphNode(current, child);
-    } else {
-      parent.replaceChild(child, current);
+  const keep = new Set(newChildren.map(keyOf).filter(Boolean));
+  for (const old of [...parent.children]) {
+    const key = keyOf(old);
+    if (key && !keep.has(key)) old.remove();
+  }
+
+  let cursor = parent.firstChild;
+  for (const child of newChildren) {
+    const key = keyOf(child);
+    let match = null;
+    if (key) {
+      match = [...parent.children].find((el) => el.id === key && el.nodeName === child.nodeName) ?? null;
+    } else if (cursor && !keyOf(cursor) && sameKind(cursor, child)) {
+      match = cursor;
     }
-  });
-  for (let i = newChildren.length; i < oldChildren.length; i += 1) oldChildren[i].remove();
+
+    if (!match) {
+      parent.insertBefore(child, cursor);
+      continue;
+    }
+    // 対応する要素の手前にある、新しい側に対応のない古い要素は取り除く
+    while (cursor && cursor !== match && !keyOf(cursor)) {
+      const following = cursor.nextSibling;
+      cursor.remove();
+      cursor = following;
+    }
+    if (cursor !== match) parent.insertBefore(match, cursor);
+    morphNode(match, child);
+    cursor = match.nextSibling;
+  }
+  while (cursor) {
+    const following = cursor.nextSibling;
+    cursor.remove();
+    cursor = following;
+  }
 }
 
 const template = document.createElement('template');

@@ -1,11 +1,13 @@
 // 比較サイトのシェル：状態管理、URL 同期、比較操作、デザイン描画の振り分け。
 
 import { DESIGNS, DESIGN_IDS, getDesign } from './designs/index.js';
+import { back, complete, createForm, fillSample, hasErrors, setValue, submit } from './form.js';
 import { html } from './html.js';
 import { icon } from './icons.js';
+import { buildAppModel } from './model.js';
 import { patch } from './morph.js';
 import { buildModel, countText, nextSort } from './query.js';
-import { WIDTHS, parseState, serializeState } from './state.js';
+import { SCREENS, WIDTHS, parseState, serializeState } from './state.js';
 
 const TRAIT_LABELS = {
   density: '情報密度と余白',
@@ -16,7 +18,14 @@ const TRAIT_LABELS = {
   hierarchy: '情報の階層と配置',
 };
 
-const UNIMPLEMENTED_TEXT = 'このサンプルでは申請一覧画面のみを実装しています。';
+const FORM_TRAIT_LABELS = {
+  layout: 'レイアウトと余白',
+  label: 'ラベル・補足・必須表記',
+  errors: '入力エラー',
+  confirm: '確認・操作',
+};
+
+const UNIMPLEMENTED_TEXT = 'このサンプルでは申請一覧と入力フォームのみを実装しています。';
 
 const els = {
   controls: document.getElementById('lab-controls'),
@@ -24,9 +33,13 @@ const els = {
   live: document.getElementById('lab-live'),
   copy: document.getElementById('lab-copy'),
   copyStatus: document.getElementById('lab-copy-status'),
+  formbar: document.getElementById('lab-formbar'),
 };
 
+// state：画面・比較条件・一覧の条件（URL と同期する）
+// form：新規申請フォームの入力内容（メモリのみ。URL・履歴・ストレージには書かない）
 let state = parseState(location.search, DESIGN_IDS);
+let form = createForm();
 let keywordTimer = 0;
 let announceTimer = 0;
 
@@ -47,6 +60,7 @@ function createPane(index) {
     scroll: section.querySelector('.pane__scroll'),
     root: section.querySelector('.pane__root'),
     designId: null,
+    layout: null,
     ui: {},
     traitsOpen: false,
   };
@@ -63,6 +77,13 @@ function update(changes, { history = 'push', focus = null } = {}) {
   syncUrl(history);
   if (focus) applyFocus(focus);
   if (before.keyword !== state.keyword || before.status !== state.status) scheduleAnnounce();
+}
+
+/** フォームの状態を更新して再描画する。URL・履歴は変えない。 */
+function updateForm(next, { focus = null } = {}) {
+  form = next;
+  render();
+  if (focus) applyFocus(focus);
 }
 
 function syncUrl(mode) {
@@ -108,7 +129,9 @@ function render() {
   els.panes.dataset.width = state.width;
   els.panes.style.setProperty('--frame-width', state.width === 'auto' ? '' : `${state.width}px`);
 
-  const model = buildModel(state);
+  els.formbar.hidden = state.screen !== 'form';
+  const model = buildAppModel(state, form);
+  const layout = state.screen === 'form' ? `form-${form.step}` : 'list';
   for (const pane of panes) {
     const visible = pane.index === 0 || state.mode === 'compare';
     pane.section.hidden = !visible;
@@ -126,12 +149,20 @@ function render() {
       uid: `p${pane.index}`,
       ui: pane.ui,
       href: (changes) => serializeState({ ...state, ...changes }),
+      navHref: (item) => {
+        if (item.id === 'applications') return serializeState({ ...state, screen: 'list', detail: null });
+        if (item.id === 'new') return serializeState({ ...state, screen: 'form', detail: null });
+        return '#';
+      },
     };
+    // 画面や入力ステップが変わるときは差分更新せず入れ替える（別の画面の入力欄を再利用しない）
+    const layoutChanged = pane.layout !== layout;
     const pageBefore = pane.root.firstElementChild?.dataset.page;
-    patch(pane.root, design.render(model, ctx).toString(), { replace: changed });
+    patch(pane.root, design.render(model, ctx).toString(), { replace: changed || layoutChanged });
     // 詳細を別ページとして描くデザインでは、ページが切り替わったら先頭から表示する
     const pageAfter = pane.root.firstElementChild?.dataset.page;
-    if (!changed && pageBefore !== pageAfter) pane.scroll.scrollTop = 0;
+    if (!changed && (layoutChanged || pageBefore !== pageAfter)) pane.scroll.scrollTop = 0;
+    pane.layout = layout;
   }
 }
 
@@ -145,6 +176,13 @@ function renderControls() {
     ['single', '単独表示'],
     ['compare', '左右比較'],
   ];
+  const screenSelect = html`
+    <div class="lab-field">
+      <label class="lab-label" for="lab-screen">画面</label>
+      <select class="lab-select" id="lab-screen" name="screen">
+        ${SCREENS.map((v) => html`<option value="${v.value}" ${v.value === state.screen ? 'selected' : ''}>${v.label}</option>`)}
+      </select>
+    </div>`;
   const designSelect = (name, label, value, className = '') => html`
     <div class="lab-field ${className}">
       <label class="lab-label" for="lab-${name}">${label}</label>
@@ -179,6 +217,7 @@ function renderControls() {
           </div>`;
 
   return html`
+    ${screenSelect}
     <div class="lab-field">
       <span class="lab-label" id="lab-mode-label">表示</span>
       <div class="lab-seg" role="radiogroup" aria-labelledby="lab-mode-label">
@@ -201,6 +240,9 @@ function renderControls() {
 }
 
 function renderPaneHead(design, pane) {
+  const isForm = state.screen === 'form';
+  const traitLabels = isForm ? FORM_TRAIT_LABELS : TRAIT_LABELS;
+  const traits = isForm ? design.formTraits : design.traits;
   return html`
     <div class="pane__meta">
       ${state.mode === 'compare' ? html`<span class="pane__side" aria-hidden="true">${pane.index === 0 ? '左' : '右'}</span>` : ''}
@@ -213,9 +255,7 @@ function renderPaneHead(design, pane) {
     <details class="pane__traits" ${pane.traitsOpen ? 'open' : ''}>
       <summary>設計上の特徴</summary>
       <dl class="pane__trait-list">
-        ${Object.entries(TRAIT_LABELS).map(
-          ([key, label]) => html`<div><dt>${label}</dt><dd>${design.traits[key]}</dd></div>`,
-        )}
+        ${Object.entries(traitLabels).map(([key, label]) => html`<div><dt>${label}</dt><dd>${traits[key]}</dd></div>`)}
       </dl>
     </details>`;
 }
@@ -224,7 +264,8 @@ function renderPaneHead(design, pane) {
 
 els.controls.addEventListener('change', (event) => {
   const { name, value } = event.target;
-  if (name === 'mode') setMode(value);
+  if (name === 'screen') update({ screen: value, notice: null });
+  else if (name === 'mode') setMode(value);
   else if (name === 'design' || name === 'left') update({ left: value });
   else if (name === 'right') update({ right: value });
   else if (name === 'width') update({ width: value });
@@ -232,10 +273,30 @@ els.controls.addEventListener('change', (event) => {
 
 els.controls.addEventListener('submit', (event) => event.preventDefault());
 
-els.controls.addEventListener('click', (event) => {
-  if (event.target.closest('[data-shell="swap"]')) {
-    update({ left: state.right, right: state.left });
-    announce(`左右を入れ替えました。左：${getDesign(state.left).name}、右：${getDesign(state.right).name}`);
+document.querySelector('.lab-bar').addEventListener('click', (event) => {
+  const button = event.target.closest('[data-shell]');
+  if (!button) return;
+  switch (button.dataset.shell) {
+    case 'swap':
+      update({ left: state.right, right: state.left });
+      announce(`左右を入れ替えました。左：${getDesign(state.left).name}、右：${getDesign(state.right).name}`);
+      break;
+    case 'form-sample':
+      updateForm(fillSample('valid'));
+      announce('入力例を入力しました');
+      break;
+    case 'form-error': {
+      const next = fillSample('invalid');
+      updateForm(next);
+      announce(`入力エラーを再現しました。${Object.keys(next.errors).length}件のエラーがあります`);
+      break;
+    }
+    case 'form-clear':
+      updateForm(createForm());
+      announce('入力内容をクリアしました');
+      break;
+    default:
+      break;
   }
 });
 
@@ -276,23 +337,35 @@ function bindPaneEvents(pane) {
     if (event.target.matches('.pane__traits')) pane.traitsOpen = event.target.open;
   }, true);
 
+  // IME の変換中（isComposing）は状態を更新せず、確定（compositionend）で反映する。
+  // 変換中に再描画して入力を壊さないため、入力中の欄は morph でも触らない。
   section.addEventListener('input', (event) => {
     const field = event.target;
-    if (field.dataset.bind !== 'keyword' || event.isComposing) return;
-    clearTimeout(keywordTimer);
-    keywordTimer = setTimeout(() => commitKeyword(field.value), 180);
+    if (event.isComposing) return;
+    if (field.dataset.bind === 'keyword') {
+      clearTimeout(keywordTimer);
+      keywordTimer = setTimeout(() => commitKeyword(field.value), 180);
+    } else if (field.dataset.field) {
+      commitField(field);
+    }
   });
 
   section.addEventListener('compositionend', (event) => {
     if (event.target.dataset.bind === 'keyword') commitKeyword(event.target.value);
+    else if (event.target.dataset.field) commitField(event.target);
   });
 
   section.addEventListener('change', (event) => {
     if (event.target.dataset.bind === 'status') update({ status: event.target.value });
+    else if (event.target.dataset.field) commitField(event.target);
   });
 
   section.addEventListener('submit', (event) => {
     event.preventDefault();
+    if (event.target.dataset.form === 'entry') {
+      submitEntry(index);
+      return;
+    }
     const field = event.target.querySelector('[data-bind="keyword"]');
     if (field) {
       commitKeyword(field.value);
@@ -308,6 +381,11 @@ function bindPaneEvents(pane) {
   });
 
   section.addEventListener('keydown', (event) => {
+    // 日本語入力の変換確定の Enter でフォームが送信されないようにする（Safari は確定後に keyCode 229 の Enter が来る）
+    if (event.key === 'Enter' && (event.isComposing || event.keyCode === 229) && event.target.dataset.field) {
+      event.preventDefault();
+      return;
+    }
     const modal = pane.root.querySelector('[data-modal]');
     if (!modal) return;
     if (event.key === 'Escape') {
@@ -317,6 +395,28 @@ function bindPaneEvents(pane) {
       trapFocus(event, modal);
     }
   });
+}
+
+function commitField(field) {
+  const value = field.type === 'checkbox' ? field.checked : field.value;
+  const next = setValue(form, field.dataset.field, value);
+  if (next !== form) updateForm(next);
+}
+
+/** 「確認へ」：エラーがあればデザインごとの方法でフォーカスを移し、なければ確認画面へ進む。 */
+function submitEntry(paneIndex) {
+  const next = submit(form);
+  if (!hasErrors(next.errors)) {
+    updateForm(next, { focus: { pane: paneIndex, selector: '[data-focus="heading"]' } });
+    announce('確認画面です。内容を確認してください');
+    return;
+  }
+  const design = getDesign(paneIndex === 0 ? state.left : state.right);
+  const selector = design.errorFocus === 'summary' ? '[data-focus="error-summary"]' : '[data-focus="first-error"]';
+  // エラーの一覧（サマリー・バナー）が見えるよう、先頭から表示した状態でフォーカスする
+  panes[paneIndex].scroll.scrollTop = 0;
+  updateForm(next, { focus: { pane: paneIndex, selector, fallback: '[data-focus="heading"]' } });
+  announce(`入力エラーが${Object.keys(next.errors).length}件あります`);
 }
 
 function trapFocus(event, container) {
@@ -336,7 +436,7 @@ function trapFocus(event, container) {
 }
 
 function handleAction(action, el, pane) {
-  const { id, key, value, target } = el.dataset;
+  const { id, key, value, target, gotoField: field } = el.dataset;
   switch (action) {
     case 'set-status':
       update({ status: value ?? '' });
@@ -364,11 +464,27 @@ function handleAction(action, el, pane) {
       break;
     }
     case 'new':
-      showNotice('新規申請', `新規申請フォームは未実装です。${UNIMPLEMENTED_TEXT}`);
+      update({ screen: 'form', detail: null, notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
+      break;
+    case 'form-back':
+      updateForm(back(form), {
+        focus: { pane, selector: field ? `[data-field="${field}"]` : '[data-focus="heading"]', fallback: '[data-focus="heading"]' },
+      });
+      break;
+    case 'form-confirm':
+      updateForm(complete(form), { focus: { pane, selector: '[data-focus="heading"]' } });
+      announce('申請の入力が完了しました（デモのため、送信・登録はされません）');
+      break;
+    case 'form-restart':
+      updateForm(createForm(), { focus: { pane, selector: '[data-focus="heading"]' } });
+      break;
+    case 'focus-field':
+      applyFocus({ pane, selector: `[data-field="${field}"]` });
       break;
     case 'nav':
       if (target === 'applications') {
-        if (state.detail) handleAction('close-detail', el, pane);
+        if (state.screen === 'form') update({ screen: 'list', detail: null, notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
+        else if (state.detail) handleAction('close-detail', el, pane);
         else applyFocus({ pane, selector: '[data-focus="heading"]' });
       } else if (target === 'new') {
         handleAction('new', el, pane);

@@ -28,6 +28,9 @@ export function html(strings, ...values) {
   return new Raw(out);
 }
 
+/** 属性を 1 つ出力する。値が null / false のときは何も出さない（引用符入りの文字列を html に直接渡さないため）。 */
+export const attr = (name, value) => (value == null || value === false ? '' : raw(`${name}="${escapeHtml(value === true ? '' : value)}"`));
+
 /** 真の値を持つキーだけをクラス名として連結する。 */
 export const cx = (...parts) =>
   parts

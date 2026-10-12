@@ -33,6 +33,18 @@
         <span class="lab-wide-only">各デザインシステムの公開ドキュメントの考え方を参考にした比較用の独自実装です。公式コンポーネントの再現や準拠・適合を示すものではありません。自治体・申請データはすべて架空です。</span>
         <span class="lab-narrow-only">公開ドキュメントを参考にした比較用の独自実装です（公式準拠ではありません）。データは架空です。</span>
       </p>
+      <div class="lab-formbar" id="lab-formbar" hidden>
+        <div class="lab-field lab-tools" role="group" aria-label="入力データ">
+          <span class="lab-label">入力データ</span>
+          <button type="button" class="lab-button" data-shell="form-sample">入力例</button>
+          <button type="button" class="lab-button" data-shell="form-error">エラーを再現</button>
+          <button type="button" class="lab-button" data-shell="form-clear">クリア</button>
+        </div>
+        <p class="lab-note">
+          <span class="lab-wide-only">入力内容は送信・保存されず、URL・履歴にも含まれません。このページを開いている間だけ保持し、左右比較では共通の値を表示します。</span>
+          <span class="lab-narrow-only">入力内容は送信・保存されず、URLにも含まれません。</span>
+        </p>
+      </div>
     </header>
     <main class="lab-panes" id="lab-panes" tabindex="-1">
       <noscript><p class="lab-noscript">このサイトの表示には JavaScript が必要です。</p></noscript>

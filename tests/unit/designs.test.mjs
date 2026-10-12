@@ -5,10 +5,12 @@ import { test } from 'node:test';
 
 import { COLUMNS, DEFAULT_SORT, NAV_ITEMS } from '../../site/assets/js/data.js';
 import { DESIGNS } from '../../site/assets/js/designs/index.js';
+import { createForm } from '../../site/assets/js/form.js';
+import { buildAppModel } from '../../site/assets/js/model.js';
 import { buildModel, countText } from '../../site/assets/js/query.js';
 
-const base = { keyword: '', status: '', sort: DEFAULT_SORT, detail: null, notice: null };
-const ctx = () => ({ uid: 't', ui: {}, href: () => '?' });
+const base = { screen: 'list', keyword: '', status: '', sort: DEFAULT_SORT, detail: null, notice: null };
+const ctx = () => ({ uid: 't', ui: {}, href: () => '?', navHref: () => '?' });
 const render = (design, state) => design.render(buildModel({ ...base, ...state }), ctx()).toString();
 const count = (htmlText, needle) => htmlText.split(needle).length - 1;
 
@@ -26,6 +28,7 @@ for (const design of DESIGNS) {
     for (const key of ['density', 'navigation', 'table', 'input', 'actions', 'hierarchy']) {
       assert.ok(design.traits[key], key);
     }
+    for (const key of ['layout', 'label', 'errors', 'confirm']) assert.ok(design.formTraits[key], `formTraits.${key}`);
   });
 
   test(`${design.id}: 一覧の情報と操作がすべて含まれる`, () => {
@@ -48,6 +51,16 @@ for (const design of DESIGNS) {
       assert.ok(out.includes(row.type), row.type);
       assert.ok(out.includes(row.status.label), row.status.label);
       assert.match(out, new RegExp(`data-action="open-detail"\\s+data-id="${row.id}"`), `詳細ボタン ${row.id}`);
+    }
+  });
+
+  test(`${design.id}: 現在の画面が aria-current で示される`, () => {
+    // 属性が文字列としてエスケープされていないこと（\&quot; を含まない）も確認する
+    for (const [screen, label] of [['list', '申請一覧'], ['form', '新規申請']]) {
+      const out = design.render(buildAppModel({ ...base, screen }, createForm()), ctx()).toString();
+      assert.ok(!out.includes('&quot;'), `${screen}: 属性がエスケープされている`);
+      const current = [...out.matchAll(/<a\b[^>]*aria-current="page"[^>]*>([\s\S]*?)<\/a\s*>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+      assert.ok(current.includes(label), `${screen}: ナビの現在地 ${label}（実際: ${current.join(',')}）`);
     }
   });
 

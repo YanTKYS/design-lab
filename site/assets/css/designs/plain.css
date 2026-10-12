@@ -50,3 +50,30 @@
 .ds-plain .plain-detail dt {
   font-weight: bold;
 }
+
+.ds-plain fieldset {
+  margin: 0 0 12px;
+}
+
+.ds-plain input[type='text'],
+.ds-plain input[type='email'],
+.ds-plain input[type='tel'] {
+  width: min(100%, 24em);
+}
+
+.ds-plain textarea {
+  width: min(100%, 36em);
+}
+
+.ds-plain .plain-error {
+  color: #b00020;
+}
+
+.ds-plain .plain-errors {
+  border: 1px solid #b00020;
+  padding: 0 8px;
+}
+
+.ds-plain .plain-pre {
+  white-space: pre-wrap;
+}

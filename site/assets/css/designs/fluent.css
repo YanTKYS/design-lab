@@ -717,3 +717,220 @@
 .fui-grid {
   min-width: 720px;
 }
+
+/* ---------- 新規申請フォーム ---------- */
+
+.fui-formcard {
+  max-width: 880px;
+  padding: 8px 24px 24px;
+}
+
+.fui-subtitle {
+  margin: 20px 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.fui-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+.fui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fui-field--wide {
+  grid-column: 1 / -1;
+}
+
+.fui-field__label {
+  padding: 0 0 2px;
+  font-weight: 600;
+}
+
+.fui-field__required {
+  color: #b10e1c;
+}
+
+.fui-input {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid var(--fui-stroke1);
+  border-bottom-color: var(--fui-stroke-accessible);
+  border-radius: var(--fui-radius);
+  background: var(--fui-bg1);
+  padding: 0 10px;
+  color: var(--fui-fg1);
+  font: inherit;
+}
+
+.fui-input:hover {
+  border-color: #c7c7c7;
+  border-bottom-color: var(--fui-fg1);
+}
+
+.fui-input:focus-visible {
+  outline: none;
+  border-bottom: 2px solid var(--fui-brand);
+  box-shadow: none;
+}
+
+.fui-input--select {
+  padding-right: 30px;
+  appearance: none;
+  background: var(--fui-bg1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23424242' stroke-width='1.75'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;
+}
+
+.fui-input--textarea {
+  min-height: 112px;
+  padding: 6px 10px;
+  line-height: 20px;
+  resize: vertical;
+}
+
+.is-invalid > .fui-input {
+  border-color: #b10e1c;
+}
+
+.is-invalid > .fui-input:focus-visible {
+  border-bottom: 2px solid #b10e1c;
+}
+
+.fui-field__validation {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 2px 0 0;
+  color: #b10e1c;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.fui-field__validation svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.fui-field__hint {
+  margin: 0;
+  color: var(--fui-fg3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.fui-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.fui-checkbox__input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  border: 1px solid var(--fui-fg2);
+  border-radius: 2px;
+  background: var(--fui-bg1);
+  appearance: none;
+  cursor: pointer;
+}
+
+.fui-checkbox__input:checked {
+  border-color: var(--fui-brand);
+  background: var(--fui-brand) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") no-repeat center / 12px;
+}
+
+.is-invalid .fui-checkbox__input {
+  border-color: #b10e1c;
+}
+
+.fui-checkbox__label {
+  cursor: pointer;
+}
+
+.fui-form-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+  border-top: 1px solid var(--fui-stroke2);
+  padding-top: 16px;
+}
+
+.fui-messagebar--error,
+.fui-messagebar--success {
+  max-width: 880px;
+}
+
+.fui-messagebar--error {
+  border-color: #eeacb2;
+  background: #fdf3f4;
+}
+
+.fui-messagebar--error .fui-messagebar__icon {
+  color: #b10e1c;
+}
+
+.fui-messagebar--success {
+  border-color: #9fd89f;
+  background: #f1faf1;
+}
+
+.fui-messagebar--success .fui-messagebar__icon {
+  color: #107c10;
+}
+
+.fui-summary {
+  margin: 8px 0 0;
+}
+
+.fui-summary__row {
+  display: grid;
+  grid-template-columns: 11em minmax(0, 1fr);
+  gap: 16px;
+  border-bottom: 1px solid var(--fui-stroke2);
+  padding: 10px 0;
+}
+
+.fui-summary dt {
+  color: var(--fui-fg3);
+}
+
+.fui-summary dd {
+  margin: 0;
+}
+
+.fui-pre {
+  white-space: pre-wrap;
+}
+
+.fui-done {
+  margin: 16px 0 0;
+}
+
+@container frame (max-width: 599px) {
+  .fui-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fui-formcard {
+    padding: 4px 16px 20px;
+  }
+
+  .fui-summary__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .fui-form-footer .fui-button {
+    flex: 1 1 100%;
+  }
+}

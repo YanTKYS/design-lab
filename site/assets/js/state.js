@@ -11,8 +11,14 @@ export const WIDTHS = [
   { value: '375', label: '375px' },
 ];
 
+export const SCREENS = [
+  { value: 'list', label: '申請一覧' },
+  { value: 'form', label: '入力フォーム' },
+];
+
 export function defaultState(designIds) {
   return {
+    screen: 'list',
     mode: 'single',
     left: designIds[0],
     right: designIds[1],
@@ -30,6 +36,7 @@ const pick = (value, allowed, fallback) => (allowed.includes(value) ? value : fa
 export function parseState(search, designIds) {
   const p = new URLSearchParams(search);
   const base = defaultState(designIds);
+  const screen = pick(p.get('screen'), SCREENS.map((v) => v.value), base.screen);
   const mode = pick(p.get('mode'), ['single', 'compare'], base.mode);
   const left = pick(p.get(mode === 'compare' ? 'left' : 'design'), designIds, base.left);
   let right = pick(p.get('right'), designIds, base.right);
@@ -40,6 +47,7 @@ export function parseState(search, designIds) {
 
   return {
     ...base,
+    screen,
     mode,
     left,
     right,
@@ -54,6 +62,8 @@ export function parseState(search, designIds) {
 /** 既定値と同じ項目は省略して、共有しやすい短いクエリにする。 */
 export function serializeState(state) {
   const p = new URLSearchParams();
+  // フォームの入力内容は URL に含めない。ここに載せるのは画面・比較条件・一覧の条件だけ。
+  if (state.screen === 'form') p.set('screen', 'form');
   if (state.mode === 'compare') {
     p.set('mode', 'compare');
     p.set('left', state.left);

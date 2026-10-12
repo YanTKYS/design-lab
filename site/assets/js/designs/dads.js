@@ -2,9 +2,10 @@
 // 16px 基準の本文と広い行間、ラベルを入力欄の上に置く検索条件パネル、
 // 罫線つきテーブル、黄色＋黒の太いフォーカスリングが特徴。
 
-import { html } from '../html.js';
+import { attr, html } from '../html.js';
 import { TONE_ICONS, icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { formPage } from './dads.form.js';
 
 const CHIP_COLORS = { info: 'light-blue', progress: 'blue', warning: 'orange', success: 'green', error: 'red' };
 
@@ -13,7 +14,7 @@ function header(model, ctx) {
   return html`
     <header class="dads-header">
       <div class="dads-header__inner">
-        <a class="dads-header__logo" href="${ctx.href({ detail: null })}" data-action="nav" data-target="applications">
+        <a class="dads-header__logo" href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">
           <svg class="dads-header__emblem" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
             <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" stroke-width="2" />
             <path d="M18 7l3 7h7l-5.5 4.5 2 7.5L18 21.5 11.5 26l2-7.5L8 14h7z" fill="currentColor" />
@@ -43,10 +44,10 @@ function header(model, ctx) {
               <li>
                 <a
                   class="dads-gnav__link"
-                  href="${item.current ? ctx.href({ detail: null }) : '#'}"
+                  href="${ctx.navHref(item)}"
                   data-action="nav"
                   data-target="${item.id}"
-                  ${item.current ? 'aria-current="page"' : ''}
+                  ${attr('aria-current', item.current && 'page')}
                   >${icon(item.icon, { size: 20 })}${item.label}</a
                 >
               </li>`,
@@ -61,10 +62,13 @@ function breadcrumb(model, ctx) {
     <nav class="dads-breadcrumb" aria-label="現在位置">
       <ol>
         <li><a class="dads-link" href="#" data-action="nav" data-target="home" data-label="ホーム">ホーム</a></li>
-        ${model.detail
-          ? html`<li><a class="dads-link" href="${ctx.href({ detail: null })}" data-action="close-detail">申請一覧</a></li>
-              <li><span aria-current="page">申請詳細</span></li>`
-          : html`<li><span aria-current="page">申請一覧</span></li>`}
+        ${model.screen === 'form'
+          ? html`<li><a class="dads-link" href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">申請一覧</a></li>
+              <li><span aria-current="page">新規申請</span></li>`
+          : model.detail
+            ? html`<li><a class="dads-link" href="${ctx.href({ detail: null })}" data-action="close-detail">申請一覧</a></li>
+                <li><span aria-current="page">申請詳細</span></li>`
+            : html`<li><span aria-current="page">申請一覧</span></li>`}
       </ol>
     </nav>`;
 }
@@ -237,12 +241,20 @@ export default {
     actions: '角丸8pxの塗り／アウトライン／テキストボタン。主要操作は塗り、行内の詳細は小さいアウトラインボタン。',
     hierarchy: 'パンくず → ページ見出し → 説明文 → 検索条件 → 検索結果の順に縦へ積み、詳細は別ページとして表示する。',
   },
+  formTraits: {
+    layout: '1列の縦積み。「申請者の情報」「申請の内容」「確認事項」の見出しで区切り、項目の間隔を広く（32px）取る。最大幅は約40rem。',
+    label: 'ラベルの横に赤い「※必須」または「任意」を明示。補足と入力例はラベルの直下に置く。入力欄は高さ48px・角丸8px。',
+    errors: 'エラー文は入力欄の直下に「＊」付きの赤文字で出し、枠も赤くする。上部には通知バナーで件数と項目名を示し、最初のエラー項目へフォーカスを移す。',
+    confirm: '入力→確認→完了をステップ表示。確認は項目名つきの罫線表で、大きな「この内容で申請する」と「入力画面に戻って修正する」を並べる。',
+  },
+  errorFocus: 'field',
   render(model, ctx) {
     return html`
       <div class="ds-dads" data-page="${model.detail ? 'detail' : 'list'}">
         ${header(model, ctx)}
         <div class="dads-main">
-          ${breadcrumb(model, ctx)} ${notice(model)} ${model.detail ? detailPage(model, ctx) : listPage(model, ctx)}
+          ${breadcrumb(model, ctx)} ${notice(model)}
+          ${model.screen === 'form' ? formPage(model, ctx) : model.detail ? detailPage(model, ctx) : listPage(model, ctx)}
         </div>
         <footer class="dads-footer"><p>© ${model.system.org}（架空の自治体）</p></footer>
       </div>`;

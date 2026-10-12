@@ -24,6 +24,18 @@ export const STATUSES = [
   { value: 'rejected', label: '却下', tone: 'error' },
 ];
 
+/** 申請種別（一覧データと新規申請フォームで共通）。 */
+export const APPLICATION_TYPES = [
+  '住民票の写し等交付申請',
+  '道路占用許可申請',
+  '児童手当認定請求',
+  '保育所等入所申込',
+  '住宅リフォーム補助金交付申請',
+  '犬の登録申請',
+  '粗大ごみ収集申込',
+  '屋外広告物許可申請',
+];
+
 export const COLUMNS = [
   { key: 'id', label: '受付番号' },
   { key: 'applicant', label: '申請者' },
@@ -64,3 +76,28 @@ export const APPLICATIONS = [
   r('2026-00965', '森 菜々子', 'もり ななこ', '犬の登録申請', '環境衛生課', '2026-09-01', 'approved', '窓口', '2026-09-08', ''),
   r('2026-00961', '山口 奏太', 'やまぐち そうた', '住民票の写し等交付申請', '市民課', '2026-08-29', 'approved', '郵送', '2026-09-05', ''),
 ];
+
+/** 新規申請フォームの入力例（すべて架空）。比較のために呼び出す。 */
+export const FORM_SAMPLES = {
+  valid: {
+    name: '桜井 はるか',
+    kana: 'さくらい はるか',
+    email: 'haruka.sakurai@example.com',
+    phone: '090-1234-5678',
+    type: '保育所等入所申込',
+    date: '2026-11-02',
+    body: '令和9年4月からの入所を希望します。\n第1希望：さくら野第一保育園\n第2希望：さくら野第二保育園',
+    agree: true,
+  },
+  // 必須の未入力・ふりがなの形式不正・メールアドレスの形式不正・未同意をすべて含む
+  invalid: {
+    name: '',
+    kana: 'サクライ ハルカ',
+    email: 'haruka.sakurai#example.com',
+    phone: '',
+    type: '',
+    date: '',
+    body: '',
+    agree: false,
+  },
+};

@@ -3,8 +3,9 @@
 // 行の「表示」リンク、戻るリンクのある別ページ型の詳細、緑の主要ボタンが特徴。
 // 王冠ロゴなど GOV.UK 固有の識別要素は使わない。
 
-import { html } from '../html.js';
+import { attr, html } from '../html.js';
 import { countText, formatDate } from '../query.js';
+import { formPage } from './govuk.form.js';
 
 const TAG_COLORS = { info: '', progress: 'purple', warning: 'orange', success: 'green', error: 'red' };
 
@@ -13,7 +14,7 @@ function header(model, ctx) {
   return html`
     <header class="gvk-header">
       <div class="gvk-width-container">
-        <a class="gvk-header__logo" href="${ctx.href({ detail: null })}" data-action="nav" data-target="applications">${model.system.org}</a>
+        <a class="gvk-header__logo" href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">${model.system.org}</a>
       </div>
     </header>
     <section class="gvk-service-nav" aria-label="サービス情報">
@@ -36,10 +37,10 @@ function header(model, ctx) {
                 <li class="gvk-service-nav__item ${item.current ? 'gvk-service-nav__item--active' : ''}">
                   <a
                     class="gvk-service-nav__link"
-                    href="${item.current ? ctx.href({ detail: null }) : '#'}"
+                    href="${ctx.navHref(item)}"
                     data-action="nav"
                     data-target="${item.id}"
-                    ${item.current ? 'aria-current="page"' : ''}
+                    ${attr('aria-current', item.current && 'page')}
                     >${item.current ? html`<strong>${item.label}</strong>` : item.label}</a
                   >
                 </li>`,
@@ -205,11 +206,20 @@ export default {
     actions: '角のない緑の主要ボタン（下に影）と灰色の副ボタン。補助的な操作はリンクで表す。',
     hierarchy: '見出しの左に絞り込み列、右に結果を置く。詳細は「戻る」リンク付きの別ページで、要約リストとして表示する。',
   },
+  formTraits: {
+    layout: '1列で1つの流れ。項目の間隔は30px、見出しは大きく。入力欄の幅は内容に合わせて変え、すべて同じ幅にはしない。',
+    label: 'ラベル（太字）→ヒント→エラー→入力欄の順。必須は無印で、任意の項目だけ「（任意）」と示す。2pxの黒枠の入力欄と大きな四角のチェックボックス。',
+    errors: '先頭に「問題があります」のエラーサマリー（赤い太枠）を出してフォーカスを移し、各項目へのリンクを示す。エラー項目は左に赤い帯、メッセージは太字の赤。',
+    confirm: '「回答内容を確認してください」の要約リストで、各行に「変更」リンク（その項目へ戻る）。緑の「この内容で申請する」で、緑の完了パネルを表示。',
+  },
+  errorFocus: 'summary',
   render(model, ctx) {
+    const page =
+      model.screen === 'form' ? formPage(model, ctx, banner(model)) : model.detail ? detailPage(model, ctx) : listPage(model, ctx);
     return html`
       <div class="ds-govuk" data-page="${model.detail ? 'detail' : 'list'}">
         ${header(model, ctx)}
-        <div class="gvk-width-container gvk-page">${model.detail ? detailPage(model, ctx) : listPage(model, ctx)}</div>
+        <div class="gvk-width-container gvk-page">${page}</div>
         <footer class="gvk-footer">
           <div class="gvk-width-container"><p>© ${model.system.org}（架空の自治体）</p></div>
         </footer>
