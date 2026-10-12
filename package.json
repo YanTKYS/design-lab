@@ -1,0 +1,17 @@
+{
+  "name": "design-lab",
+  "private": true,
+  "description": "同じ画面を複数のデザインシステムの考え方で表示して比較する静的サイト",
+  "type": "module",
+  "scripts": {
+    "start": "node tests/server.mjs",
+    "test": "node --test \"tests/unit/*.test.mjs\"",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

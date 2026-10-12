@@ -1,0 +1,448 @@
+/* 比較サイトのシェル。特定のデザインシステムに寄せない中立的な見た目にする。
+   サンプル画面（.ds-*）へは影響させないよう、すべて lab- / pane クラスで指定する。 */
+
+:root {
+  --lab-fg: #1f1f1f;
+  --lab-muted: #595959;
+  --lab-border: #c6c6c6;
+  --lab-bg: #ececec;
+  --lab-surface: #fff;
+  --lab-accent: #1f1f1f;
+  --lab-font: system-ui, -apple-system, 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, sans-serif;
+  --lab-compare-min: 600px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--lab-bg);
+  color: var(--lab-fg);
+  font-family: var(--lab-font);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.lab-skip {
+  position: absolute;
+  top: -100px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 12px;
+  background: var(--lab-surface);
+  color: var(--lab-fg);
+}
+
+.lab-skip:focus {
+  top: 8px;
+}
+
+:where(.lab-bar, .pane__head) :focus-visible {
+  outline: 2px solid var(--lab-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- 上部バー ---------- */
+
+.lab-bar {
+  flex: none;
+  border-bottom: 1px solid var(--lab-border);
+  background: var(--lab-surface);
+  padding: 8px 16px 6px;
+}
+
+.lab-bar__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+}
+
+.lab-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lab-title__sub {
+  margin-left: 8px;
+  color: var(--lab-muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.lab-controls {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 0;
+}
+
+.lab-field,
+.lab-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lab-group {
+  flex-wrap: wrap;
+}
+
+.lab-label {
+  color: var(--lab-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.lab-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--lab-border);
+  border-radius: 4px;
+  background: var(--lab-surface);
+  overflow: hidden;
+}
+
+.lab-seg__item {
+  position: relative;
+  display: inline-flex;
+}
+
+.lab-seg__item + .lab-seg__item {
+  border-left: 1px solid var(--lab-border);
+}
+
+.lab-seg__item input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lab-seg__item span {
+  padding: 4px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lab-seg__item:hover span {
+  background: #f2f2f2;
+}
+
+.lab-seg__item input:checked + span {
+  background: var(--lab-accent);
+  color: #fff;
+}
+
+.lab-seg__item input:focus-visible + span {
+  outline: 2px solid var(--lab-accent);
+  outline-offset: -4px;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.lab-select,
+.lab-button {
+  min-height: 30px;
+  border: 1px solid var(--lab-border);
+  border-radius: 4px;
+  background: var(--lab-surface);
+  color: var(--lab-fg);
+  font: inherit;
+}
+
+.lab-select {
+  padding: 2px 6px;
+}
+
+.lab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lab-button:hover,
+.lab-select:hover {
+  border-color: #8a8a8a;
+}
+
+.lab-swap-icon {
+  transform: rotate(90deg);
+}
+
+.lab-share {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.lab-share__status {
+  color: var(--lab-muted);
+  font-size: 12px;
+}
+
+.lab-note {
+  margin: 6px 0 0;
+  color: var(--lab-muted);
+  font-size: 12px;
+}
+
+.lab-noscript {
+  margin: 16px;
+}
+
+/* ---------- 比較エリア ---------- */
+
+.lab-panes {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: safe center;
+  gap: 1px;
+  min-height: 420px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  outline: none;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--lab-surface);
+}
+
+.pane[hidden] {
+  display: none;
+}
+
+body[data-mode='compare'] .lab-panes[data-width='auto'] .pane {
+  min-width: var(--lab-compare-min);
+}
+
+.lab-panes:not([data-width='auto']) .pane {
+  flex: 0 0 auto;
+  width: var(--frame-width);
+}
+
+.lab-panes:not([data-width='auto']) .pane + .pane {
+  margin-left: 12px;
+}
+
+.pane__head {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px 12px;
+  border-bottom: 1px solid var(--lab-border);
+  background: #f7f7f7;
+  padding: 6px 12px;
+}
+
+.pane__meta {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas:
+    'side name link'
+    'summary summary summary';
+  align-items: baseline;
+  column-gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pane__side {
+  grid-area: side;
+  align-self: center;
+  border: 1px solid var(--lab-fg);
+  border-radius: 2px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pane__name {
+  grid-area: name;
+  margin: 0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pane__link {
+  grid-area: link;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  justify-self: start;
+  color: var(--lab-fg);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.pane__summary {
+  grid-area: summary;
+  display: -webkit-box;
+  margin: 2px 0 0;
+  overflow: hidden;
+  color: var(--lab-muted);
+  font-size: 12px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* 左右比較ではサンプル画面の上端を揃えるため、説明文の高さを 2 行分に固定する */
+body[data-mode='compare'] .pane__summary {
+  min-height: 3em;
+}
+
+.pane__traits {
+  flex: none;
+}
+
+.pane__traits summary {
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pane__trait-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  max-height: 60vh;
+  margin: 0;
+  overflow: auto;
+  border-bottom: 1px solid var(--lab-border);
+  background: var(--lab-surface);
+  padding: 8px 12px 12px;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.12);
+}
+
+.pane__trait-list > div {
+  display: grid;
+  grid-template-columns: 9em 1fr;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.pane__trait-list dt {
+  font-weight: 700;
+}
+
+.pane__trait-list dd {
+  margin: 0;
+}
+
+/* サンプル画面の枠。position: fixed の要素を枠内に閉じ込め、コンテナクエリの基準にする */
+.pane__frame {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  container: frame / inline-size;
+  contain: layout paint;
+}
+
+.pane__scroll {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.pane__root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane__root > * {
+  flex: 1 0 auto;
+}
+
+.lab-narrow-only {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+  .lab-wide-only {
+    display: none !important;
+  }
+
+  .lab-field.lab-narrow-only {
+    display: flex !important;
+  }
+
+  span.lab-narrow-only {
+    display: inline !important;
+  }
+
+  .lab-bar {
+    padding: 6px 12px;
+  }
+
+  .lab-bar__row {
+    gap: 6px 12px;
+  }
+
+  .lab-title__sub {
+    display: none;
+  }
+
+  .lab-controls {
+    order: 2;
+    flex-basis: 100%;
+    gap: 6px 12px;
+  }
+
+  .lab-note {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+
+  .lab-share__status:empty {
+    display: none;
+  }
+
+  .pane__trait-list > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
