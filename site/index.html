@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design Lab — デザインシステム比較</title>
+    <meta
+      name="description"
+      content="同じ申請一覧画面を複数のデザインシステムの考え方で表示し、情報密度・ナビゲーション・テーブル・入力・操作の違いを比較するサイト"
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <link rel="stylesheet" href="assets/css/designs/dads.css" />
+    <link rel="stylesheet" href="assets/css/designs/carbon.css" />
+    <link rel="stylesheet" href="assets/css/designs/fluent.css" />
+    <link rel="stylesheet" href="assets/css/designs/govuk.css" />
+    <link rel="stylesheet" href="assets/css/designs/uswds.css" />
+    <link rel="stylesheet" href="assets/css/designs/plain.css" />
+    <script type="module" src="assets/js/main.js"></script>
+  </head>
+  <body data-mode="single">
+    <a class="lab-skip" href="#lab-panes">サンプル画面へ移動</a>
+    <header class="lab-bar">
+      <div class="lab-bar__row">
+        <h1 class="lab-title">Design Lab<span class="lab-title__sub">デザインシステム比較</span></h1>
+        <form class="lab-controls" id="lab-controls" aria-label="比較の設定"></form>
+        <div class="lab-share">
+          <button type="button" class="lab-button" id="lab-copy">URLをコピー</button>
+          <span class="lab-share__status" id="lab-copy-status" role="status"></span>
+        </div>
+      </div>
+      <p class="lab-note">
+        <span class="lab-wide-only">各デザインシステムの公開ドキュメントの考え方を参考にした比較用の独自実装です。公式コンポーネントの再現や準拠・適合を示すものではありません。自治体・申請データはすべて架空です。</span>
+        <span class="lab-narrow-only">公開ドキュメントを参考にした比較用の独自実装です（公式準拠ではありません）。データは架空です。</span>
+      </p>
+    </header>
+    <main class="lab-panes" id="lab-panes" tabindex="-1">
+      <noscript><p class="lab-noscript">このサイトの表示には JavaScript が必要です。</p></noscript>
+    </main>
+    <div class="visually-hidden" id="lab-live" aria-live="polite"></div>
+  </body>
+</html>

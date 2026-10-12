@@ -1,0 +1,734 @@
+/* GOV.UK Design System（govuk-frontend v6 の配色）の考え方を参考にした独自スタイル。
+   GDS Transport は gov.uk ドメイン専用の書体のため使わず、Arial 系で代替する。 */
+
+.ds-govuk {
+  --gvk-text: #0b0c0c;
+  --gvk-secondary-text: #484949;
+  --gvk-brand: #1d70b8;
+  --gvk-link: #1a65a6;
+  --gvk-link-hover: #0f385c;
+  --gvk-border: #cecece;
+  --gvk-input-border: #0b0c0c;
+  --gvk-focus: #fd0;
+  --gvk-surface: #f4f8fb;
+  --gvk-surface-border: #8eb8dc;
+  --gvk-button: #0f7a52;
+  --gvk-button-hover: #0b5c3e;
+  --gvk-button-shadow: #083d29;
+
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--gvk-text);
+  font-family: arial, 'Hiragino Sans', 'Yu Gothic UI', Meiryo, sans-serif;
+  font-size: 19px;
+  line-height: 1.32;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ds-govuk *,
+.ds-govuk *::before,
+.ds-govuk *::after {
+  box-sizing: border-box;
+}
+
+.gvk-width-container {
+  max-width: 960px;
+  margin: 0 30px;
+}
+
+@container frame (min-width: 1020px) {
+  .gvk-width-container {
+    margin: 0 auto;
+  }
+}
+
+/* ---------- リンクとフォーカス ---------- */
+
+.gvk-link,
+.gvk-link-button,
+.gvk-back-link,
+.gvk-service-nav__link,
+.gvk-header__logo {
+  text-decoration: underline;
+  text-decoration-thickness: max(1px, 0.0625rem);
+  text-underline-offset: 0.15em;
+}
+
+.gvk-link,
+.gvk-link-button,
+.gvk-service-nav__link {
+  color: var(--gvk-link);
+}
+
+.gvk-link:hover,
+.gvk-link-button:hover,
+.gvk-service-nav__link:hover {
+  color: var(--gvk-link-hover);
+  text-decoration-thickness: max(3px, 0.1875rem);
+}
+
+.ds-govuk :is(a, .gvk-link-button, .gvk-sort, .gvk-service-nav__toggle):focus-visible {
+  outline: 3px solid transparent;
+  background-color: var(--gvk-focus);
+  box-shadow: 0 -2px var(--gvk-focus), 0 4px var(--gvk-text);
+  color: var(--gvk-text);
+  text-decoration: none;
+}
+
+.gvk-link-button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ---------- ヘッダーとサービスナビゲーション ---------- */
+
+.gvk-header {
+  background: var(--gvk-brand);
+  color: #fff;
+}
+
+.gvk-header .gvk-width-container {
+  padding: 14px 0 12px;
+}
+
+.gvk-header__logo {
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.gvk-header__logo:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+}
+
+.gvk-service-nav {
+  border-bottom: 1px solid var(--gvk-surface-border);
+  background: var(--gvk-surface);
+}
+
+.gvk-service-nav__container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 30px;
+}
+
+.gvk-service-nav__name {
+  padding: 15px 0;
+  font-weight: 700;
+}
+
+.gvk-service-nav__toggle {
+  display: none;
+  margin: 10px 0;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--gvk-link);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gvk-service-nav__toggle::after {
+  content: '';
+  display: inline-block;
+  margin-left: 5px;
+  border-style: solid;
+  border-width: 8.66px 5px 0;
+  border-color: currentColor transparent transparent;
+}
+
+.gvk-service-nav__toggle[aria-expanded='true']::after {
+  border-width: 0 5px 8.66px;
+  border-color: transparent transparent currentColor;
+}
+
+.gvk-service-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 30px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gvk-service-nav__item {
+  padding: 15px 0;
+  border: 0 solid var(--gvk-link);
+}
+
+.gvk-service-nav__item--active {
+  padding-bottom: 10px;
+  border-bottom-width: 5px;
+}
+
+/* ---------- 本文 ---------- */
+
+.gvk-page {
+  flex: 1 0 auto;
+}
+
+.gvk-main {
+  padding: 40px 0 60px;
+}
+
+.gvk-back-link {
+  position: relative;
+  display: inline-block;
+  margin-top: 15px;
+  padding-left: 14px;
+  color: var(--gvk-text);
+  font-size: 16px;
+}
+
+.gvk-back-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 7px;
+  height: 7px;
+  margin: auto 0;
+  border: solid var(--gvk-secondary-text);
+  border-width: 1px 1px 0 0;
+  transform: rotate(225deg);
+}
+
+.gvk-back-link + .gvk-main {
+  padding-top: 25px;
+}
+
+.gvk-caption-l {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--gvk-secondary-text);
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.gvk-heading-xl,
+.gvk-heading-l,
+.gvk-heading-m {
+  margin: 0;
+  font-weight: 700;
+}
+
+.gvk-heading-xl {
+  margin-bottom: 50px;
+  font-size: 48px;
+  line-height: 1.04;
+}
+
+.gvk-heading-l {
+  margin-bottom: 30px;
+  font-size: 36px;
+  line-height: 1.11;
+}
+
+.gvk-heading-m {
+  margin-bottom: 20px;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.gvk-body {
+  margin: 0 0 20px;
+}
+
+.gvk-body-s {
+  margin: -10px 0 20px;
+  font-size: 16px;
+}
+
+.gvk-secondary {
+  color: var(--gvk-secondary-text);
+}
+
+.gvk-list {
+  margin: 0 0 20px;
+  padding-left: 20px;
+}
+
+.gvk-grid-row {
+  display: flex;
+  gap: 30px;
+}
+
+.gvk-grid-column-one-quarter {
+  flex: 0 0 calc(25% - 15px);
+  min-width: 0;
+}
+
+.gvk-grid-column-three-quarters {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ---------- フォーム ---------- */
+
+.gvk-filter {
+  margin: 0;
+}
+
+.gvk-form-group {
+  margin-bottom: 30px;
+}
+
+.gvk-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.gvk-label--s {
+  font-weight: 700;
+}
+
+.gvk-hint {
+  margin-bottom: 15px;
+  color: var(--gvk-secondary-text);
+}
+
+.gvk-input {
+  width: 100%;
+  height: 40px;
+  border: 2px solid var(--gvk-input-border);
+  border-radius: 0;
+  padding: 5px;
+  font: inherit;
+  appearance: none;
+}
+
+.gvk-input:focus {
+  outline: 3px solid var(--gvk-focus);
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 2px var(--gvk-input-border);
+}
+
+.gvk-fieldset {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.gvk-fieldset__legend {
+  margin-bottom: 10px;
+  padding: 0;
+  font-weight: 700;
+}
+
+.gvk-radios__item {
+  position: relative;
+  display: flex;
+  margin-bottom: 0;
+}
+
+.gvk-radios__input {
+  z-index: 1;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: 0 0 0 -10px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gvk-radios__label {
+  position: relative;
+  align-self: center;
+  margin: 0;
+  padding: 7px 15px 7px 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.gvk-radios__label::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: -34px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.gvk-radios__label::after {
+  content: '';
+  position: absolute;
+  top: 17px;
+  left: -27px;
+  width: 0;
+  height: 0;
+  border: 5px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.gvk-radios__input:checked + .gvk-radios__label::after {
+  opacity: 1;
+}
+
+.gvk-radios__input:focus-visible + .gvk-radios__label::before {
+  border-width: 4px;
+  box-shadow: 0 0 0 4px var(--gvk-focus);
+}
+
+.gvk-radios__item:hover .gvk-radios__label::before {
+  box-shadow: 0 0 0 10px #cecece;
+}
+
+/* ---------- ボタン ---------- */
+
+.gvk-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 15px;
+}
+
+.gvk-button {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 32px;
+  border: 2px solid transparent;
+  border-radius: 0;
+  background: var(--gvk-button);
+  padding: 8px 10px 7px;
+  box-shadow: 0 2px 0 var(--gvk-button-shadow);
+  color: #fff;
+  font: inherit;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.gvk-button:hover {
+  background: var(--gvk-button-hover);
+}
+
+.gvk-button:active {
+  top: 2px;
+  box-shadow: none;
+}
+
+.gvk-button--secondary {
+  background: #f3f3f3;
+  box-shadow: 0 2px 0 #858686;
+  color: var(--gvk-text);
+}
+
+.gvk-button--secondary:hover {
+  background: #cecece;
+}
+
+.ds-govuk .gvk-button:focus-visible {
+  outline: 3px solid transparent;
+  border-color: var(--gvk-focus);
+  background: var(--gvk-focus);
+  box-shadow: 0 2px 0 var(--gvk-text);
+  color: var(--gvk-text);
+}
+
+/* ---------- 結果と表 ---------- */
+
+.gvk-results-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 20px;
+}
+
+.gvk-results-head .gvk-button {
+  margin-bottom: 20px;
+}
+
+.gvk-table-wrap {
+  position: relative;
+  overflow-x: auto;
+}
+
+.gvk-table {
+  width: 100%;
+  margin-bottom: 40px;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.gvk-table__header,
+.gvk-table__cell {
+  border-bottom: 1px solid var(--gvk-border);
+  padding: 10px 20px 10px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.gvk-table__header:last-child,
+.gvk-table__cell:last-child {
+  padding-right: 0;
+}
+
+.gvk-table__header {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gvk-nowrap {
+  white-space: nowrap;
+}
+
+.gvk-sort {
+  position: relative;
+  border: 0;
+  background: none;
+  padding: 0 14px 0 0;
+  color: var(--gvk-link);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gvk-sort:hover {
+  color: var(--gvk-link-hover);
+  text-decoration: underline;
+}
+
+.gvk-sort__arrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.gvk-sort__arrow--none::before,
+.gvk-sort__arrow--none::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  border-style: solid;
+}
+
+.gvk-sort__arrow--none::before {
+  top: -7px;
+  border-width: 0 4px 5px;
+  border-color: transparent transparent currentColor;
+}
+
+.gvk-sort__arrow--none::after {
+  top: 2px;
+  border-width: 5px 4px 0;
+  border-color: currentColor transparent transparent;
+}
+
+.gvk-sort__arrow--asc {
+  margin-top: -4px;
+  border-width: 0 5px 8px;
+  border-color: transparent transparent currentColor;
+}
+
+.gvk-sort__arrow--desc {
+  margin-top: -4px;
+  border-width: 8px 5px 0;
+  border-color: currentColor transparent transparent;
+}
+
+.gvk-tag {
+  display: inline-block;
+  max-width: 160px;
+  border-radius: 1px;
+  background: #d2e2f1;
+  padding: 2px 8px 3px;
+  color: #0f385c;
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.gvk-tag--purple {
+  background: #ddd6ec;
+  color: #2a1950;
+}
+
+.gvk-tag--orange {
+  background: #fde4d7;
+  color: #7a3c1c;
+}
+
+.gvk-tag--green {
+  background: #cfe4dc;
+  color: #083d29;
+}
+
+.gvk-tag--red {
+  background: #f4d7d7;
+  color: #651b1b;
+}
+
+.gvk-summary-list {
+  margin: 0 0 30px;
+}
+
+.gvk-summary-list__row {
+  display: flex;
+  border-bottom: 1px solid var(--gvk-border);
+}
+
+.gvk-summary-list__key,
+.gvk-summary-list__value {
+  margin: 0;
+  padding: 10px 20px 10px 0;
+}
+
+.gvk-summary-list__key {
+  flex: 0 0 30%;
+  font-weight: 700;
+}
+
+/* ---------- 通知バナー ---------- */
+
+.gvk-notification-banner {
+  margin-bottom: 40px;
+  border: 5px solid var(--gvk-brand);
+  background: var(--gvk-brand);
+}
+
+.gvk-notification-banner__header {
+  padding: 2px 20px 5px;
+  color: #fff;
+}
+
+.gvk-notification-banner__title {
+  margin: 0;
+  font-size: 19px;
+}
+
+.gvk-notification-banner__content {
+  background: #fff;
+  padding: 20px;
+}
+
+.gvk-notification-banner__heading {
+  margin: 0 0 15px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.gvk-notification-banner__content > :last-child {
+  margin-bottom: 0;
+}
+
+.gvk-footer {
+  border-top: 1px solid var(--gvk-surface-border);
+  background: var(--gvk-surface);
+  padding: 25px 0;
+  font-size: 16px;
+}
+
+.gvk-footer p {
+  margin: 0;
+}
+
+/* ---------- 狭い幅（GOV.UK の desktop ブレークポイント未満で 1 列に） ---------- */
+
+@container frame (max-width: 899px) {
+  .gvk-grid-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .gvk-filter {
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--gvk-border);
+  }
+
+  .gvk-radios {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+  }
+}
+
+@container frame (max-width: 640px) {
+  .ds-govuk {
+    font-size: 16px;
+  }
+
+  .gvk-width-container {
+    margin: 0 15px;
+  }
+
+  .gvk-header__logo {
+    font-size: 24px;
+  }
+
+  .gvk-service-nav__toggle {
+    display: inline-block;
+  }
+
+  .gvk-service-nav__wrapper {
+    display: none;
+    flex-basis: 100%;
+  }
+
+  .gvk-service-nav__wrapper.is-open {
+    display: block;
+  }
+
+  .gvk-service-nav__list {
+    flex-direction: column;
+    padding-bottom: 10px;
+  }
+
+  .gvk-service-nav__item {
+    padding: 5px 0;
+  }
+
+  .gvk-service-nav__item--active {
+    margin-left: -15px;
+    border-bottom-width: 0;
+    border-left-width: 5px;
+    padding-left: 10px;
+  }
+
+  .gvk-main {
+    padding: 20px 0 40px;
+  }
+
+  .gvk-heading-xl {
+    margin-bottom: 30px;
+    font-size: 32px;
+  }
+
+  .gvk-heading-l {
+    font-size: 27px;
+  }
+
+  .gvk-caption-l {
+    font-size: 18px;
+  }
+
+  .gvk-button {
+    width: 100%;
+  }
+
+  .gvk-summary-list__row {
+    flex-direction: column;
+  }
+
+  .gvk-summary-list__key {
+    padding-bottom: 0;
+  }
+}
