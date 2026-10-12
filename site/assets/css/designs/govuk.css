@@ -39,6 +39,7 @@
 
 @container frame (min-width: 1020px) {
   .gvk-width-container {
+    width: 100%;
     margin: 0 auto;
   }
 }
@@ -730,5 +731,252 @@
 
   .gvk-summary-list__key {
     padding-bottom: 0;
+  }
+}
+
+/* ---------- 新規申請フォーム ---------- */
+
+.gvk-form-column {
+  max-width: 640px;
+}
+
+.gvk-form-group {
+  margin-bottom: 30px;
+}
+
+.gvk-form-group--error {
+  padding-left: 15px;
+  border-left: 5px solid #ca3535;
+}
+
+.gvk-label--m {
+  font-size: 24px;
+}
+
+.gvk-form-group .gvk-hint {
+  margin-bottom: 15px;
+}
+
+.gvk-error-message {
+  display: block;
+  margin: 0 0 15px;
+  color: #ca3535;
+  font-weight: 700;
+}
+
+.gvk-input--w30 {
+  max-width: 29.5em;
+}
+
+.gvk-input--w20 {
+  max-width: 20.5em;
+}
+
+.gvk-input--w10 {
+  max-width: 11.5em;
+}
+
+.gvk-input.gvk-input--error,
+.gvk-select.gvk-select--error,
+.gvk-textarea.gvk-textarea--error {
+  border-color: #ca3535;
+}
+
+.gvk-select,
+.gvk-textarea {
+  display: block;
+  max-width: 100%;
+  border: 2px solid var(--gvk-input-border);
+  border-radius: 0;
+  background: #fff;
+  padding: 5px;
+  color: var(--gvk-text);
+  font: inherit;
+}
+
+.gvk-select {
+  min-width: 11.5em;
+  height: 40px;
+}
+
+.gvk-textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+}
+
+.gvk-select:focus,
+.gvk-textarea:focus {
+  outline: 3px solid var(--gvk-focus);
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 2px var(--gvk-input-border);
+}
+
+.gvk-fieldset {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.gvk-fieldset__legend {
+  display: table;
+  max-width: 100%;
+  margin-bottom: 10px;
+  padding: 0;
+  font-weight: 700;
+}
+
+.gvk-checkboxes__item {
+  position: relative;
+  display: flex;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.gvk-checkboxes__item .gvk-checkboxes__input {
+  margin-left: 0;
+}
+
+.gvk-checkboxes__input {
+  z-index: 1;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: 0 0 0 -2px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gvk-checkboxes__label {
+  position: relative;
+  align-self: center;
+  margin: 0;
+  padding: 7px 15px 7px 4px;
+  cursor: pointer;
+}
+
+.gvk-checkboxes__label::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: -42px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid currentColor;
+  background: #fff;
+}
+
+.gvk-checkboxes__label::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: -32px;
+  width: 22px;
+  height: 12px;
+  border: solid currentColor;
+  border-width: 0 0 5px 5px;
+  opacity: 0;
+  transform: rotate(-45deg);
+}
+
+.gvk-checkboxes__input:checked + .gvk-checkboxes__label::after {
+  opacity: 1;
+}
+
+.gvk-checkboxes__input:focus-visible + .gvk-checkboxes__label::before {
+  border-width: 4px;
+  box-shadow: 0 0 0 4px var(--gvk-focus);
+}
+
+.gvk-checkboxes__item:hover .gvk-checkboxes__label::before {
+  box-shadow: 0 0 0 10px #cecece;
+}
+
+.gvk-error-summary {
+  margin-bottom: 30px;
+  border: 5px solid #ca3535;
+  padding: 20px;
+}
+
+.gvk-error-summary:focus {
+  outline: 3px solid var(--gvk-focus);
+}
+
+.gvk-error-summary__title {
+  margin: 0 0 15px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.gvk-error-summary__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-weight: 700;
+}
+
+.gvk-error-summary__list a {
+  color: #ca3535;
+}
+
+.gvk-summary-list__value {
+  flex: 1 1 auto;
+}
+
+.gvk-summary-list__actions {
+  flex: 0 0 20%;
+  margin: 0;
+  padding: 10px 0 10px 20px;
+  text-align: right;
+}
+
+.gvk-pre {
+  white-space: pre-wrap;
+}
+
+.gvk-panel {
+  margin-bottom: 30px;
+  border: 5px solid transparent;
+  background: var(--gvk-button);
+  padding: 35px;
+  color: #fff;
+  text-align: center;
+}
+
+.gvk-panel__title {
+  margin: 0 0 30px;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.04;
+}
+
+.gvk-panel__body {
+  font-size: 36px;
+  line-height: 1.11;
+}
+
+@container frame (max-width: 640px) {
+  .gvk-panel__title {
+    font-size: 32px;
+  }
+
+  .gvk-panel__body {
+    font-size: 24px;
+  }
+
+  .gvk-panel {
+    padding: 20px;
+  }
+
+  .gvk-summary-list__actions {
+    flex: none;
+    padding: 0 0 10px;
+    text-align: left;
+  }
+
+  .gvk-button-group .gvk-button {
+    width: 100%;
   }
 }

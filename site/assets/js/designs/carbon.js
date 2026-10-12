@@ -2,9 +2,10 @@
 // 黒い UI シェルとサイドナビ、ツールバー一体型のデータテーブル、角のない 48px ボタン、
 // 展開行による詳細表示、トースト通知など、業務アプリ向けの高密度な構成。
 
-import { html } from '../html.js';
+import { attr, html } from '../html.js';
 import { icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { formPage } from './carbon.form.js';
 
 const TAG_COLORS = { info: 'blue', progress: 'purple', warning: 'magenta', success: 'green', error: 'red' };
 
@@ -23,7 +24,7 @@ function shellHeader(model, ctx) {
       >
         ${icon(open ? 'close' : 'menu', { size: 20, stroke: 1.5 })}
       </button>
-      <a class="cds-header__name" href="${ctx.href({ detail: null })}" data-action="nav" data-target="applications">
+      <a class="cds-header__name" href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">
         <span class="cds-header__prefix">${model.system.org}</span>${model.system.name}
       </a>
       <div class="cds-header__global">
@@ -46,10 +47,10 @@ function sideNav(model, ctx) {
             <li>
               <a
                 class="cds-sidenav__link"
-                href="${item.current ? ctx.href({ detail: null }) : '#'}"
+                href="${ctx.navHref(item)}"
                 data-action="nav"
                 data-target="${item.id}"
-                ${item.current ? 'aria-current="page"' : ''}
+                ${attr('aria-current', item.current && 'page')}
                 >${icon(item.icon, { size: 16, stroke: 1.5 })}<span>${item.label}</span></a
               >
             </li>`,
@@ -221,6 +222,13 @@ export default {
     actions: '角丸なし・高さ48pxのボタン。テキストは左寄せ、アイコンは右端。主要操作はツールバー右端に置く。',
     hierarchy: 'パンくず → ページ見出し → テーブルコンテナ（見出し・ツールバー・表）。通知は右上のトーストで重ねて表示する。',
   },
+  formTraits: {
+    layout: '2カラムのグリッド。「申請者」「申請内容」「確認事項」のフィールドセットで区切り、申請内容と同意は全幅。最大幅は672px。',
+    label: 'ラベルは欄の上の小さな文字。入力例は欄の中（プレースホルダー）、補足は欄の下のヘルパーテキスト。必須は無印で、任意の項目だけ「（任意）」と示す。',
+    errors: '欄を赤い2pxの枠で囲み、右端に警告アイコン。ヘルパーテキストはエラー文に置き換わる。上部にインライン通知（件数）を出し、最初のエラー項目へフォーカスする。',
+    confirm: '進行インジケーター（入力・確認・完了）。確認は「項目／入力内容」の構造化リスト。左右が隙間なく並ぶ高さ64pxのボタンセット（左：修正する、右：申請する）。',
+  },
+  errorFocus: 'field',
   render(model, ctx) {
     return html`
       <div class="ds-carbon">
@@ -231,11 +239,15 @@ export default {
             <nav class="cds-breadcrumb" aria-label="パンくずリスト">
               <ol>
                 <li><a href="#" data-action="nav" data-target="home" data-label="ホーム">ホーム</a></li>
-                <li><span aria-current="page">申請一覧</span></li>
+                ${model.screen === 'form'
+                  ? html`<li><a href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">申請一覧</a></li>
+                      <li><span aria-current="page">新規申請</span></li>`
+                  : html`<li><span aria-current="page">申請一覧</span></li>`}
               </ol>
             </nav>
-            <h2 class="cds-page-title" tabindex="-1" data-focus="heading">申請一覧</h2>
-            ${dataTable(model, ctx)}
+            ${model.screen === 'form'
+              ? formPage(model, ctx)
+              : html`<h2 class="cds-page-title" tabindex="-1" data-focus="heading">申請一覧</h2> ${dataTable(model, ctx)}`}
           </div>
         </div>
         ${toast(model)}

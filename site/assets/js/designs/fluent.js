@@ -2,9 +2,10 @@
 // ブランド色のアプリヘッダーと左のナビゲーションドロワー、影のあるカード面、
 // コマンドバー＋タブ型フィルター、右から開くオーバーレイドロワーによる詳細表示が特徴。
 
-import { html } from '../html.js';
+import { attr, html } from '../html.js';
 import { TONE_ICONS, icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { formPage } from './fluent.form.js';
 
 const BADGE_COLORS = { info: 'brand', progress: 'informative', warning: 'warning', success: 'success', error: 'danger' };
 
@@ -23,7 +24,7 @@ function appHeader(model, ctx) {
       >
         ${icon('menu', { size: 20, stroke: 1.5 })}
       </button>
-      <a class="fui-appbar__title" href="${ctx.href({ detail: null })}" data-action="nav" data-target="applications">
+      <a class="fui-appbar__title" href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">
         ${model.system.name}<span class="fui-appbar__org">${model.system.org}</span>
       </a>
       <button
@@ -49,10 +50,10 @@ function navDrawer(model, ctx) {
             <li>
               <a
                 class="fui-nav__item"
-                href="${item.current ? ctx.href({ detail: null }) : '#'}"
+                href="${ctx.navHref(item)}"
                 data-action="nav"
                 data-target="${item.id}"
-                ${item.current ? 'aria-current="page"' : ''}
+                ${attr('aria-current', item.current && 'page')}
                 >${icon(item.icon, { size: 20, stroke: 1.5 })}<span>${item.label}</span></a
               >
             </li>`,
@@ -211,26 +212,36 @@ export default {
     actions: '高さ32px・角丸4pxの小ぶりなボタン。主要操作はコマンドバー先頭、行の操作は背景のない Subtle ボタン。',
     hierarchy: 'ページ見出しの下に、コマンドバー・フィルター・表をまとめた1枚のカード。詳細は右から開くドロワーで一覧に重ねる。',
   },
+  formTraits: {
+    layout: '1枚の白いカードの中に2カラム。「申請者」「申請内容」「確認事項」を小見出しで区切る。最大幅は880px。',
+    label: 'ラベルの右に赤い「＊」で必須を示す。補足と入力例は欄の下の小さなヒント。入力欄は高さ32px・下辺が濃い線。',
+    errors: '欄の赤枠に加え、欄の下に警告アイコン付きの検証メッセージ（ヒントの上）を表示。上部の MessageBar に件数と「最初の項目へ」ボタンを置く。',
+    confirm: '見出しの横に「手順 n / 3」。確認はカード内の項目名・値の2列で、左寄せの「申請する」（主）と「戻って修正」（副）。',
+  },
+  errorFocus: 'field',
   render(model, ctx) {
+    const overlay = model.screen === 'list' && model.detail;
     return html`
       <div class="ds-fluent">
-        <div class="fui-app" ${model.detail ? 'inert' : ''}>
+        <div class="fui-app" ${overlay ? 'inert' : ''}>
         ${appHeader(model, ctx)}
         <div class="fui-body">
           ${navDrawer(model, ctx)}
           <div class="fui-content">
             ${messageBar(model)}
-            <div class="fui-page-head">
-              <h2 class="fui-title" tabindex="-1" data-focus="heading">申請一覧</h2>
-              <p class="fui-caption">${countText(model)}を表示</p>
-            </div>
-            <section class="fui-card" aria-label="申請一覧">
-              ${commandBar(model, ctx)} ${filterTabs(model, ctx)} ${dataGrid(model)}
-            </section>
+            ${model.screen === 'form'
+              ? formPage(model, ctx)
+              : html`<div class="fui-page-head">
+                    <h2 class="fui-title" tabindex="-1" data-focus="heading">申請一覧</h2>
+                    <p class="fui-caption">${countText(model)}を表示</p>
+                  </div>
+                  <section class="fui-card" aria-label="申請一覧">
+                    ${commandBar(model, ctx)} ${filterTabs(model, ctx)} ${dataGrid(model)}
+                  </section>`}
           </div>
         </div>
         </div>
-        ${drawer(model, ctx)}
+        ${model.screen === 'list' ? drawer(model, ctx) : ''}
       </div>`;
   },
 };

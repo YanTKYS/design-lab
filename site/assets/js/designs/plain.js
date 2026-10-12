@@ -1,8 +1,9 @@
 // 装飾を抑えた素の HTML。ブラウザ標準のフォーム部品と表を最小限の CSS で整えるだけにする。
 // 他のデザインと比べたときの「基準線」として使う。
 
-import { html } from '../html.js';
+import { attr, html } from '../html.js';
 import { countText, formatDate } from '../query.js';
+import { formPage } from './plain.form.js';
 
 function notice(model) {
   if (!model.notice) return '';
@@ -85,18 +86,25 @@ export default {
     actions: 'OS／ブラウザ標準のボタン。主要・副次の区別は配置だけで、見た目の差はない。',
     hierarchy: '見出し → 操作 → 検索 → 件数 → 表の文書順そのまま。詳細は表の上に差し込む。',
   },
+  formTraits: {
+    layout: 'fieldset と legend で区切るだけの縦1列。ブラウザ標準の部品の既定の見た目のまま。',
+    label: 'ラベルの後ろに「（必須）」「（任意）」を文字で記載。補足は small の小さな文字。',
+    errors: '上部に件数と一覧（role="alert"）、欄の後ろに「エラー：…」の赤文字。最初のエラー項目へフォーカスを移す。',
+    confirm: '「手順 n / 3」の文字と、dl の一覧。標準のボタンを並べるだけ。',
+  },
+  errorFocus: 'field',
   render(model, ctx) {
     const kwId = `${ctx.uid}-plain-kw`;
     const stId = `${ctx.uid}-plain-st`;
     return html`
       <div class="ds-plain">
         <header>
-          <p class="plain-system"><a href="${ctx.href({ detail: null })}" data-action="nav" data-target="applications">${model.system.org} ${model.system.name}</a></p>
+          <p class="plain-system"><a href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">${model.system.org} ${model.system.name}</a></p>
           <nav aria-label="メニュー">
             <ul>
               ${model.nav.map(
                 (item) => html`<li>
-                  <a href="${item.current ? ctx.href({ detail: null }) : '#'}" data-action="nav" data-target="${item.id}" ${item.current ? 'aria-current="page"' : ''}
+                  <a href="${ctx.navHref(item)}" data-action="nav" data-target="${item.id}" ${attr('aria-current', item.current && 'page')}
                     >${item.label}</a
                   >
                 </li>`,
@@ -106,24 +114,26 @@ export default {
         </header>
         <hr />
         ${notice(model)}
-        <h2 tabindex="-1" data-focus="heading">申請一覧</h2>
-        <p><button type="button" data-action="new">新規申請</button></p>
-        <form role="search" aria-label="申請の検索">
-          <p>
-            <label for="${kwId}">キーワード</label>
-            <input id="${kwId}" type="search" data-bind="keyword" value="${model.keyword}" autocomplete="off" />
-            <button type="submit">検索</button>
-          </p>
-          <p>
-            <label for="${stId}">処理状態</label>
-            <select id="${stId}" data-bind="status">
-              ${model.statusOptions.map((o) => html`<option value="${o.value}" ${o.selected ? 'selected' : ''}>${o.label}（${o.count}）</option>`)}
-            </select>
-            <button type="button" data-action="clear">条件をクリア</button>
-          </p>
-        </form>
-        <p>${countText(model)}</p>
-        ${detail(model, ctx)} ${table(model)}
+        ${model.screen === 'form'
+          ? formPage(model, ctx)
+          : html`<h2 tabindex="-1" data-focus="heading">申請一覧</h2>
+              <p><button type="button" data-action="new">新規申請</button></p>
+              <form role="search" aria-label="申請の検索">
+                <p>
+                  <label for="${kwId}">キーワード</label>
+                  <input id="${kwId}" type="search" data-bind="keyword" value="${model.keyword}" autocomplete="off" />
+                  <button type="submit">検索</button>
+                </p>
+                <p>
+                  <label for="${stId}">処理状態</label>
+                  <select id="${stId}" data-bind="status">
+                    ${model.statusOptions.map((o) => html`<option value="${o.value}" ${o.selected ? 'selected' : ''}>${o.label}（${o.count}）</option>`)}
+                  </select>
+                  <button type="button" data-action="clear">条件をクリア</button>
+                </p>
+              </form>
+              <p>${countText(model)}</p>
+              ${detail(model, ctx)} ${table(model)}`}
         <hr />
         <footer><small>© ${model.system.org}（架空の自治体）</small></footer>
       </div>`;

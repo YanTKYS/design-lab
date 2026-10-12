@@ -201,6 +201,22 @@ body {
   transform: rotate(90deg);
 }
 
+.lab-formbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin-top: 4px;
+}
+
+.lab-formbar[hidden] {
+  display: none;
+}
+
+.lab-formbar .lab-note {
+  margin: 0;
+}
+
 .lab-share {
   display: flex;
   align-items: center;
