@@ -176,7 +176,8 @@ test('一覧への引き継ぎ：条件だけを渡し、ダッシュボード�
   assert.deepEqual(next.scope, { period: 'q2', dept: '市民課', type: '', group: '' });
   assert.equal(next.status, 'approved');
   assert.equal(next.keyword, '', '一覧のキーワードは集計と一致させるため空にする');
-  assert.equal(listStateFor(listState({ period: DEFAULT_PERIOD }), {}).scope.period, '', '既定の期間は「全期間」として扱い、条件に出さない');
+  assert.equal(listStateFor(listState({ period: DEFAULT_PERIOD }), {}).scope.period, DEFAULT_PERIOD, '既定の期間でも明示的に引き継ぐ');
+  assert.equal(buildModel({ ...listState({}), ...listStateFor(listState({}), {}) }).scope.items[0].key, 'period', '既定の期間も条件として表示する');
   assert.equal('period' in next && next.period !== undefined, false, 'ダッシュボードの集計条件（period / dept）は返さない');
   assert.deepEqual(listStateFor(state, { type: '犬の登録申請' }).scope.type, '犬の登録申請');
   assert.deepEqual(listStateFor(state, { group: 'pending' }).scope.group, 'pending');
@@ -207,4 +208,16 @@ test('ビューモデル：指標・定義・リンクがそろう', () => {
   assert.equal(d.months.reduce((n, m) => n + m.count, 0), d.total);
   assert.ok(d.months.every((m) => m.ratio >= 0 && m.ratio <= 1));
   assert.equal(Math.max(...d.months.map((m) => m.ratio)), 1, '最大の月が 1');
+});
+
+test('将来、集計期間外（別年度）の申請が増えても、ダッシュボードから開く一覧は集計と同じ範囲になる', () => {
+  const future = { ...APPLICATIONS[0], id: '2027-00001', receivedAt: '2027-05-10', status: 'received' };
+  const apps = [...APPLICATIONS, future];
+  const state = { ...listState({}), screen: 'dashboard' };
+  const agg = aggregate(apps, { period: DEFAULT_PERIOD });
+  assert.equal(agg.total, APPLICATIONS.length, '期間外の申請は集計に含まれない');
+  // 一覧側：既定の期間でも期間を引き継ぐため、期間外の申請は含まれない
+  const scope = listStateFor(state, {}).scope;
+  assert.equal(filterByScope(apps, scope).length, agg.total);
+  assert.equal(filterByScope(apps, { ...scope, group: 'pending' }).length, agg.pending);
 });

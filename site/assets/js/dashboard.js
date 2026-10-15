@@ -129,10 +129,12 @@ export function aggregate(apps, { period = DEFAULT_PERIOD, dept = '' } = {}) {
 /**
  * ダッシュボードの現在の集計条件と、指標の絞り込み（status / group / type）から、
  * 一覧画面に設定する状態を作る。表示対象が集計と一致するよう、一覧のキーワードは空にする。
+ * 期間・担当課は、既定値でもそのまま引き継ぐ。
  */
 export function listStateFor(state, { status = '', group = '', type = '' } = {}) {
   return {
-    scope: { period: state.period === DEFAULT_PERIOD ? '' : state.period, dept: state.dept, type, group },
+    // 既定の期間でも空にせず明示的に引き継ぐ（将来、別年度のデータが増えても集計と同じ範囲になる）
+    scope: { period: state.period, dept: state.dept, type, group },
     status,
     keyword: '',
     detail: null,
