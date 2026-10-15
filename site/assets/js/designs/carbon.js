@@ -5,6 +5,7 @@
 import { attr, html } from '../html.js';
 import { icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { dashboardPage } from './carbon.dashboard.js';
 import { formPage } from './carbon.form.js';
 
 const TAG_COLORS = { info: 'blue', progress: 'purple', warning: 'magenta', success: 'green', error: 'red' };
@@ -144,6 +145,17 @@ function detachedDetail(model) {
     </section>`;
 }
 
+/** ダッシュボードから引き継いだ絞り込み条件（タグ）と解除。 */
+function scopeNotice(model) {
+  if (!model.scope.active) return '';
+  return html`
+    <div class="cds-scope" data-scope>
+      <span class="cds-scope__label">引き継いだフィルター</span>
+      ${model.scope.items.map((i) => html`<span class="cds-tag cds-tag--filter" data-color="blue">${i.label}：${i.text}</span>`)}
+      <button type="button" class="cds-btn cds-btn--ghost" data-action="clear-scope">すべて解除</button>
+    </div>`;
+}
+
 function dataTable(model, ctx) {
   const searchId = `${ctx.uid}-cds-search`;
   const statusId = `${ctx.uid}-cds-status`;
@@ -185,7 +197,7 @@ function dataTable(model, ctx) {
           新規申請${icon('add', { size: 16, stroke: 1.5, className: 'cds-btn__icon' })}
         </button>
       </div>
-      ${detachedDetail(model)}
+      ${scopeNotice(model)} ${detachedDetail(model)}
       <div class="cds-data-table-content">
         <table class="cds-data-table">
           <thead>
@@ -228,6 +240,13 @@ export default {
     errors: '欄を赤い2pxの枠で囲み、右端に警告アイコン。ヘルパーテキストはエラー文に置き換わる。上部にインライン通知（件数）を出し、最初のエラー項目へフォーカスする。',
     confirm: '進行インジケーター（入力・確認・完了）。確認は「項目／入力内容」の構造化リスト。左右が隙間なく並ぶ高さ64pxのボタンセット（左：修正する、右：申請する）。',
   },
+  dashboardTraits: {
+    kpi: '指標は 1px の隙間だけで並ぶ薄いタイル（数値は32px・細字、ラベルと注記は12px）。各タイルの下端に一覧へのリンク。',
+    density: '本文14px・8px グリッドで詰めた高密度。タイトルとタイルの間も 8〜16px で、1 画面に指標とグラフ 4 面を収める。',
+    chart: '縦棒は細く小さい値ラベル、処理状況は中央に合計を置いたドーナツ＋凡例テーブル（件数・割合・リンク）、種別は小さな横棒。',
+    filter: 'ページ見出しの直下の 1 行のツールバーに、インラインのセレクト（対象期間・担当課）とリセット、基準日を置く。',
+    hierarchy: '見出し→ツールバー→指標タイル→2 列のタイルグリッド（月別／処理状況／種別／集計の定義）。面の区切りは枠線のみ。',
+  },
   errorFocus: 'field',
   render(model, ctx) {
     return html`
@@ -242,12 +261,16 @@ export default {
                 ${model.screen === 'form'
                   ? html`<li><a href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">申請一覧</a></li>
                       <li><span aria-current="page">新規申請</span></li>`
-                  : html`<li><span aria-current="page">申請一覧</span></li>`}
+                  : model.screen === 'dashboard'
+                    ? html`<li><span aria-current="page">ダッシュボード</span></li>`
+                    : html`<li><span aria-current="page">申請一覧</span></li>`}
               </ol>
             </nav>
             ${model.screen === 'form'
               ? formPage(model, ctx)
-              : html`<h2 class="cds-page-title" tabindex="-1" data-focus="heading">申請一覧</h2> ${dataTable(model, ctx)}`}
+              : model.screen === 'dashboard'
+                ? dashboardPage(model, ctx)
+                : html`<h2 class="cds-page-title" tabindex="-1" data-focus="heading">申請一覧</h2> ${dataTable(model, ctx)}`}
           </div>
         </div>
         ${toast(model)}

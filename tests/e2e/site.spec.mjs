@@ -1,7 +1,7 @@
+import { LOWEST_ID, TOTAL, countOf } from './expected.mjs';
 import { expect, test } from './fixtures.mjs';
 
 const DESIGNS = ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'];
-const TOTAL = 24;
 
 const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const rows = (scope) => scope.locator('.pane__root [data-id]');
@@ -30,21 +30,22 @@ test.describe('各デザインの表示と機能', () => {
       await expect(p.locator('.pane__root')).toContainText(`${TOTAL}件`);
 
       await search(page, p, 'こども家庭課');
-      await expect(rows(p)).toHaveCount(6);
+      await expect(rows(p)).toHaveCount(countOf({ keyword: 'こども家庭課' }));
       await setStatus(p, 'approved');
-      await expect(rows(p)).toHaveCount(2);
-      await expect(p.locator('.pane__root')).toContainText(`${TOTAL}件中 2件`);
+      const approved = countOf({ keyword: 'こども家庭課', status: 'approved' });
+      await expect(rows(p)).toHaveCount(approved);
+      await expect(p.locator('.pane__root')).toContainText(`${TOTAL}件中 ${approved}件`);
       expect(query(page).get('status')).toBe('approved');
 
       await search(page, p, 'あおき');
       await expect(rows(p)).toHaveCount(0);
       await setStatus(p, '');
-      await expect(rows(p)).toHaveCount(1);
+      await expect(rows(p)).toHaveCount(countOf({ keyword: 'あおき' }));
       await expect(rows(p).first()).toHaveAttribute('data-id', '2026-01042');
 
       await search(page, p, '');
       await p.locator('[data-action="sort"][data-key="id"]').click();
-      await expect(rows(p).first()).toHaveAttribute('data-id', '2026-00961');
+      await expect(rows(p).first()).toHaveAttribute('data-id', LOWEST_ID);
       expect(query(page).get('sort')).toBe('id');
       expect(query(page).get('order')).toBe('asc');
       await expect(p.locator('th[aria-sort="ascending"]')).toHaveCount(1);
@@ -79,12 +80,12 @@ test.describe('各デザインの表示と機能', () => {
       await expect(page.locator('#lab-screen')).toHaveValue('form');
       await expect(p.locator('[data-focus="heading"]')).toBeFocused();
 
-      const reports = p.locator('[data-action="nav"][data-target="reports"]');
+      const reports = p.locator('[data-action="nav"][data-target="settings"]');
       if (!(await reports.isVisible())) await p.locator('[data-action="toggle-ui"]').first().click();
       await reports.click();
-      await expect(p.locator('.pane__root')).toContainText('「集計」画面');
+      await expect(p.locator('.pane__root')).toContainText('「設定」画面');
       await p.locator('[data-action="dismiss-notice"]').click();
-      await expect(p.locator('.pane__root')).not.toContainText('「集計」画面');
+      await expect(p.locator('.pane__root')).not.toContainText('「設定」画面');
 
       await p.locator('[data-action="nav"][data-target="applications"]').first().click();
       await expect(rows(p)).toHaveCount(TOTAL);
@@ -105,7 +106,7 @@ test('デザインを切り替えても検索条件・並び・詳細を維持�
     await pick(id);
     await expect(p).toHaveAttribute('data-design', id);
     await expect(keyword(p)).toHaveValue('補助金');
-    await expect(rows(p)).toHaveCount(1);
+    await expect(rows(p)).toHaveCount(countOf({ keyword: '補助金', status: 'reviewing' }));
     await expect(p.locator('th[aria-sort="ascending"]')).toContainText('申請者');
   }
 
@@ -137,19 +138,19 @@ test('左右比較：独立したデザイン選択・共通の条件・入れ�
   await page.locator('#lab-right').selectOption('govuk');
   await expect(right).toHaveAttribute('data-design', 'govuk');
   await search(page, left, '道路');
-  await expect(rows(left)).toHaveCount(3);
-  await expect(rows(right)).toHaveCount(3);
+  await expect(rows(left)).toHaveCount(countOf({ keyword: '道路' }));
+  await expect(rows(right)).toHaveCount(countOf({ keyword: '道路' }));
   await expect(keyword(right)).toHaveValue('道路');
   await setStatus(right, 'approved');
-  await expect(rows(left)).toHaveCount(1);
-  await expect(rows(right)).toHaveCount(1);
+  await expect(rows(left)).toHaveCount(countOf({ keyword: '道路', status: 'approved' }));
+  await expect(rows(right)).toHaveCount(countOf({ keyword: '道路', status: 'approved' }));
 
   await page.getByRole('button', { name: '入れ替え' }).click();
   await expect(left).toHaveAttribute('data-design', 'govuk');
   await expect(right).toHaveAttribute('data-design', 'carbon');
   await expect(page.locator('#lab-left')).toHaveValue('govuk');
   expect([query(page).get('left'), query(page).get('right')]).toEqual(['govuk', 'carbon']);
-  await expect(rows(right)).toHaveCount(1);
+  await expect(rows(right)).toHaveCount(countOf({ keyword: '道路', status: 'approved' }));
 
   await page.getByRole('radio', { name: '単独表示' }).check();
   await expect(right).toBeHidden();
@@ -170,7 +171,7 @@ test('URL から比較状態を復元する', async ({ page }) => {
   }
   await pane(page, 1).locator('[data-modal] [data-action="close-detail"]').first().click();
   await expect(pane(page, 0).locator('[data-modal]')).toHaveCount(0);
-  await expect(rows(pane(page, 0))).toHaveCount(1);
+  await expect(rows(pane(page, 0))).toHaveCount(countOf({ keyword: '保育', status: 'reviewing' }));
   await expect(keyword(pane(page, 1))).toHaveValue('保育');
 });
 

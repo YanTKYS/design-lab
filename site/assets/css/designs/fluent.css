@@ -934,3 +934,390 @@
     flex: 1 1 100%;
   }
 }
+
+/* ---------- ダッシュボード ---------- */
+
+.ds-fluent {
+  --tone-info: #479ef5;
+  --tone-progress: #8764b8;
+  --tone-warning: #f7630c;
+  --tone-success: #107c10;
+  --tone-error: #c50f1f;
+}
+
+.ds-fluent .tone-info {
+  --tone: var(--tone-info);
+}
+
+.ds-fluent .tone-progress {
+  --tone: var(--tone-progress);
+}
+
+.ds-fluent .tone-warning {
+  --tone: var(--tone-warning);
+}
+
+.ds-fluent .tone-success {
+  --tone: var(--tone-success);
+}
+
+.ds-fluent .tone-error {
+  --tone: var(--tone-error);
+}
+
+.fui-toolbar--dash {
+  align-items: flex-end;
+  margin-bottom: 16px;
+  border-radius: var(--fui-radius-lg);
+  background: var(--fui-bg1);
+  padding: 12px 16px;
+  box-shadow: var(--fui-shadow4);
+}
+
+.fui-cmd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fui-cmd-field__label {
+  color: var(--fui-fg3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.fui-toolbar__spacer {
+  flex: 1 1 0;
+}
+
+.fui-button:disabled {
+  color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+a.fui-button {
+  text-decoration: none;
+}
+
+.fui-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.fui-kpi {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 16px 20px;
+}
+
+.fui-kpi p {
+  margin: 0;
+}
+
+.fui-kpi__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: #ebf3fc;
+  color: var(--fui-brand);
+}
+
+.fui-kpi__label {
+  color: var(--fui-fg2);
+}
+
+.fui-kpi__value {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 40px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fui-kpi__unit {
+  margin-left: 2px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.fui-kpi__note {
+  color: var(--fui-fg3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.fui-kpi__link,
+.fui-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  color: var(--fui-brand-fg);
+  text-decoration: none;
+}
+
+.fui-kpi__link {
+  margin-top: 8px;
+}
+
+.fui-kpi__link:hover,
+.fui-link:hover {
+  text-decoration: underline;
+}
+
+.fui-dgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.fui-dgrid--one {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fui-dcard {
+  min-width: 0;
+  padding: 16px 20px 20px;
+}
+
+.fui-dcard__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.fui-dcard__caption {
+  margin: 0 0 12px;
+  color: var(--fui-fg3);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.ds-fluent .fui-line {
+  --chart-line-h: 150px;
+  --chart-bar: var(--fui-brand);
+  --chart-line-w: 2.5;
+  --chart-dot: 10;
+  --chart-axis: var(--fui-stroke1);
+}
+
+.fui-line .chart-line__labels {
+  margin-top: 8px;
+}
+
+.fui-line .chart-line__label {
+  color: var(--fui-fg3);
+  font-size: 12px;
+}
+
+.ds-fluent .fui-stacked {
+  --chart-stack-h: 12px;
+  --chart-bar-radius: 6px;
+  --chart-track: var(--fui-bg4);
+  --chart-seg-gap: #fff;
+  margin-bottom: 12px;
+}
+
+.fui-stacked .chart-stacked__text {
+  display: none;
+}
+
+.fui-statuses {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fui-statuses__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.5em 4em 3em;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  border-bottom: 1px solid var(--fui-stroke2);
+}
+
+.fui-statuses__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fui-statuses__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--tone);
+  color: #fff;
+}
+
+.fui-statuses__count,
+.fui-statuses__share {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.fui-statuses__link {
+  text-align: right;
+}
+
+.ds-fluent .fui-hbars {
+  --chart-hbar-h: 8px;
+  --chart-bar-radius: 4px;
+  --chart-bar: var(--fui-brand);
+  --chart-track: var(--fui-bg4);
+  --chart-row-gap: 12px;
+  --chart-label-w: minmax(9em, 14em);
+}
+
+.fui-hbars .chart-hbars__share {
+  color: var(--fui-fg3);
+}
+
+.fui-accordion {
+  padding: 0;
+}
+
+.fui-accordion__heading {
+  margin: 0;
+  font-size: 14px;
+}
+
+.fui-accordion__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--fui-radius-lg);
+  background: transparent;
+  padding: 0 20px;
+  color: var(--fui-fg1);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fui-accordion__button:hover {
+  background: var(--fui-bg3);
+}
+
+.fui-accordion__panel {
+  padding: 0 20px 16px;
+}
+
+.fui-accordion__panel[hidden] {
+  display: none;
+}
+
+.fui-defs {
+  margin: 0 0 8px;
+}
+
+.fui-defs div {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: 12px;
+  border-top: 1px solid var(--fui-stroke2);
+  padding: 8px 0;
+}
+
+.fui-defs dt {
+  font-weight: 600;
+}
+
+.fui-defs dd {
+  margin: 0;
+}
+
+.fui-empty-text {
+  margin: 0;
+  color: var(--fui-fg3);
+}
+
+.fui-scope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--fui-stroke2);
+  padding: 4px 16px 8px;
+}
+
+.fui-scope__label {
+  color: var(--fui-fg3);
+  font-size: 12px;
+}
+
+.fui-chip {
+  border: 1px solid #b4d6fa;
+  border-radius: 999px;
+  background: #ebf3fc;
+  padding: 0 10px;
+  color: #0e4775;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+@container frame (max-width: 1099px) {
+  .fui-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container frame (max-width: 899px) {
+  .fui-dgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container frame (max-width: 599px) {
+  .fui-kpis {
+    gap: 8px;
+  }
+
+  .fui-kpi {
+    padding: 12px 14px;
+  }
+
+  .fui-kpi__value {
+    font-size: 26px;
+  }
+
+  .fui-cmd-field {
+    flex: 1 1 100%;
+  }
+
+  .fui-toolbar--dash .fui-toolbar__spacer {
+    display: none;
+  }
+
+  .fui-toolbar--dash .fui-button--primary {
+    flex: 1 1 100%;
+  }
+
+  .fui-statuses__row {
+    grid-template-columns: minmax(0, 1fr) 3.5em 3.5em 2.5em;
+    gap: 4px;
+  }
+
+  .fui-defs div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}

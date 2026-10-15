@@ -2,6 +2,7 @@
 // DOM に依存しない純粋関数のみ（Node のユニットテスト対象）。
 
 import { APPLICATIONS, COLUMNS, DEFAULT_SORT, NAV_ITEMS, STATUSES, SYSTEM } from './data.js';
+import { EMPTY_SCOPE, GROUPS, PERIODS, filterByScope, isScopeActive } from './dashboard.js';
 
 const STATUS_BY_VALUE = new Map(STATUSES.map((s, i) => [s.value, { ...s, order: i }]));
 
@@ -59,9 +60,28 @@ function toRow(app) {
  * 状態からデザイン共通のビューモデルを作る。
  * デザイン側はこの値を表示するだけで、検索ロジックを持たない。
  */
+const NAV_CURRENT = { list: 'applications', form: 'new', dashboard: 'dashboard' };
+
+function groupText(value) {
+  const group = GROUPS.find((g) => g.value === value);
+  return `${group.label}（${group.statuses.map((v) => STATUS_BY_VALUE.get(v).label).join('・')}）`;
+}
+
+/** ダッシュボードから引き継いだ絞り込みの表示用データ。 */
+function scopeModel(scope = EMPTY_SCOPE) {
+  const items = [
+    scope.period && { key: 'period', label: '対象期間', text: PERIODS.find((p) => p.value === scope.period)?.label },
+    scope.dept && { key: 'dept', label: '担当課', text: scope.dept },
+    scope.type && { key: 'type', label: '申請種別', text: scope.type },
+    scope.group && { key: 'group', label: '処理状態', text: groupText(scope.group) },
+  ].filter(Boolean);
+  return { active: isScopeActive(scope), items, summary: items.map((i) => `${i.label}：${i.text}`).join('、') };
+}
+
 export function buildModel(state) {
-  const { keyword, status, sort, detail, notice, screen = 'list' } = state;
-  const keywordMatched = filterApplications(APPLICATIONS, { keyword });
+  const { keyword, status, sort, detail, notice, screen = 'list', scope = EMPTY_SCOPE } = state;
+  const scoped = filterByScope(APPLICATIONS, scope);
+  const keywordMatched = filterApplications(scoped, { keyword });
   const rows = sortApplications(filterApplications(keywordMatched, { status }), sort).map(toRow);
   const countBy = (value) => keywordMatched.filter((a) => a.status === value).length;
   const detailApp = detail ? APPLICATIONS.find((a) => a.id === detail) : null;
@@ -69,7 +89,7 @@ export function buildModel(state) {
   return {
     system: SYSTEM,
     screen,
-    nav: NAV_ITEMS.map((item) => ({ ...item, current: item.id === (screen === 'form' ? 'new' : 'applications') })),
+    nav: NAV_ITEMS.map((item) => ({ ...item, current: item.id === NAV_CURRENT[screen] })),
     keyword,
     status,
     sort,
@@ -83,7 +103,8 @@ export function buildModel(state) {
       ariaSort: sort.key === c.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none',
     })),
     rows,
-    total: APPLICATIONS.length,
+    total: scoped.length,
+    scope: scopeModel(scope),
     shown: rows.length,
     filtered: Boolean(keyword || status),
     detail: detailApp ? toRow(detailApp) : null,

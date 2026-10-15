@@ -6,6 +6,7 @@
 import { attr, html } from '../html.js';
 import { icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { dashboardPage } from './uswds.dashboard.js';
 import { formPage } from './uswds.form.js';
 
 function banner(ctx) {
@@ -88,6 +89,18 @@ function alert(model) {
       <div class="usa-alert__body">
         <p class="usa-alert__text"><strong>${model.notice.title}：</strong>${model.notice.text}</p>
         <button type="button" class="usa-button usa-button--unstyled" data-action="dismiss-notice">閉じる</button>
+      </div>
+    </div>`;
+}
+
+/** ダッシュボードから引き継いだ絞り込み条件の表示と解除。 */
+function scopeAlert(model) {
+  if (!model.scope.active) return '';
+  return html`
+    <div class="usa-alert usa-alert--info usa-alert--slim" data-scope>
+      <div class="usa-alert__body">
+        <p class="usa-alert__text"><strong>ダッシュボードから引き継いだ絞り込み：</strong>${model.scope.items.map((i) => `${i.label}＝${i.text}`).join('、')}</p>
+        <button type="button" class="usa-button usa-button--unstyled" data-action="clear-scope">絞り込みを解除</button>
       </div>
     </div>`;
 }
@@ -222,6 +235,13 @@ export default {
     errors: 'エラー項目は左に赤い帯、入力欄は太い赤枠。上部に赤いアラート（件数と項目名）を出し、最初のエラー項目へフォーカスする。',
     confirm: '分割式のステップインジケーター（1/3 入力）。確認は罫線だけの項目表で、青い「申請する」とアウトラインの「修正する」を並べる。',
   },
+  dashboardTraits: {
+    kpi: '上辺に青い太線を引いた 4 つのサマリーボックス。セリフ体の大きな数値、ラベル、注記、「該当する申請の一覧」リンクを入れる。',
+    density: '本文17px・行間1.5 の標準的な密度。セクションごとに見出しと説明文を付け、グラフと表を同じ幅で整理する。',
+    chart: '月別と種別は番号・ラベル・値・割合つきの横棒。処理状況は積み上げ棒＋表。グラフごとに「データを表で表示」のアコーディオンを添える。',
+    filter: 'リード文の下に、ラベル上置きのセレクトを横一列に並べたフィルター行（対象期間・担当課・リセット）を置く。',
+    hierarchy: 'リード文→フィルター→概要→月別→処理状況→種別→「集計の定義と出典」の順。各セクションは見出し・説明・内容の 3 段で揃える。',
+  },
   errorFocus: 'field',
   render(model, ctx) {
     const overlay = model.screen === 'list' && model.detail;
@@ -233,12 +253,14 @@ export default {
             <div class="grid-container">
               ${model.screen === 'form'
                 ? formPage(model, ctx, alert(model))
-                : html`${alert(model)}
+                : model.screen === 'dashboard'
+                  ? dashboardPage(model, ctx, alert(model))
+                  : html`${alert(model)}
                     <div class="usa-page-head">
                       <h2 class="usa-page-title" tabindex="-1" data-focus="heading">申請一覧</h2>
                       <button type="button" class="usa-button" data-action="new">${icon('add', { size: 20, stroke: 2.25 })}新規申請</button>
                     </div>
-                    ${searchArea(model, ctx)} ${table(model)}`}
+                    ${scopeAlert(model)} ${searchArea(model, ctx)} ${table(model)}`}
             </div>
           </div>
           <div class="usa-identifier">

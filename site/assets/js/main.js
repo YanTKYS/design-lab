@@ -4,6 +4,7 @@ import { DESIGNS, DESIGN_IDS, getDesign } from './designs/index.js';
 import { back, complete, createForm, fillSample, hasErrors, setValue, submit } from './form.js';
 import { html } from './html.js';
 import { icon } from './icons.js';
+import { DEFAULT_PERIOD, EMPTY_SCOPE, buildDashboardModel, listStateFor } from './dashboard.js';
 import { buildAppModel } from './model.js';
 import { patch } from './morph.js';
 import { buildModel, countText, nextSort } from './query.js';
@@ -25,7 +26,18 @@ const FORM_TRAIT_LABELS = {
   confirm: '確認・操作',
 };
 
-const UNIMPLEMENTED_TEXT = 'このサンプルでは申請一覧と入力フォームのみを実装しています。';
+const DASHBOARD_TRAIT_LABELS = {
+  kpi: 'KPIの表現',
+  density: '情報密度',
+  chart: 'グラフ・可視化',
+  filter: 'フィルターの配置',
+  hierarchy: '情報の階層',
+};
+
+/** ナビゲーションの項目 → 画面。ここにない項目は未実装として通知する。 */
+const NAV_SCREENS = { applications: 'list', new: 'form', dashboard: 'dashboard' };
+
+const UNIMPLEMENTED_TEXT = 'このサンプルでは申請一覧・入力フォーム・ダッシュボードのみを実装しています。';
 
 const els = {
   controls: document.getElementById('lab-controls'),
@@ -34,6 +46,7 @@ const els = {
   copy: document.getElementById('lab-copy'),
   copyStatus: document.getElementById('lab-copy-status'),
   formbar: document.getElementById('lab-formbar'),
+  dashbar: document.getElementById('lab-dashbar'),
 };
 
 // state：画面・比較条件・一覧の条件（URL と同期する）
@@ -130,8 +143,9 @@ function render() {
   els.panes.style.setProperty('--frame-width', state.width === 'auto' ? '' : `${state.width}px`);
 
   els.formbar.hidden = state.screen !== 'form';
+  els.dashbar.hidden = state.screen !== 'dashboard';
   const model = buildAppModel(state, form);
-  const layout = state.screen === 'form' ? `form-${form.step}` : 'list';
+  const layout = state.screen === 'form' ? `form-${form.step}` : state.screen;
   for (const pane of panes) {
     const visible = pane.index === 0 || state.mode === 'compare';
     pane.section.hidden = !visible;
@@ -150,10 +164,11 @@ function render() {
       ui: pane.ui,
       href: (changes) => serializeState({ ...state, ...changes }),
       navHref: (item) => {
-        if (item.id === 'applications') return serializeState({ ...state, screen: 'list', detail: null });
-        if (item.id === 'new') return serializeState({ ...state, screen: 'form', detail: null });
-        return '#';
+        const screen = NAV_SCREENS[item.id];
+        return screen ? serializeState({ ...state, screen, detail: null }) : '#';
       },
+      // ダッシュボードの指標から、同じ集計条件で絞り込んだ申請一覧への URL
+      listHref: (target) => serializeState({ ...state, screen: 'list', ...listStateFor(state, target) }),
     };
     // 画面や入力ステップが変わるときは差分更新せず入れ替える（別の画面の入力欄を再利用しない）
     const layoutChanged = pane.layout !== layout;
@@ -240,9 +255,10 @@ function renderControls() {
 }
 
 function renderPaneHead(design, pane) {
-  const isForm = state.screen === 'form';
-  const traitLabels = isForm ? FORM_TRAIT_LABELS : TRAIT_LABELS;
-  const traits = isForm ? design.formTraits : design.traits;
+  const [traitLabels, traits] = {
+    form: [FORM_TRAIT_LABELS, design.formTraits],
+    dashboard: [DASHBOARD_TRAIT_LABELS, design.dashboardTraits],
+  }[state.screen] ?? [TRAIT_LABELS, design.traits];
   return html`
     <div class="pane__meta">
       ${state.mode === 'compare' ? html`<span class="pane__side" aria-hidden="true">${pane.index === 0 ? '左' : '右'}</span>` : ''}
@@ -356,7 +372,9 @@ function bindPaneEvents(pane) {
   });
 
   section.addEventListener('change', (event) => {
-    if (event.target.dataset.bind === 'status') update({ status: event.target.value });
+    const { bind } = event.target.dataset;
+    if (bind === 'status') update({ status: event.target.value });
+    else if (bind === 'period' || bind === 'dept') setCondition(bind, event.target.value);
     else if (event.target.dataset.field) commitField(event.target);
   });
 
@@ -395,6 +413,13 @@ function bindPaneEvents(pane) {
       trapFocus(event, modal);
     }
   });
+}
+
+/** ダッシュボードの集計条件（対象期間・担当課）を変更する。一覧・フォームの状態には触れない。 */
+function setCondition(name, value) {
+  update({ [name]: value });
+  const d = buildDashboardModel(state);
+  announce(`${d.scopeText}で集計しました。受付${d.total}件、処理待ち${d.pending}件、処理完了${d.done}件、処理完了率${d.rate}`);
 }
 
 function commitField(field) {
@@ -436,7 +461,7 @@ function trapFocus(event, container) {
 }
 
 function handleAction(action, el, pane) {
-  const { id, key, value, target, gotoField: field } = el.dataset;
+  const { id, key, value, target, gotoField: field, linkStatus: status, linkGroup: group, linkType: type } = el.dataset;
   switch (action) {
     case 'set-status':
       update({ status: value ?? '' });
@@ -466,6 +491,16 @@ function handleAction(action, el, pane) {
     case 'new':
       update({ screen: 'form', detail: null, notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
       break;
+    case 'open-list':
+      update({ screen: 'list', ...listStateFor(state, { status, group, type }), notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
+      announce(`申請一覧を表示しました。${buildModel(state).scope.summary || '絞り込み条件なし'}`);
+      break;
+    case 'clear-scope':
+      update({ scope: { ...EMPTY_SCOPE } }, { history: 'replace' });
+      break;
+    case 'reset-conditions':
+      update({ period: DEFAULT_PERIOD, dept: '' });
+      break;
     case 'form-back':
       updateForm(back(form), {
         focus: { pane, selector: field ? `[data-field="${field}"]` : '[data-focus="heading"]', fallback: '[data-focus="heading"]' },
@@ -481,17 +516,19 @@ function handleAction(action, el, pane) {
     case 'focus-field':
       applyFocus({ pane, selector: `[data-field="${field}"]` });
       break;
-    case 'nav':
-      if (target === 'applications') {
-        if (state.screen === 'form') update({ screen: 'list', detail: null, notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
-        else if (state.detail) handleAction('close-detail', el, pane);
-        else applyFocus({ pane, selector: '[data-focus="heading"]' });
-      } else if (target === 'new') {
-        handleAction('new', el, pane);
-      } else {
+    case 'nav': {
+      const screen = NAV_SCREENS[target];
+      if (!screen) {
         showNotice(`「${el.dataset.label ?? el.textContent.trim()}」画面`, `この画面は未実装です。${UNIMPLEMENTED_TEXT}`);
+      } else if (screen !== state.screen) {
+        update({ screen, detail: null, notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
+      } else if (screen === 'list' && state.detail) {
+        handleAction('close-detail', el, pane);
+      } else {
+        applyFocus({ pane, selector: '[data-focus="heading"]' });
       }
       break;
+    }
     case 'dismiss-notice':
       update({ notice: null }, { history: 'replace', focus: { pane, selector: '[data-focus="heading"]' } });
       break;

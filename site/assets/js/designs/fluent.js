@@ -5,6 +5,7 @@
 import { attr, html } from '../html.js';
 import { TONE_ICONS, icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { dashboardPage } from './fluent.dashboard.js';
 import { formPage } from './fluent.form.js';
 
 const BADGE_COLORS = { info: 'brand', progress: 'informative', warning: 'warning', success: 'success', error: 'danger' };
@@ -122,6 +123,17 @@ function commandBar(model, ctx) {
     </div>`;
 }
 
+/** ダッシュボードから引き継いだ絞り込み条件（チップ）と解除。 */
+function scopeBar(model) {
+  if (!model.scope.active) return '';
+  return html`
+    <div class="fui-scope" data-scope>
+      <span class="fui-scope__label">引き継いだ条件</span>
+      ${model.scope.items.map((i) => html`<span class="fui-chip">${i.label}：${i.text}</span>`)}
+      <button type="button" class="fui-button fui-button--subtle" data-action="clear-scope">${icon('close', { size: 16, stroke: 1.5 })}解除</button>
+    </div>`;
+}
+
 function dataGrid(model) {
   if (model.rows.length === 0) {
     return html`<div class="fui-empty">${icon('search', { size: 24 })}<p>条件に一致する申請はありません</p></div>`;
@@ -218,6 +230,13 @@ export default {
     errors: '欄の赤枠に加え、欄の下に警告アイコン付きの検証メッセージ（ヒントの上）を表示。上部の MessageBar に件数と「最初の項目へ」ボタンを置く。',
     confirm: '見出しの横に「手順 n / 3」。確認はカード内の項目名・値の2列で、左寄せの「申請する」（主）と「戻って修正」（副）。',
   },
+  dashboardTraits: {
+    kpi: '白い指標カード（影と角丸）を 4 枚並べ、アイコン・ラベル・32px の太字の数値・注記・「一覧を表示」リンクで 1 枚にまとめる。',
+    density: '本文14px・カード内の余白16〜20px の中密度。カードの間は16px で、面のまとまりで領域を分ける。',
+    chart: '月別は折れ線（点とラベル列）、処理状況は丸い積み上げバー＋アイコン付きの行、種別は丸い横棒。値は常に文字でも表示する。',
+    filter: 'ページ見出しの直下のコマンドバーに、ラベル付きセレクト・リセット・主要操作「申請一覧を開く」を 1 行で並べる。',
+    hierarchy: '見出し→コマンドバー→指標カード→2 列のカード→種別カード→折りたためる「集計の定義」の順に、カードを積む。',
+  },
   errorFocus: 'field',
   render(model, ctx) {
     const overlay = model.screen === 'list' && model.detail;
@@ -231,12 +250,14 @@ export default {
             ${messageBar(model)}
             ${model.screen === 'form'
               ? formPage(model, ctx)
-              : html`<div class="fui-page-head">
+              : model.screen === 'dashboard'
+                ? dashboardPage(model, ctx)
+                : html`<div class="fui-page-head">
                     <h2 class="fui-title" tabindex="-1" data-focus="heading">申請一覧</h2>
                     <p class="fui-caption">${countText(model)}を表示</p>
                   </div>
                   <section class="fui-card" aria-label="申請一覧">
-                    ${commandBar(model, ctx)} ${filterTabs(model, ctx)} ${dataGrid(model)}
+                    ${commandBar(model, ctx)} ${scopeBar(model)} ${filterTabs(model, ctx)} ${dataGrid(model)}
                   </section>`}
           </div>
         </div>
