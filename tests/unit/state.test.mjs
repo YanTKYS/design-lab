@@ -74,3 +74,34 @@ test('フォームの入力内容は URL に含まれない（state にも持た
   }
   assert.ok(!/secret|example|桜井|090/.test(url));
 });
+
+test('dashboard：screen・集計条件（period / dept）を URL に載せ、既存の URL との互換を保つ', () => {
+  assert.equal(parseState('?screen=dashboard', IDS).screen, 'dashboard');
+  assert.equal(serializeState(parseState('?screen=dashboard', IDS)), '?screen=dashboard&design=dads');
+  const search = '?screen=dashboard&mode=compare&left=carbon&right=govuk&width=768&period=q2&dept=%E5%B8%82%E6%B0%91%E8%AA%B2';
+  const state = parseState(search, IDS);
+  assert.deepEqual([state.screen, state.period, state.dept], ['dashboard', 'q2', '市民課']);
+  assert.equal(serializeState(state), search);
+  // 既定の期間・担当課は URL に出さない。既存の URL は従来どおり
+  assert.equal(serializeState(parseState('?design=fluent&period=fy', IDS)), '?design=fluent');
+  assert.equal(parseState('?design=fluent', IDS).period, 'fy');
+  assert.equal(parseState('?design=fluent', IDS).dept, '');
+  // 不正な値は既定値に戻す
+  const bad = parseState('?screen=dashboard&period=zzz&dept=%E3%81%AA%E3%81%84%E8%AA%B2&lperiod=x&ldept=y&ltype=z&lgroup=w', IDS);
+  assert.deepEqual([bad.period, bad.dept, bad.scope], ['fy', '', { period: '', dept: '', type: '', group: '' }]);
+});
+
+test('dashboard：一覧へ引き継いだ絞り込み（lperiod / ldept / ltype / lgroup）の往復と、ダッシュボード条件との独立', () => {
+  const search = '?design=govuk&status=approved&lperiod=q2&ldept=%E5%B8%82%E6%B0%91%E8%AA%B2&ltype=%E7%8A%AC%E3%81%AE%E7%99%BB%E9%8C%B2%E7%94%B3%E8%AB%8B&lgroup=done';
+  const state = parseState(search, IDS);
+  assert.deepEqual(state.scope, { period: 'q2', dept: '市民課', type: '犬の登録申請', group: 'done' });
+  assert.deepEqual([state.period, state.dept], ['fy', ''], '一覧の絞り込みとダッシュボードの集計条件は別');
+  assert.equal(serializeState(state), search);
+  const changed = { ...state, period: 'm3', dept: '住宅政策課' };
+  assert.deepEqual(parseState(serializeState(changed), IDS).scope, state.scope, '集計条件を変えても一覧の絞り込みは変わらない');
+});
+
+test('dashboard：フォームの入力内容は引き続き URL に含まれない', () => {
+  const state = parseState('?screen=dashboard&name=%E6%A1%9C%E4%BA%95&email=a%40example.com', IDS);
+  assert.equal(serializeState(state), '?screen=dashboard&design=dads');
+});

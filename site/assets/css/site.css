@@ -89,6 +89,12 @@ body {
   white-space: nowrap;
 }
 
+@media (max-width: 1600px) {
+  .lab-title__sub {
+    display: none;
+  }
+}
+
 .lab-title__sub {
   margin-left: 8px;
   color: var(--lab-muted);

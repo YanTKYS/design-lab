@@ -5,6 +5,7 @@
 
 import { attr, html } from '../html.js';
 import { countText, formatDate } from '../query.js';
+import { dashboardPage } from './govuk.dashboard.js';
 import { formPage } from './govuk.form.js';
 
 const TAG_COLORS = { info: '', progress: 'purple', warning: 'orange', success: 'green', error: 'red' };
@@ -106,8 +107,19 @@ function sortButton(c) {
     </button>`;
 }
 
+/** ダッシュボードから引き継いだ絞り込み条件の説明と解除。 */
+function scopeNotice(model) {
+  if (!model.scope.active) return '';
+  return html`
+    <div class="gvk-inset-text" data-scope>
+      <p class="gvk-body">ダッシュボードの集計条件で絞り込んでいます。${model.scope.items.map((i) => html`<br />${i.label}：<strong>${i.text}</strong>`)}</p>
+      <p class="gvk-body-s"><button type="button" class="gvk-link-button" data-action="clear-scope">この絞り込みを解除する</button></p>
+    </div>`;
+}
+
 function results(model, ctx) {
   return html`
+    ${scopeNotice(model)}
     <div class="gvk-results-head">
       <h3 class="gvk-heading-m">${model.shown}件の申請</h3>
       <button type="button" class="gvk-button" data-action="new">新規申請</button>
@@ -212,10 +224,23 @@ export default {
     errors: '先頭に「問題があります」のエラーサマリー（赤い太枠）を出してフォーカスを移し、各項目へのリンクを示す。エラー項目は左に赤い帯、メッセージは太字の赤。',
     confirm: '「回答内容を確認してください」の要約リストで、各行に「変更」リンク（その項目へ戻る）。緑の「この内容で申請する」で、緑の完了パネルを表示。',
   },
+  dashboardTraits: {
+    kpi: '指標は枠やアイコンのない「ラベル・太字の数値・短い説明」の行で並べ、数値から一覧への「申請の一覧を見る」リンクを添える。',
+    density: '本文19px・見出し48px の低密度。結果を先頭の文章で伝え、1 つずつ見出しと説明を付けて余白を大きく取る。',
+    chart: 'グラフは月別の推移だけを、表の中の単色の棒で示す。処理状況と種別は見出し付きの表（状態はタグ）で、割合も数字で示す。',
+    filter: '左の列に「集計条件」（期間はラジオ、担当課はセレクト）を置く。結果は右の 3/4 の列に縦に並べる。',
+    hierarchy: '要点の文章 → 主な数字 → 月別 → 処理状況 → 種別 → 「この数字の見方」（インセットテキスト）の順で、読み物のように上から下へ進む。',
+  },
   errorFocus: 'summary',
   render(model, ctx) {
     const page =
-      model.screen === 'form' ? formPage(model, ctx, banner(model)) : model.detail ? detailPage(model, ctx) : listPage(model, ctx);
+      model.screen === 'form'
+        ? formPage(model, ctx, banner(model))
+        : model.screen === 'dashboard'
+          ? dashboardPage(model, ctx, banner(model))
+          : model.detail
+            ? detailPage(model, ctx)
+            : listPage(model, ctx);
     return html`
       <div class="ds-govuk" data-page="${model.detail ? 'detail' : 'list'}">
         ${header(model, ctx)}

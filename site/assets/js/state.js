@@ -1,6 +1,7 @@
 // 比較状態の既定値と URL クエリとの相互変換。DOM に依存しない。
 
-import { APPLICATIONS, DEFAULT_SORT, STATUSES } from './data.js';
+import { APPLICATIONS, APPLICATION_TYPES, DEFAULT_SORT, DEPARTMENTS, STATUSES } from './data.js';
+import { DEFAULT_PERIOD, EMPTY_SCOPE, GROUPS, PERIODS } from './dashboard.js';
 import { SORT_KEYS } from './query.js';
 
 export const WIDTHS = [
@@ -14,6 +15,7 @@ export const WIDTHS = [
 export const SCREENS = [
   { value: 'list', label: '申請一覧' },
   { value: 'form', label: '入力フォーム' },
+  { value: 'dashboard', label: 'ダッシュボード' },
 ];
 
 export function defaultState(designIds) {
@@ -27,6 +29,9 @@ export function defaultState(designIds) {
     status: '',
     sort: { ...DEFAULT_SORT },
     detail: null,
+    period: DEFAULT_PERIOD, // ダッシュボードの集計条件
+    dept: '',
+    scope: { ...EMPTY_SCOPE }, // ダッシュボードから一覧へ引き継いだ絞り込み
     notice: null, // 一時的な通知。URL には含めない
   };
 }
@@ -56,6 +61,14 @@ export function parseState(search, designIds) {
     status: pick(p.get('status'), STATUSES.map((s) => s.value), ''),
     sort: { key: sortKey, dir: sortDir },
     detail: APPLICATIONS.some((a) => a.id === detail) ? detail : null,
+    period: pick(p.get('period'), PERIODS.map((v) => v.value), base.period),
+    dept: pick(p.get('dept'), DEPARTMENTS, ''),
+    scope: {
+      period: pick(p.get('lperiod'), PERIODS.map((v) => v.value), ''),
+      dept: pick(p.get('ldept'), DEPARTMENTS, ''),
+      type: pick(p.get('ltype'), APPLICATION_TYPES, ''),
+      group: pick(p.get('lgroup'), GROUPS.map((g) => g.value), ''),
+    },
   };
 }
 
@@ -63,7 +76,7 @@ export function parseState(search, designIds) {
 export function serializeState(state) {
   const p = new URLSearchParams();
   // フォームの入力内容は URL に含めない。ここに載せるのは画面・比較条件・一覧の条件だけ。
-  if (state.screen === 'form') p.set('screen', 'form');
+  if (state.screen !== 'list') p.set('screen', state.screen);
   if (state.mode === 'compare') {
     p.set('mode', 'compare');
     p.set('left', state.left);
@@ -79,5 +92,10 @@ export function serializeState(state) {
     p.set('order', state.sort.dir);
   }
   if (state.detail) p.set('detail', state.detail);
+  if (state.period !== DEFAULT_PERIOD) p.set('period', state.period);
+  if (state.dept) p.set('dept', state.dept);
+  for (const [key, param] of [['period', 'lperiod'], ['dept', 'ldept'], ['type', 'ltype'], ['group', 'lgroup']]) {
+    if (state.scope[key]) p.set(param, state.scope[key]);
+  }
   return `?${p.toString()}`;
 }

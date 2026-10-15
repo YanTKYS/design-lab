@@ -3,6 +3,7 @@
 
 import { attr, html } from '../html.js';
 import { countText, formatDate } from '../query.js';
+import { dashboardPage } from './plain.dashboard.js';
 import { formPage } from './plain.form.js';
 
 function notice(model) {
@@ -92,6 +93,13 @@ export default {
     errors: '上部に件数と一覧（role="alert"）、欄の後ろに「エラー：…」の赤文字。最初のエラー項目へフォーカスを移す。',
     confirm: '「手順 n / 3」の文字と、dl の一覧。標準のボタンを並べるだけ。',
   },
+  dashboardTraits: {
+    kpi: '指標・値・説明・一覧リンクを並べた 1 つの表。装飾はなく、値は文字だけで示す。',
+    density: 'ブラウザ既定の文字サイズと余白。数値は表のセルに詰まり、情報量は多いが視線の誘導は弱い。',
+    chart: 'グラフを使わない。月別・処理状況・種別をそれぞれ見出し付きの表にして、件数と割合を数字で示す。',
+    filter: '見出しの下に、ラベル付きの標準セレクトと標準ボタンを 1 行で置く。',
+    hierarchy: '見出し→フィルター→主な数字→月別→処理状況→種別→集計の見方の順に、文書の順番どおり並べるだけ。',
+  },
   errorFocus: 'field',
   render(model, ctx) {
     const kwId = `${ctx.uid}-plain-kw`;
@@ -116,8 +124,14 @@ export default {
         ${notice(model)}
         ${model.screen === 'form'
           ? formPage(model, ctx)
-          : html`<h2 tabindex="-1" data-focus="heading">申請一覧</h2>
+          : model.screen === 'dashboard'
+            ? dashboardPage(model, ctx)
+            : html`<h2 tabindex="-1" data-focus="heading">申請一覧</h2>
               <p><button type="button" data-action="new">新規申請</button></p>
+              ${model.scope.active
+                ? html`<p class="plain-notice" data-scope>絞り込み条件（ダッシュボードから）：${model.scope.items.map((i) => `${i.label}＝${i.text}`).join('、')}
+                    <button type="button" data-action="clear-scope">解除</button></p>`
+                : ''}
               <form role="search" aria-label="申請の検索">
                 <p>
                   <label for="${kwId}">キーワード</label>

@@ -1,0 +1,229 @@
+/* ダッシュボードのグラフの構造（レイアウト）だけを定義する共通 CSS。
+   色・太さ・丸みなどの見た目は、各デザインの CSS が変数（--chart-*, --tone-*）とクラスで決める。 */
+
+.chart-columns,
+.chart-hbars,
+.chart-line__labels {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- 縦棒 ---------- */
+
+.chart-columns {
+  --chart-bar-max: 160px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: var(--chart-gap, 8px);
+}
+
+.chart-columns__item {
+  display: flex;
+  flex-direction: column-reverse; /* DOM は「ラベル→値」の順（読み上げ順）、見た目はラベルを下に置く */
+  align-items: center;
+  min-width: 0;
+  gap: 4px;
+}
+
+.chart-columns__track {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: calc(var(--chart-bar-max) + 1.6em);
+}
+
+.chart-columns__value {
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.chart-columns__bar {
+  width: min(100%, var(--chart-bar-w, 48px));
+  height: calc(var(--r) * var(--chart-bar-max));
+  min-height: 2px;
+  background: var(--chart-bar, currentColor);
+  border-radius: var(--chart-bar-radius, 0);
+}
+
+.chart-columns__label {
+  white-space: nowrap;
+}
+
+/* ---------- 横棒 ---------- */
+
+.chart-hbars {
+  display: grid;
+  gap: var(--chart-row-gap, 8px);
+}
+
+.chart-hbars__item {
+  display: grid;
+  grid-template-columns: var(--chart-label-w, minmax(7em, 11em)) minmax(0, 1fr) auto;
+  grid-template-areas: 'label track value';
+  align-items: center;
+  gap: 0 var(--chart-col-gap, 12px);
+}
+
+.chart-hbars__item:has(.chart-hbars__share) {
+  grid-template-columns: var(--chart-label-w, minmax(7em, 11em)) minmax(0, 1fr) auto auto;
+  grid-template-areas: 'label track value share';
+}
+
+.chart-hbars__label {
+  grid-area: label;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.chart-hbars__track {
+  grid-area: track;
+  height: var(--chart-hbar-h, 12px);
+  background: var(--chart-track, transparent);
+  border-radius: var(--chart-bar-radius, 0);
+}
+
+.chart-hbars__bar {
+  display: block;
+  width: calc(var(--r) * 100%);
+  height: 100%;
+  min-width: 2px;
+  background: var(--chart-bar, currentColor);
+  border-radius: inherit;
+}
+
+.chart-hbars__value {
+  grid-area: value;
+  min-width: 2.2em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chart-hbars__share {
+  grid-area: share;
+  min-width: 3.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 狭い枠では、ラベルを上段に出して棒を全幅にする */
+@container frame (max-width: 479px) {
+  .chart-hbars__item,
+  .chart-hbars__item:has(.chart-hbars__share) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'label value share'
+      'track track track';
+    row-gap: 4px;
+  }
+}
+
+/* ---------- 積み上げ（100%） ---------- */
+
+.chart-stacked {
+  display: flex;
+  width: 100%;
+  height: var(--chart-stack-h, 28px);
+  overflow: hidden;
+  background: var(--chart-track, transparent);
+  border-radius: var(--chart-bar-radius, 0);
+}
+
+.chart-stacked__seg {
+  flex: 0 0 calc(var(--r) * 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--tone, #888);
+  color: var(--chart-seg-text, #fff);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.chart-stacked__seg + .chart-stacked__seg {
+  box-shadow: inset 2px 0 0 var(--chart-seg-gap, #fff);
+}
+
+/* ---------- 円（ドーナツ） ---------- */
+
+.chart-donut {
+  display: block;
+  width: 100%;
+  max-width: var(--chart-donut-size, 160px);
+  height: auto;
+}
+
+.chart-donut__track {
+  stroke: var(--chart-track, #e0e0e0);
+}
+
+.chart-donut__arc {
+  stroke: var(--tone, #888);
+}
+
+.chart-donut__center {
+  fill: currentColor;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.chart-donut__caption {
+  fill: currentColor;
+  font-size: 11px;
+}
+
+/* ---------- 折れ線 ---------- */
+
+.chart-line {
+  --chart-line-h: 140px;
+}
+
+.chart-line__svg {
+  display: block;
+  width: 100%;
+  height: var(--chart-line-h);
+  overflow: visible;
+}
+
+.chart-line__base {
+  stroke: var(--chart-axis, #c6c6c6);
+  stroke-width: 1;
+}
+
+.chart-line__path {
+  stroke: var(--chart-bar, currentColor);
+  stroke-width: var(--chart-line-w, 2);
+  stroke-linejoin: round;
+}
+
+.chart-line__dot {
+  stroke: var(--chart-bar, currentColor);
+  stroke-width: var(--chart-dot, 9);
+  stroke-linecap: round;
+}
+
+.chart-line__labels {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  text-align: center;
+}
+
+.chart-line__labels li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-line__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}

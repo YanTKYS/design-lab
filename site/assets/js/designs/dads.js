@@ -5,6 +5,7 @@
 import { attr, html } from '../html.js';
 import { TONE_ICONS, icon } from '../icons.js';
 import { countText, formatDate } from '../query.js';
+import { dashboardPage } from './dads.dashboard.js';
 import { formPage } from './dads.form.js';
 
 const CHIP_COLORS = { info: 'light-blue', progress: 'blue', warning: 'orange', success: 'green', error: 'red' };
@@ -65,7 +66,9 @@ function breadcrumb(model, ctx) {
         ${model.screen === 'form'
           ? html`<li><a class="dads-link" href="${ctx.href({ screen: 'list', detail: null })}" data-action="nav" data-target="applications">申請一覧</a></li>
               <li><span aria-current="page">新規申請</span></li>`
-          : model.detail
+          : model.screen === 'dashboard'
+            ? html`<li><span aria-current="page">ダッシュボード</span></li>`
+            : model.detail
             ? html`<li><a class="dads-link" href="${ctx.href({ detail: null })}" data-action="close-detail">申請一覧</a></li>
                 <li><span aria-current="page">申請詳細</span></li>`
             : html`<li><span aria-current="page">申請一覧</span></li>`}
@@ -97,6 +100,17 @@ function sortIcon(column) {
   return icon('arrowsUpDown', { size: 20 });
 }
 
+/** ダッシュボードから引き継いだ絞り込み条件の表示と解除。 */
+function scopeNotice(model) {
+  if (!model.scope.active) return '';
+  return html`
+    <div class="dads-scope" data-scope>
+      <p class="dads-scope__title">${icon('info', { size: 20 })}ダッシュボードから引き継いだ絞り込み条件</p>
+      <ul class="dads-scope__list">${model.scope.items.map((i) => html`<li>${i.label}：${i.text}</li>`)}</ul>
+      <button type="button" class="dads-button" data-type="outline" data-size="sm" data-action="clear-scope">絞り込みを解除</button>
+    </div>`;
+}
+
 function listPage(model, ctx) {
   const kwId = `${ctx.uid}-dads-kw`;
   const stId = `${ctx.uid}-dads-st`;
@@ -108,6 +122,7 @@ function listPage(model, ctx) {
       </button>
     </div>
     <p class="dads-lead">受け付けた申請を検索し、内容と処理状況を確認できます。</p>
+    ${scopeNotice(model)}
 
     <section class="dads-search" aria-labelledby="${ctx.uid}-dads-search-title">
       <h3 class="dads-section-title" id="${ctx.uid}-dads-search-title">検索条件</h3>
@@ -247,6 +262,13 @@ export default {
     errors: 'エラー文は入力欄の直下に「＊」付きの赤文字で出し、枠も赤くする。上部には通知バナーで件数と項目名を示し、最初のエラー項目へフォーカスを移す。',
     confirm: '入力→確認→完了をステップ表示。確認は項目名つきの罫線表で、大きな「この内容で申請する」と「入力画面に戻って修正する」を並べる。',
   },
+  dashboardTraits: {
+    kpi: '4つの指標を見出し・説明・「該当する申請を見る」リンクつきで並べ、数値は48pxの太字。ボックスは細い枠だけで飾らない。',
+    density: '本文16px・行間1.7のゆったりした密度。セクションの間隔を56px取り、1画面の情報量より読み取りやすさを優先する。',
+    chart: '縦棒は値を棒の上に20pxで直接表示。処理状況の積み上げ棒は模様（斜線・点・格子）とラベル・数値・割合を併記し、すべてのグラフに表を添える。',
+    filter: '最上部の「集計条件」パネルに、ラベルと補足説明つきのセレクト（対象期間・担当課）を縦に置く。',
+    hierarchy: '「集計条件→申請の受付と処理→月別→処理状況→種別別→集計の見方」の見出し付きセクションを1列で縦に積む。',
+  },
   errorFocus: 'field',
   render(model, ctx) {
     return html`
@@ -254,7 +276,13 @@ export default {
         ${header(model, ctx)}
         <div class="dads-main">
           ${breadcrumb(model, ctx)} ${notice(model)}
-          ${model.screen === 'form' ? formPage(model, ctx) : model.detail ? detailPage(model, ctx) : listPage(model, ctx)}
+          ${model.screen === 'form'
+            ? formPage(model, ctx)
+            : model.screen === 'dashboard'
+              ? dashboardPage(model, ctx)
+              : model.detail
+                ? detailPage(model, ctx)
+                : listPage(model, ctx)}
         </div>
         <footer class="dads-footer"><p>© ${model.system.org}（架空の自治体）</p></footer>
       </div>`;

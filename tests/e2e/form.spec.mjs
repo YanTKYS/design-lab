@@ -1,3 +1,4 @@
+import { countOf } from './expected.mjs';
 import { expect, test } from './fixtures.mjs';
 
 const DESIGNS = ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'];
@@ -228,7 +229,7 @@ test.describe('画面の切り替えと URL', () => {
     await page.locator('#lab-screen').selectOption('list');
     await expect(pane(page, 0).locator('[data-bind="keyword"]')).toHaveValue('道路');
     await expect(pane(page, 1).locator('[data-bind="keyword"]')).toHaveValue('道路');
-    await expect(pane(page, 0).locator('.pane__root [data-id]')).toHaveCount(1);
+    await expect(pane(page, 0).locator('.pane__root [data-id]')).toHaveCount(countOf({ keyword: '道路', status: 'approved' }));
     expect(query(page).get('screen')).toBeNull();
     await expect(page.locator('#lab-formbar')).toBeHidden();
   });
