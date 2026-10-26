@@ -1,4 +1,4 @@
-// 6 デザインすべてで、同じ項目・同じ入力・同じエラー・同じ操作が使えることを描画結果で確認する。
+// 登録済みの全デザインで、同じ項目・同じ入力・同じエラー・同じ操作が使えることを描画結果で確認する。
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -154,7 +154,7 @@ for (const design of DESIGNS) {
   });
 }
 
-test('6 デザインでフォームの構造（見出し・必須表記・エラー表示）が互いに異なる', () => {
+test('全デザインでフォームの構造（見出し・必須表記・エラー表示）が互いに異なる', () => {
   const outputs = DESIGNS.map((d) => render(d, invalid));
   const signature = (out) => [
     /※必須/.test(out), // デジタル庁：ラベルの「※必須」
@@ -167,5 +167,5 @@ test('6 デザインでフォームの構造（見出し・必須表記・エラ
   assert.equal(new Set(outputs.map(signature)).size >= 4, true, '必須・エラーの示し方に違いがある');
   // フォームのマークアップが共通化されていない（class の接頭辞が全て異なる）
   const prefixes = outputs.map((o) => o.match(/class="(ds-\w+)"/)[1]);
-  assert.equal(new Set(prefixes).size, 6);
+  assert.equal(new Set(prefixes).size, DESIGNS.length);
 });

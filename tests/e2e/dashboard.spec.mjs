@@ -2,7 +2,7 @@ import { aggregate, percentText } from '../../site/assets/js/dashboard.js';
 import { APPLICATIONS, TOTAL, countOf } from './expected.mjs';
 import { expect, test } from './fixtures.mjs';
 
-const DESIGNS = ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'];
+import { DESIGN_IDS as DESIGNS } from '../../site/assets/js/designs/index.js';
 
 const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const root = (page, index = 0) => pane(page, index).locator('.pane__root');
@@ -180,7 +180,7 @@ test.describe('各デザインのダッシュボード', () => {
   }
 });
 
-test('6 デザインが同じ条件で同じ集計値を表示する', async ({ page }) => {
+test('全デザインが同じ条件で同じ集計値を表示する', async ({ page }) => {
   for (const c of CONDITIONS) {
     const { a, values } = expectedOf(c);
     for (const id of DESIGNS) {
@@ -323,7 +323,7 @@ test.describe('主要な画面幅でダッシュボードが破綻しない', ()
       const a = aggregate(APPLICATIONS, { period: 'q2', dept: '' });
       for (const mode of ['single', 'compare']) {
         for (const id of DESIGNS) {
-          const right = DESIGNS[(DESIGNS.indexOf(id) + 1) % 6];
+          const right = DESIGNS[(DESIGNS.indexOf(id) + 1) % DESIGNS.length];
           const params = mode === 'single' ? `design=${id}` : `mode=compare&left=${id}&right=${right}`;
           await page.goto(`?screen=dashboard&${params}&period=q2`);
           const panes = mode === 'single' ? [0] : [0, 1];
