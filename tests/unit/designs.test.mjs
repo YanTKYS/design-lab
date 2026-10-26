@@ -14,10 +14,10 @@ const ctx = () => ({ uid: 't', ui: {}, href: () => '?', navHref: () => '?' });
 const render = (design, state) => design.render(buildModel({ ...base, ...state }), ctx()).toString();
 const count = (htmlText, needle) => htmlText.split(needle).length - 1;
 
-test('6 種類のデザインが登録されている', () => {
+test('7 種類のデザインが登録されている', () => {
   assert.deepEqual(
     DESIGNS.map((d) => d.id),
-    ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'],
+    ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain', 'material3'],
   );
 });
 

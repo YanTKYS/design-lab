@@ -1,7 +1,7 @@
 import { countOf } from './expected.mjs';
 import { expect, test } from './fixtures.mjs';
 
-const DESIGNS = ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'];
+import { DESIGN_IDS as DESIGNS } from '../../site/assets/js/designs/index.js';
 
 const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const root = (page, index = 0) => pane(page, index).locator('.pane__root');
@@ -551,7 +551,7 @@ test.describe('主要な画面幅でフォームが破綻しない', () => {
 
       for (const mode of ['single', 'compare']) {
         for (const id of DESIGNS) {
-          const right = DESIGNS[(DESIGNS.indexOf(id) + 1) % 6];
+          const right = DESIGNS[(DESIGNS.indexOf(id) + 1) % DESIGNS.length];
           await page.goto(mode === 'single' ? `?screen=form&design=${id}` : `?screen=form&mode=compare&left=${id}&right=${right}`);
           const label = `${mode}/${id}`;
           await expect(field(page, 'name')).toBeVisible();

@@ -1,4 +1,4 @@
-// 6 デザインすべてで、同じ条件なら同じ集計値が表示され、グラフの値が文字でも確認できることを描画結果で確認する。
+// 登録済みの全デザインで、同じ条件なら同じ集計値が表示され、グラフの値が文字でも確認できることを描画結果で確認する。
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -115,7 +115,7 @@ for (const design of DESIGNS) {
   });
 }
 
-test('同じ条件なら 6 デザインすべてが同じ数値を表示する', () => {
+test('同じ条件なら 登録済みの全デザインが同じ数値を表示する', () => {
   for (const c of CONDITIONS) {
     const values = DESIGNS.map((d) => {
       const out = render(d, c);

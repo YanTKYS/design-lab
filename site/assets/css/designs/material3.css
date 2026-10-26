@@ -1,0 +1,939 @@
+/* Material 3 baseline light roles. 独自実装、すべて比較ペイン内に限定する。 */
+.ds-material3 {
+  --m3-primary: #6750a4;
+  --m3-on-primary: #fff;
+  --m3-primary-container: #eaddff;
+  --m3-on-primary-container: #21005d;
+  --m3-secondary-container: #e8def8;
+  --m3-on-secondary-container: #1d192b;
+  --m3-surface: #fef7ff;
+  --m3-surface-low: #f7f2fa;
+  --m3-surface-high: #ece6f0;
+  --m3-on-surface: #1d1b20;
+  --m3-on-surface-variant: #49454f;
+  --m3-outline: #79747e;
+  --m3-outline-variant: #cac4d0;
+  --m3-error: #b3261e;
+  --tone-info: #4f378b;
+  --tone-progress: #285c83;
+  --tone-warning: #795900;
+  --tone-success: #286238;
+  --tone-error: #b3261e;
+  --chart-bar: var(--m3-primary);
+  --chart-track: var(--m3-surface-high);
+  --chart-bar-radius: 6px;
+  --chart-bar-max: 150px;
+  color: var(--m3-on-surface);
+  background: var(--m3-surface);
+  min-height: 100%;
+  font:
+    400 14px/1.5 Roboto,
+    'Noto Sans JP',
+    'Hiragino Kaku Gothic ProN',
+    'Yu Gothic',
+    sans-serif;
+}
+.ds-material3 *,
+.ds-material3 *::before,
+.ds-material3 *::after {
+  box-sizing: border-box;
+}
+.ds-material3 h2,
+.ds-material3 h3,
+.ds-material3 p {
+  margin: 0;
+}
+.ds-material3 h2 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+.ds-material3 h3 {
+  font-size: 18px;
+  font-weight: 500;
+}
+.ds-material3 button,
+.ds-material3 input,
+.ds-material3 select,
+.ds-material3 textarea {
+  font: inherit;
+}
+.ds-material3 button {
+  cursor: pointer;
+}
+.ds-material3 button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.ds-material3 a {
+  color: var(--m3-primary);
+  text-underline-offset: 3px;
+}
+.ds-material3 :focus-visible {
+  outline: 3px solid var(--m3-primary);
+  outline-offset: 3px;
+}
+.ds-material3 [data-focus]:focus {
+  outline: 3px solid var(--m3-primary);
+  outline-offset: 3px;
+}
+.ds-material3 svg {
+  flex: none;
+  vertical-align: middle;
+}
+.ds-material3 .m3-appbar {
+  min-height: 72px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--m3-surface-low);
+}
+.ds-material3 .m3-appbar strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 500;
+}
+.ds-material3 .m3-appbar div > span {
+  display: block;
+  font-size: 12px;
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-brand {
+  color: var(--m3-primary);
+}
+.ds-material3 .m3-account {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-icon-button.m3-menu {
+  display: none;
+}
+.ds-material3 .m3-body {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+.ds-material3 .m3-nav {
+  background: var(--m3-surface-low);
+  padding: 20px 8px;
+}
+.ds-material3 .m3-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.ds-material3 .m3-nav a {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  color: var(--m3-on-surface-variant);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+}
+.ds-material3 .m3-nav__indicator {
+  padding: 4px 16px;
+  width: 56px;
+  height: 32px;
+  border-radius: 16px;
+}
+.ds-material3 .m3-nav a[aria-current] {
+  font-weight: 700;
+  color: var(--m3-on-secondary-container);
+}
+.ds-material3 .m3-nav a[aria-current] .m3-nav__indicator {
+  background: var(--m3-secondary-container);
+}
+.ds-material3 .m3-nav a:hover .m3-nav__indicator {
+  background: var(--m3-surface-high);
+}
+.ds-material3 .m3-content {
+  min-width: 0;
+  padding: 28px 32px 48px;
+}
+.ds-material3 .m3-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.ds-material3 .m3-support {
+  color: var(--m3-on-surface-variant);
+  font-size: 12px;
+  margin-top: 6px;
+}
+.ds-material3 .m3-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 20px;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  color: var(--m3-primary);
+  background: transparent;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ds-material3 .m3-button:hover:not(:disabled) {
+  background: rgb(103 80 164 / 0.08);
+}
+.ds-material3 .m3-button:active:not(:disabled) {
+  background: rgb(103 80 164 / 0.16);
+}
+.ds-material3 .m3-button--filled {
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+}
+.ds-material3 .m3-button--filled:hover:not(:disabled) {
+  background: #5f4998;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}
+.ds-material3 .m3-button--filled:active:not(:disabled) {
+  background: #543f88;
+}
+.ds-material3 .m3-button--outlined {
+  border-color: var(--m3-outline);
+}
+.ds-material3 .m3-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--m3-on-surface-variant);
+  flex: none;
+}
+.ds-material3 .m3-icon-button:hover {
+  background: rgb(73 69 79 / 0.08);
+}
+.ds-material3 .m3-search {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 8px 4px 20px;
+  max-width: 720px;
+  min-height: 56px;
+  background: var(--m3-surface-high);
+  border-radius: 28px;
+}
+.ds-material3 .m3-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--m3-on-surface);
+  padding: 12px 0;
+}
+.ds-material3 .m3-search input::placeholder {
+  color: var(--m3-on-surface-variant);
+  opacity: 1;
+}
+.ds-material3 .m3-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 24px;
+}
+.ds-material3 .m3-chip {
+  position: relative;
+  cursor: pointer;
+}
+.ds-material3 .m3-chip input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.ds-material3 .m3-chip > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid var(--m3-outline);
+  border-radius: 8px;
+  font-weight: 500;
+}
+.ds-material3 .m3-chip small {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.ds-material3 .m3-chip input:checked + span {
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+  border-color: transparent;
+}
+.ds-material3 .m3-chip input:hover + span {
+  box-shadow: inset 0 0 0 40px rgb(73 69 79 / 0.08);
+}
+.ds-material3 .m3-chip input:focus-visible {
+  outline: 0;
+}
+.ds-material3 .m3-chip input:focus-visible + span {
+  outline: 3px solid var(--m3-primary);
+  outline-offset: 3px;
+}
+.ds-material3 .m3-surface {
+  background: var(--m3-surface-low);
+  border-radius: 16px;
+  min-width: 0;
+}
+.ds-material3 .m3-table-scroll {
+  position: relative;
+  overflow-x: auto;
+  border-radius: 16px;
+}
+.ds-material3 .m3-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 760px;
+  text-align: left;
+}
+.ds-material3 .m3-table th {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-table th,
+.ds-material3 .m3-table td {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--m3-outline-variant);
+}
+.ds-material3 .m3-table th button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0;
+  color: inherit;
+  border: 0;
+  background: transparent;
+  white-space: nowrap;
+}
+.ds-material3 .m3-table td:nth-child(4) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ds-material3 .m3-table td .m3-button {
+  min-height: 36px;
+  padding: 6px 12px;
+}
+.ds-material3 .m3-table tr:last-child td {
+  border-bottom: 0;
+}
+.ds-material3 .m3-table tbody tr:hover {
+  background: var(--m3-surface-high);
+}
+.ds-material3 .m3-number {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ds-material3 .m3-status {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ds-material3 .tone-info {
+  --tone: var(--tone-info);
+}
+.ds-material3 .tone-progress {
+  --tone: var(--tone-progress);
+}
+.ds-material3 .tone-warning {
+  --tone: var(--tone-warning);
+}
+.ds-material3 .tone-success {
+  --tone: var(--tone-success);
+}
+.ds-material3 .tone-error {
+  --tone: var(--tone-error);
+}
+.ds-material3 .m3-status.tone-info {
+  color: var(--tone-info);
+}
+.ds-material3 .m3-status.tone-progress {
+  color: var(--tone-progress);
+}
+.ds-material3 .m3-status.tone-warning {
+  color: var(--tone-warning);
+}
+.ds-material3 .m3-status.tone-success {
+  color: var(--tone-success);
+}
+.ds-material3 .m3-status.tone-error {
+  color: var(--tone-error);
+}
+.ds-material3 .m3-empty {
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  padding: 48px 16px;
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-scope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--m3-secondary-container);
+  border-radius: 12px;
+}
+.ds-material3 .m3-notice,
+.ds-material3 .m3-error-notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--m3-secondary-container);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+.ds-material3 .m3-notice p {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.ds-material3 .m3-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.32);
+  z-index: 20;
+}
+.ds-material3 .m3-dialog {
+  position: fixed;
+  z-index: 21;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100% - 32px));
+  max-height: calc(100% - 48px);
+  overflow: auto;
+  padding: 24px;
+  background: var(--m3-surface-high);
+  border-radius: 28px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);
+}
+.ds-material3 .m3-dialog header {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+.ds-material3 .m3-dialog h3 {
+  font-size: 24px;
+  font-weight: 400;
+}
+.ds-material3 .m3-dialog__symbol {
+  color: var(--m3-primary);
+}
+.ds-material3 .m3-dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+.ds-material3 .m3-summary {
+  margin: 16px 0;
+}
+.ds-material3 .m3-summary > div {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--m3-outline-variant);
+}
+.ds-material3 .m3-summary dt {
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-summary dd {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* フォーム */
+.ds-material3 .m3-form-layout {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 880px);
+  gap: 28px;
+}
+.ds-material3 .m3-form-guide > p {
+  color: var(--m3-on-surface-variant);
+  font-size: 12px;
+  margin-top: 20px;
+}
+.ds-material3 .m3-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+.ds-material3 .m3-steps li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-steps li > span {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: var(--m3-surface-high);
+  border-radius: 50%;
+  flex: none;
+}
+.ds-material3 .m3-steps li[aria-current] {
+  color: var(--m3-primary);
+  font-weight: 700;
+}
+.ds-material3 .m3-steps li[aria-current] > span {
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+}
+.ds-material3 .m3-form-surface {
+  padding: 24px;
+}
+.ds-material3 fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 28px;
+  min-width: 0;
+}
+.ds-material3 legend {
+  font-size: 18px;
+  font-weight: 500;
+  padding: 0;
+  margin-bottom: 20px;
+}
+.ds-material3 .m3-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 20px;
+}
+.ds-material3 .m3-field {
+  min-width: 0;
+}
+.ds-material3 .m3-field--wide {
+  grid-column: 1 / -1;
+}
+.ds-material3 .m3-filled {
+  background: var(--m3-surface-high);
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid var(--m3-on-surface-variant);
+  padding: 8px 16px 0;
+}
+.ds-material3 .m3-filled:focus-within {
+  border-color: var(--m3-primary);
+  box-shadow: 0 1px 0 var(--m3-primary);
+}
+.ds-material3 .m3-filled label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--m3-on-surface-variant);
+  font-size: 12px;
+}
+.ds-material3 .m3-filled:focus-within label {
+  color: var(--m3-primary);
+}
+.ds-material3 .m3-field small {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.ds-material3 .m3-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  padding: 4px 0 8px;
+  border: 0;
+  color: var(--m3-on-surface);
+  background: transparent;
+  border-radius: 0;
+}
+.ds-material3 select.m3-input {
+  min-height: 36px;
+}
+.ds-material3 select option {
+  background: var(--m3-surface);
+  color: var(--m3-on-surface);
+}
+.ds-material3 .m3-input--textarea {
+  min-height: 120px;
+  resize: vertical;
+  vertical-align: top;
+}
+.ds-material3 .m3-input:focus-visible {
+  outline-offset: 1px;
+  outline-width: 2px;
+}
+.ds-material3 .m3-field__hint {
+  font-size: 12px;
+  color: var(--m3-on-surface-variant);
+  padding: 4px 16px 0;
+}
+.ds-material3 .m3-field__error {
+  color: var(--m3-error);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 16px 0;
+}
+.ds-material3 .is-invalid .m3-filled {
+  border-color: var(--m3-error);
+  box-shadow: 0 1px 0 var(--m3-error);
+}
+.ds-material3 .is-invalid .m3-filled label {
+  color: var(--m3-error);
+}
+.ds-material3 .m3-error-notice {
+  background: #f9dedc;
+  color: #410e0b;
+}
+.ds-material3 .m3-error-notice .m3-button {
+  color: var(--m3-error);
+  padding-left: 0;
+}
+.ds-material3 .m3-consent > p {
+  margin-bottom: 8px;
+}
+.ds-material3 .m3-consent > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ds-material3 .m3-consent label {
+  padding: 8px 0;
+}
+.ds-material3 .m3-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--m3-primary);
+  margin: 8px 0;
+  flex: none;
+}
+.ds-material3 .is-invalid .m3-checkbox {
+  outline: 2px solid var(--m3-error);
+  outline-offset: 2px;
+}
+.ds-material3 .m3-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+.ds-material3 .m3-complete {
+  padding: 32px 0;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.ds-material3 .m3-complete > svg {
+  color: var(--m3-primary);
+}
+/* ダッシュボード */
+.ds-material3 .m3-dash-layout {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr);
+  gap: 24px;
+}
+.ds-material3 .m3-dash-filters {
+  align-self: start;
+  border: 1px solid var(--m3-outline-variant);
+  border-radius: 16px;
+  padding: 20px 16px;
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+.ds-material3 .m3-dash-filters h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+.ds-material3 .m3-outlined-field {
+  display: block;
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--m3-outline);
+  border-radius: 4px;
+}
+.ds-material3 .m3-outlined-field > span {
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  padding: 0 4px;
+  color: var(--m3-on-surface-variant);
+  background: var(--m3-surface);
+  font-size: 12px;
+}
+.ds-material3 .m3-outlined-field select {
+  width: 100%;
+  min-height: 56px;
+  padding: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--m3-on-surface);
+}
+.ds-material3 .m3-definitions {
+  font-size: 12px;
+  color: var(--m3-on-surface-variant);
+}
+.ds-material3 .m3-definitions summary {
+  cursor: pointer;
+  min-height: 32px;
+}
+.ds-material3 .m3-definitions dt {
+  font-weight: 700;
+  margin-top: 12px;
+}
+.ds-material3 .m3-definitions dd {
+  margin: 4px 0 12px;
+}
+.ds-material3 .m3-dash-main {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+.ds-material3 .m3-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 16px;
+}
+.ds-material3 .m3-kpi {
+  padding: 20px;
+  min-width: 0;
+}
+.ds-material3 .m3-kpi--hero {
+  background: var(--m3-primary-container);
+  color: var(--m3-on-primary-container);
+  border-radius: 24px;
+}
+.ds-material3 .m3-kpi--hero > svg {
+  margin-bottom: 20px;
+}
+.ds-material3 .m3-kpi__label {
+  font-weight: 500;
+}
+.ds-material3 .m3-kpi__value {
+  font-size: 32px;
+  line-height: 1.3;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.ds-material3 .m3-kpi--hero .m3-kpi__value {
+  font-size: 48px;
+}
+.ds-material3 .m3-kpi__value small {
+  font-size: 14px;
+  margin-left: 4px;
+}
+.ds-material3 .m3-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: var(--m3-surface-low);
+  border-radius: 24px;
+}
+.ds-material3 .m3-kpi .m3-button {
+  padding: 8px 0;
+}
+.ds-material3 .m3-chart-panel {
+  padding: 24px;
+}
+.ds-material3 .m3-chart-panel h3 {
+  margin-bottom: 8px;
+}
+.ds-material3 .m3-chart-panel > .chart-columns {
+  margin-top: 24px;
+}
+.ds-material3 .m3-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.ds-material3 .chart-donut {
+  display: block;
+  margin: 24px auto;
+}
+.ds-material3 .m3-status-list {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+}
+.ds-material3 .m3-status-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--m3-outline-variant);
+  font-size: 12px;
+}
+.ds-material3 .chart-hbars {
+  margin-top: 24px;
+}
+.ds-material3 .chart-hbars__label {
+  overflow-wrap: anywhere;
+}
+@container frame (max-width: 1199px) {
+  .ds-material3 .m3-content {
+    padding: 24px;
+  }
+  .ds-material3 .m3-form-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .ds-material3 .m3-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+  }
+  .ds-material3 .m3-form-guide > p {
+    display: inline-block;
+    margin: 8px 12px 0 0;
+  }
+  .ds-material3 .m3-dash-layout {
+    grid-template-columns: 1fr;
+  }
+  .ds-material3 .m3-dash-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ds-material3 .m3-dash-filters h3,
+  .ds-material3 .m3-definitions {
+    grid-column: 1 / -1;
+  }
+  .ds-material3 .m3-chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@container frame (max-width: 839px) {
+  .ds-material3 .m3-overview {
+    grid-template-columns: 1fr;
+  }
+  .ds-material3 .m3-kpi--hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+  .ds-material3 .m3-kpi--hero > svg {
+    display: none;
+  }
+  .ds-material3 .m3-kpi--hero .m3-kpi__value {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .ds-material3 .m3-kpi--hero .m3-button {
+    justify-self: start;
+  }
+  .ds-material3 .m3-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@container frame (max-width: 599px) {
+  .ds-material3 .m3-appbar {
+    padding: 8px 12px;
+    gap: 8px;
+    min-height: 64px;
+  }
+  .ds-material3 .m3-appbar strong {
+    font-size: 18px;
+  }
+  .ds-material3 .m3-icon-button.m3-menu {
+    display: inline-grid;
+  }
+  .ds-material3 .m3-brand,
+  .ds-material3 .m3-account span {
+    display: none;
+  }
+  .ds-material3 .m3-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ds-material3 .m3-nav {
+    display: none;
+    padding: 12px;
+  }
+  .ds-material3 .m3-nav.is-open {
+    display: block;
+  }
+  .ds-material3 .m3-nav ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .ds-material3 .m3-content {
+    padding: 20px 16px 32px;
+  }
+  .ds-material3 h2 {
+    font-size: 22px;
+  }
+  .ds-material3 .m3-form-surface,
+  .ds-material3 .m3-chart-panel {
+    padding: 20px 16px;
+  }
+  .ds-material3 .m3-dash-filters {
+    grid-template-columns: 1fr;
+  }
+  .ds-material3 .m3-metrics {
+    grid-template-columns: 1fr;
+  }
+  .ds-material3 .m3-metrics .m3-kpi {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 16px;
+    border-bottom: 1px solid var(--m3-outline-variant);
+  }
+  .ds-material3 .m3-metrics .m3-kpi:last-child {
+    border: 0;
+  }
+  .ds-material3 .m3-metrics .m3-kpi__value {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    margin: 0;
+  }
+  .ds-material3 .m3-metrics .m3-button {
+    justify-self: start;
+  }
+  .ds-material3 .m3-steps {
+    gap: 12px;
+  }
+  .ds-material3 .m3-steps li {
+    font-size: 12px;
+    gap: 4px;
+  }
+  .ds-material3 .m3-steps li > span {
+    width: 24px;
+    height: 24px;
+  }
+  .ds-material3 .m3-summary > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .ds-material3 .m3-status-list li {
+    gap: 8px;
+  }
+  .ds-material3 .m3-status {
+    gap: 4px;
+  }
+}

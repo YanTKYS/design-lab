@@ -1,7 +1,7 @@
 import { LOWEST_ID, TOTAL, countOf } from './expected.mjs';
 import { expect, test } from './fixtures.mjs';
 
-const DESIGNS = ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain'];
+import { DESIGN_IDS as DESIGNS } from '../../site/assets/js/designs/index.js';
 
 const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const rows = (scope) => scope.locator('.pane__root [data-id]');
@@ -208,7 +208,7 @@ test.describe('主要な画面幅でレイアウトが破綻しない', () => {
       await page.setViewportSize({ width, height: 900 });
       for (const mode of ['single', 'compare']) {
         for (const id of DESIGNS) {
-          const params = mode === 'single' ? `design=${id}` : `mode=compare&left=${id}&right=${DESIGNS[(DESIGNS.indexOf(id) + 1) % 6]}`;
+          const params = mode === 'single' ? `design=${id}` : `mode=compare&left=${id}&right=${DESIGNS[(DESIGNS.indexOf(id) + 1) % DESIGNS.length]}`;
           await page.goto(`?${params}`);
           await expect(rows(pane(page))).toHaveCount(TOTAL);
           const overflow = await page.evaluate(() => {
