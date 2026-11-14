@@ -1,0 +1,992 @@
+/* Astryx（Neutral テーマ）の公開トークンを参考にした独自実装。すべて比較ペイン内（.ds-astryx 配下）に限定する。
+   無彩色の面・淡い罫線・黒の主操作・角丸 6/10/12px・基準14px。外部フォントや CDN は読み込まない。 */
+.ds-astryx {
+  --ax-body: #f1f1f1;
+  --ax-surface: #fff;
+  --ax-text: #000;
+  --ax-text-secondary: #474747;
+  --ax-accent: #1b1b1b;
+  --ax-on-accent: #fff;
+  --ax-accent-muted: #d4d4d4;
+  --ax-border: rgb(0 0 0 / 0.08);
+  --ax-border-strong: #d4d4d4;
+  --ax-control-border: #848484; /* 入力欄の境界は非テキストのコントラスト 3:1 を確保する */
+  --ax-hover: rgb(0 0 0 / 0.05);
+  --ax-muted: #f1f1f1;
+  --ax-radius-inner: 6px;
+  --ax-radius-element: 10px;
+  --ax-radius-container: 12px;
+  --tone-info: #0074e2;
+  --tone-progress: #00788d;
+  --tone-warning: #ffce2f;
+  --tone-success: #198100;
+  --tone-error: #c9303a;
+  --tone-neutral: #777;
+  --chart-bar: var(--ax-accent);
+  --chart-track: #e2e2e2;
+  --chart-bar-radius: 4px;
+  --chart-bar-w: 36px;
+  --chart-bar-max: 150px;
+  --chart-seg-gap: var(--ax-surface);
+  --chart-stack-h: 32px;
+  --chart-hbar-h: 10px;
+  color: var(--ax-text);
+  background: var(--ax-body);
+  min-height: 100%;
+  font:
+    400 14px/1.5 Figtree,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Hiragino Kaku Gothic ProN',
+    'Noto Sans JP',
+    'Yu Gothic',
+    sans-serif;
+}
+.ds-astryx *,
+.ds-astryx *::before,
+.ds-astryx *::after {
+  box-sizing: border-box;
+}
+.ds-astryx h2,
+.ds-astryx h3,
+.ds-astryx p,
+.ds-astryx dl,
+.ds-astryx dd {
+  margin: 0;
+}
+.ds-astryx h2 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.ds-astryx h3 {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.ds-astryx button,
+.ds-astryx input,
+.ds-astryx select,
+.ds-astryx textarea {
+  font: inherit;
+}
+.ds-astryx button {
+  cursor: pointer;
+}
+.ds-astryx button:disabled {
+  cursor: default;
+  color: #919191;
+  border-color: var(--ax-border);
+  background: transparent;
+}
+.ds-astryx a {
+  color: var(--ax-text);
+  text-underline-offset: 3px;
+}
+/* フォーカスリング：Astryx の標準（2px の accent、3px の間隔）。 */
+.ds-astryx :focus-visible,
+.ds-astryx [data-focus]:focus {
+  outline: 2px solid var(--ax-accent);
+  outline-offset: 3px;
+}
+.ds-astryx svg {
+  flex: none;
+  vertical-align: middle;
+}
+.ds-astryx .ax-number {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ds-astryx .ax-strong {
+  font-weight: 600;
+}
+.ds-astryx .ax-right {
+  text-align: right;
+}
+.ds-astryx .ax-sub {
+  color: var(--ax-text-secondary);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* ---------- シェル：左サイドナビのみ（上部バーなし） ---------- */
+.ds-astryx .ax-topbar {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 12px;
+}
+.ds-astryx .ax-body {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  align-items: start;
+}
+.ds-astryx .ax-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 12px;
+  min-height: 100%;
+}
+.ds-astryx .ax-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 16px;
+}
+.ds-astryx .ax-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ax-radius-element);
+  background: var(--ax-accent);
+  color: var(--ax-on-accent);
+}
+.ds-astryx .ax-brand strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.ds-astryx .ax-brand span:not(.ax-brand__mark) {
+  display: block;
+  font-size: 12px;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-side__heading {
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-side ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.ds-astryx .ax-side a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 6px 8px;
+  border-radius: var(--ax-radius-element);
+  color: var(--ax-text);
+  text-decoration: none;
+}
+.ds-astryx .ax-side a:hover {
+  background: var(--ax-hover);
+}
+.ds-astryx .ax-side a[aria-current] {
+  background: var(--ax-accent-muted);
+  font-weight: 600;
+}
+.ds-astryx .ax-side__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 16px 8px 0;
+  color: var(--ax-text-secondary);
+  font-size: 13px;
+}
+.ds-astryx .ax-content {
+  min-width: 0;
+  min-height: 560px;
+  margin: 8px 8px 8px 0;
+  padding: 28px 32px 48px;
+  background: var(--ax-surface);
+  border: 1px solid var(--ax-border);
+  border-radius: var(--ax-radius-container);
+}
+
+/* ---------- ページ見出し・事実・ツールバー ---------- */
+.ds-astryx .ax-masthead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.ds-astryx .ax-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 40px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ax-border);
+}
+.ds-astryx .ax-meta dt {
+  font-size: 12px;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-meta dd {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ds-astryx .ax-meta--stack {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ds-astryx .ax-meta--stack > div {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ax-border);
+}
+.ds-astryx .ax-meta--stack dd {
+  font-weight: 400;
+  white-space: pre-wrap;
+}
+.ds-astryx .ax-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ds-astryx .ax-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 280px;
+  max-width: 480px;
+  min-height: 36px;
+  padding: 0 4px 0 12px;
+  background: var(--ax-surface);
+  border: 1px solid var(--ax-control-border);
+  border-radius: var(--ax-radius-element);
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-search:focus-within {
+  outline: 2px solid var(--ax-accent);
+  outline-offset: 3px;
+}
+.ds-astryx .ax-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+  color: var(--ax-text);
+}
+.ds-astryx .ax-search input:focus-visible {
+  outline: 0;
+}
+.ds-astryx .ax-search input::placeholder {
+  color: var(--ax-text-secondary);
+  opacity: 1;
+}
+.ds-astryx .ax-select-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.ds-astryx .ax-select-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-select-field select {
+  min-height: 36px;
+  min-width: 160px;
+  max-width: 100%;
+  padding: 0 32px 0 12px;
+  background: var(--ax-surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23474747' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  border: 1px solid var(--ax-control-border);
+  border-radius: var(--ax-radius-element);
+  color: var(--ax-text);
+  appearance: none;
+}
+
+/* ---------- ボタン ---------- */
+.ds-astryx .ax-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: var(--ax-radius-element);
+  background: transparent;
+  color: var(--ax-text);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ds-astryx .ax-button--primary {
+  background: var(--ax-accent);
+  color: var(--ax-on-accent);
+}
+.ds-astryx a.ax-button--primary {
+  color: var(--ax-on-accent);
+}
+.ds-astryx .ax-button--primary:hover:not(:disabled) {
+  background: #3b3b3b;
+}
+.ds-astryx .ax-button--primary:active:not(:disabled) {
+  background: #525252;
+}
+.ds-astryx .ax-button--secondary {
+  border-color: var(--ax-control-border);
+  background: var(--ax-surface);
+}
+.ds-astryx .ax-button--secondary:hover:not(:disabled),
+.ds-astryx .ax-button--ghost:hover:not(:disabled),
+.ds-astryx .ax-icon-button:hover {
+  background: var(--ax-hover);
+}
+.ds-astryx .ax-button--secondary:active:not(:disabled),
+.ds-astryx .ax-button--ghost:active:not(:disabled),
+.ds-astryx .ax-icon-button:active {
+  background: rgb(0 0 0 / 0.1);
+}
+.ds-astryx .ax-button--sm {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: var(--ax-radius-inner);
+  font-size: 13px;
+}
+.ds-astryx .ax-button--lg {
+  min-height: 40px;
+  padding: 0 20px;
+}
+.ds-astryx .ax-icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ax-radius-element);
+  background: transparent;
+  color: var(--ax-text);
+}
+.ds-astryx .ax-search .ax-icon-button {
+  width: 28px;
+  height: 28px;
+}
+.ds-astryx .ax-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  min-height: 24px;
+}
+
+/* ---------- バッジ・バナー ---------- */
+.ds-astryx .ax-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #e2e2e2;
+  color: #1b1b1b;
+}
+.ds-astryx .ax-badge.tone-info {
+  background: #b9d7ff;
+  color: #003978;
+}
+.ds-astryx .ax-badge.tone-progress {
+  background: #9ae2f4;
+  color: #004351;
+}
+.ds-astryx .ax-badge.tone-warning {
+  background: #fae19e;
+  color: #4b3900;
+}
+.ds-astryx .ax-badge.tone-success {
+  background: #bce0bb;
+  color: #00490b;
+}
+.ds-astryx .ax-badge.tone-error {
+  background: #ffc4be;
+  color: #76000c;
+}
+.ds-astryx .ax-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: var(--ax-radius-element);
+  background: #d0e5ff;
+  color: #003978;
+}
+.ds-astryx .ax-banner > svg {
+  margin-top: 2px;
+}
+.ds-astryx .ax-banner p {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ds-astryx .ax-banner p span {
+  margin-left: 12px;
+}
+.ds-astryx .ax-banner--warning {
+  background: #fae19e;
+  color: #4b3900;
+}
+.ds-astryx .ax-banner--error {
+  background: #ffc4be;
+  color: #76000c;
+}
+.ds-astryx .ax-banner .ax-button {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: var(--ax-radius-inner);
+  color: var(--ax-text);
+}
+
+/* ---------- カード・表 ---------- */
+.ds-astryx .ax-card {
+  min-width: 0;
+  background: var(--ax-surface);
+  border: 1px solid var(--ax-border);
+  border-radius: var(--ax-radius-container);
+}
+.ds-astryx .ax-table-scroll {
+  position: relative; /* 表内の visually-hidden が枠の外へはみ出さないよう、包含ブロックにする */
+  overflow-x: auto;
+  border-radius: var(--ax-radius-container);
+}
+.ds-astryx .ax-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 720px;
+  text-align: left;
+}
+.ds-astryx .ax-table th {
+  padding: 4px 12px;
+  border-bottom: 1px solid var(--ax-border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-table th button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+}
+.ds-astryx .ax-table th button:hover {
+  color: var(--ax-text);
+}
+.ds-astryx .ax-table th[aria-sort='ascending'] button,
+.ds-astryx .ax-table th[aria-sort='descending'] button {
+  color: var(--ax-text);
+}
+.ds-astryx .ax-table td {
+  height: 44px;
+  padding: 4px 12px;
+}
+/* 行の罫線は引かず、ホバーの塗りで行を追わせる。 */
+.ds-astryx .ax-table tbody tr:hover {
+  background: var(--ax-hover);
+}
+.ds-astryx .ax-table .ax-cell-action {
+  text-align: right;
+}
+.ds-astryx .ax-table--compact {
+  min-width: 420px;
+}
+.ds-astryx .ax-table--compact td {
+  height: 40px;
+}
+.ds-astryx .ax-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--ax-border);
+  font-size: 13px;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-summary__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ds-astryx .ax-summary__item b {
+  margin-left: -2px;
+  color: var(--ax-text);
+  font-variant-numeric: tabular-nums;
+}
+.ds-astryx .ax-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-empty strong {
+  color: var(--ax-text);
+}
+.ds-astryx .ax-empty .ax-button {
+  margin-top: 8px;
+}
+.ds-astryx .ax-empty-text {
+  padding: 16px 0;
+  color: var(--ax-text-secondary);
+}
+
+/* ---------- 詳細（右側のシート） ---------- */
+.ds-astryx .ax-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgb(0 0 0 / 0.32);
+}
+.ds-astryx .ax-sheet {
+  position: fixed;
+  z-index: 21;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(440px, 100%);
+  overflow: auto;
+  padding: 20px 24px 24px;
+  background: var(--ax-surface);
+  border-left: 1px solid var(--ax-border);
+  border-radius: var(--ax-radius-container) 0 0 var(--ax-radius-container);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 0.1), 0 12px 24px rgb(0 0 0 / 0.15);
+}
+.ds-astryx .ax-sheet header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.ds-astryx .ax-sheet header > div {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
+/* ---------- フォーム ---------- */
+.ds-astryx .ax-stepper {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+.ds-astryx .ax-stepper li {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-top: 12px;
+  border-top: 2px solid var(--ax-border-strong);
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-stepper li.is-done,
+.ds-astryx .ax-stepper li[aria-current] {
+  border-top-color: var(--ax-accent);
+  color: var(--ax-text);
+}
+.ds-astryx .ax-stepper li[aria-current] {
+  font-weight: 700;
+}
+.ds-astryx .ax-stepper__mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--ax-control-border);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ds-astryx .ax-stepper li.is-done .ax-stepper__mark,
+.ds-astryx .ax-stepper li[aria-current] .ax-stepper__mark {
+  border-color: var(--ax-accent);
+  background: var(--ax-accent);
+  color: var(--ax-on-accent);
+}
+.ds-astryx .ax-form-card {
+  max-width: 880px;
+  padding: 24px;
+}
+.ds-astryx .ax-rule {
+  margin-bottom: 20px;
+  color: var(--ax-text-secondary);
+  font-size: 13px;
+}
+.ds-astryx .ax-section {
+  min-width: 0;
+  margin: 0 0 28px;
+  padding: 0 0 4px;
+  border: 0;
+}
+.ds-astryx .ax-section legend {
+  padding: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+.ds-astryx .ax-section__desc {
+  margin: 2px 0 16px;
+  color: var(--ax-text-secondary);
+  font-size: 13px;
+}
+.ds-astryx .ax-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+}
+.ds-astryx .ax-field {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+}
+.ds-astryx .ax-field--wide {
+  grid-column: 1 / -1;
+}
+.ds-astryx .ax-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 600;
+}
+.ds-astryx .ax-optional,
+.ds-astryx .ax-required {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-hint {
+  color: var(--ax-text-secondary);
+  font-size: 13px;
+}
+.ds-astryx .ax-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 4px 12px;
+  border: 1px solid var(--ax-control-border);
+  border-radius: var(--ax-radius-element);
+  background: var(--ax-surface);
+  color: var(--ax-text);
+}
+.ds-astryx select.ax-input {
+  padding-right: 32px;
+  background: var(--ax-surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23474747' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  appearance: none;
+}
+.ds-astryx .ax-input--textarea {
+  min-height: 120px;
+  padding: 8px 12px;
+  resize: vertical;
+}
+.ds-astryx .ax-field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 2px;
+  padding: 6px 10px;
+  border-radius: var(--ax-radius-inner);
+  background: #ffc4be;
+  color: #76000c;
+  font-size: 13px;
+}
+.ds-astryx .ax-field__error > svg {
+  margin-top: 2px;
+}
+.ds-astryx .is-invalid .ax-input {
+  border-color: #c9303a;
+  box-shadow: inset 0 0 0 1px #c9303a;
+}
+.ds-astryx .ax-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ds-astryx .ax-check label {
+  padding: 3px 0;
+}
+.ds-astryx .ax-checkbox {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0;
+  accent-color: var(--ax-accent);
+}
+.ds-astryx .is-invalid .ax-checkbox {
+  outline: 2px solid #c9303a;
+  outline-offset: 2px;
+}
+.ds-astryx .ax-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ax-border);
+}
+.ds-astryx .ax-actions--center {
+  justify-content: center;
+  border-top: 0;
+}
+.ds-astryx .ax-complete {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 24px 0 8px;
+  text-align: center;
+}
+.ds-astryx .ax-complete > svg {
+  color: var(--tone-success);
+}
+
+/* ---------- ダッシュボード ---------- */
+.ds-astryx .ax-filterbar {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--ax-border);
+  border-radius: var(--ax-radius-container);
+  background: var(--ax-muted);
+}
+.ds-astryx .ax-filterbar__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+}
+.ds-astryx .ax-definitions {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-definitions summary {
+  cursor: pointer;
+  min-height: 28px;
+  padding-top: 4px;
+}
+.ds-astryx .ax-definitions dt {
+  margin-top: 10px;
+  font-weight: 700;
+  color: var(--ax-text);
+}
+.ds-astryx .ax-definitions dd {
+  margin: 2px 0 0;
+}
+.ds-astryx .ax-definitions p {
+  margin-top: 10px;
+}
+.ds-astryx .ax-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.ds-astryx .ax-tile {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--ax-border);
+  border-radius: var(--ax-radius-container);
+}
+.ds-astryx .ax-tile__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .ax-tile__value {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+.ds-astryx .ax-tile__value small {
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: 400;
+}
+.ds-astryx .ax-progress {
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--chart-track);
+  overflow: hidden;
+}
+.ds-astryx .ax-progress > span {
+  display: block;
+  width: calc(var(--r) * 100%);
+  height: 100%;
+  background: var(--ax-accent);
+}
+.ds-astryx .ax-tile .ax-link {
+  margin-top: 4px;
+}
+.ds-astryx .ax-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.ds-astryx .ax-panel {
+  padding: 20px;
+}
+.ds-astryx .ax-panel > .chart-columns,
+.ds-astryx .ax-panel > .chart-hbars {
+  margin-top: 20px;
+}
+.ds-astryx .ax-panel .chart-stacked {
+  margin: 16px 0 12px;
+}
+.ds-astryx .chart-stacked__seg {
+  background: var(--tone, var(--tone-neutral));
+  box-shadow: none;
+}
+.ds-astryx .chart-stacked__seg + .chart-stacked__seg {
+  box-shadow: inset 2px 0 0 var(--ax-surface);
+}
+.ds-astryx .chart-stacked__seg.tone-warning {
+  color: #111;
+}
+.ds-astryx .tone-info {
+  --tone: var(--tone-info);
+}
+.ds-astryx .tone-progress {
+  --tone: var(--tone-progress);
+}
+.ds-astryx .tone-warning {
+  --tone: var(--tone-warning);
+}
+.ds-astryx .tone-success {
+  --tone: var(--tone-success);
+}
+.ds-astryx .tone-error {
+  --tone: var(--tone-error);
+}
+.ds-astryx .chart-columns__value {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ds-astryx .chart-columns__label {
+  font-size: 12px;
+  color: var(--ax-text-secondary);
+}
+.ds-astryx .chart-hbars__label {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.ds-astryx .chart-hbars__share {
+  color: var(--ax-text-secondary);
+  font-size: 13px;
+}
+
+/* ---------- 幅に応じた切り替え（比較枠の幅に追従） ---------- */
+@container frame (max-width: 1199px) {
+  .ds-astryx .ax-content {
+    padding: 24px;
+  }
+  .ds-astryx .ax-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container frame (max-width: 899px) {
+  .ds-astryx .ax-charts {
+    grid-template-columns: 1fr;
+  }
+  .ds-astryx .ax-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@container frame (max-width: 719px) {
+  .ds-astryx .ax-topbar {
+    display: flex;
+  }
+  .ds-astryx .ax-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ds-astryx .ax-side {
+    display: none;
+    min-height: 0;
+    padding: 4px 12px 12px;
+  }
+  .ds-astryx .ax-side.is-open {
+    display: flex;
+  }
+  .ds-astryx .ax-content {
+    min-height: 0;
+    margin: 0 8px 8px;
+    padding: 20px 16px 32px;
+  }
+  .ds-astryx h2 {
+    font-size: 22px;
+  }
+  .ds-astryx .ax-form-card {
+    padding: 20px 16px;
+  }
+  .ds-astryx .ax-meta {
+    gap: 8px 24px;
+  }
+  .ds-astryx .ax-search {
+    max-width: none;
+  }
+}
+@container frame (max-width: 479px) {
+  .ds-astryx .ax-tiles {
+    grid-template-columns: 1fr;
+  }
+  .ds-astryx .ax-stepper__label {
+    font-size: 12px;
+  }
+  .ds-astryx .ax-stepper li {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .ds-astryx .ax-meta--stack > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .ds-astryx .ax-select-field,
+  .ds-astryx .ax-select-field select {
+    width: 100%;
+  }
+  .ds-astryx .ax-banner {
+    flex-wrap: wrap;
+  }
+  .ds-astryx .ax-panel {
+    padding: 16px;
+  }
+}

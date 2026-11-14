@@ -8,7 +8,7 @@
 
 ## 比較できるもの
 
-架空の自治体向け「申請管理システム」の **3画面・7デザイン** を比較できます。
+架空の自治体向け「申請管理システム」の **3画面・8デザイン** を比較できます。
 
 | 画面 | 試せること |
 | --- | --- |
@@ -16,7 +16,7 @@
 | 入力フォーム | 入力補助・エラー表示・入力→確認→完了 |
 | ダッシュボード | 条件別の指標・グラフ・内訳と、対応する申請一覧への移動 |
 
-対応デザイン：デジタル庁デザインシステム、IBM Carbon、Microsoft Fluent 2、GOV.UK、U.S. Web Design System、Plain（HTML 標準）、Google Material Design 3。
+対応デザイン：デジタル庁デザインシステム、IBM Carbon、Microsoft Fluent 2、GOV.UK、U.S. Web Design System、Plain（HTML 標準）、Google Material Design 3、Meta Astryx。
 
 画面別の特徴と公式サイトは[デザイン比較ガイド](docs/comparison-guide.md)にまとめています。
 
@@ -43,7 +43,7 @@ npm test     # 別のターミナルでユニットテストを実行
 
 ## 詳細ドキュメント
 
-- [デザイン比較ガイド](docs/comparison-guide.md)：画面別の違い、比較の見方、Material 3 の実装方針と参照資料
+- [デザイン比較ガイド](docs/comparison-guide.md)：画面別の違い、比較の見方、Material 3・Astryx の実装方針と参照資料
 - [使い方](docs/usage.md)：操作方法、共有 URL、入力情報の扱い、ダッシュボードの集計仕様
 - [開発資料](docs/development.md)：構成、状態管理、デザイン・画面の追加、テスト、GitHub Pages 公開
 - [変更履歴](CHANGELOG.md)

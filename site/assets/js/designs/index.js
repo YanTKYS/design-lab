@@ -7,7 +7,8 @@ import govuk from './govuk.js';
 import uswds from './uswds.js';
 import plain from './plain.js';
 import material3 from './material3.js';
+import astryx from './astryx.js';
 
-export const DESIGNS = [dads, carbon, fluent, govuk, uswds, plain, material3];
+export const DESIGNS = [dads, carbon, fluent, govuk, uswds, plain, material3, astryx];
 export const DESIGN_IDS = DESIGNS.map((d) => d.id);
 export const getDesign = (id) => DESIGNS.find((d) => d.id === id) ?? DESIGNS[0];

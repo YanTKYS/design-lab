@@ -44,7 +44,7 @@
 | パラメータ | 内容 | 例 |
 | --- | --- | --- |
 | `screen` | 画面（省略時は申請一覧。`form`：入力フォーム、`dashboard`：ダッシュボード） | `screen=dashboard` |
-| `design` | 単独表示のデザイン ID（`dads` / `carbon` / `fluent` / `govuk` / `uswds` / `plain` / `material3`） | `design=govuk` |
+| `design` | 単独表示のデザイン ID（`dads` / `carbon` / `fluent` / `govuk` / `uswds` / `plain` / `material3` / `astryx`） | `design=govuk` |
 | `mode`, `left`, `right` | 左右比較と左右のデザイン | `mode=compare&left=dads&right=carbon` |
 | `width` | 表示幅（`1280` / `1024` / `768` / `375`） | `width=1024` |
 | `q` | キーワード | `q=保育` |
@@ -54,7 +54,7 @@
 | `period`, `dept` | ダッシュボードの集計条件（対象期間 `fy` / `h1` / `q2` / `m3`、担当課） | `period=q2&dept=市民課` |
 | `lperiod`, `ldept`, `ltype`, `lgroup` | 一覧へ引き継いだ絞り込み（期間・担当課・申請種別・`pending` / `done`） | `lperiod=q2&lgroup=pending` |
 
-例：`?design=material3`、`?screen=form&design=material3`、`?screen=dashboard&mode=compare&left=material3&right=dads&period=q2`。公開サイトの URL の末尾に付けて利用できます。
+例：`?design=material3`、`?screen=form&design=astryx`、`?screen=dashboard&mode=compare&left=astryx&right=dads&period=q2`。公開サイトの URL の末尾に付けて利用できます。
 
 ## ダッシュボードの集計
 
