@@ -18,7 +18,7 @@
 
 対応デザイン：デジタル庁デザインシステム、IBM Carbon、Microsoft Fluent 2、GOV.UK、U.S. Web Design System、Plain（HTML 標準）、Google Material Design 3、Meta Astryx。
 
-画面別の特徴と公式サイトは[デザイン比較ガイド](docs/comparison-guide.md)にまとめています。
+画面別の特徴と公式サイトは[デザイン比較ガイド](docs/comparison-guide.md)にまとめています。ほかのリポジトリで使うときは、[デザイン選定ガイド](docs/design-selection.md)で比較候補を絞り、[UI 品質レビュー観点](docs/ui-quality-review.md)で画面を確認できます。
 
 ## 使い始める
 
@@ -44,6 +44,8 @@ npm test     # 別のターミナルでユニットテストを実行
 ## 詳細ドキュメント
 
 - [デザイン比較ガイド](docs/comparison-guide.md)：画面別の違い、比較の見方、Material 3・Astryx の実装方針と参照資料
+- [デザイン選定ガイド](docs/design-selection.md)：開発対象の用途から比較候補を絞る手順、各デザインの向き・注意点
+- [UI 品質レビュー観点](docs/ui-quality-review.md)：操作シナリオに基づくレビュー手順、AI が生成した画面の装飾の見分け方、依頼例と記録の形式
 - [使い方](docs/usage.md)：操作方法、共有 URL、入力情報の扱い、ダッシュボードの集計仕様
 - [開発資料](docs/development.md)：構成、状態管理、デザイン・画面の追加、テスト、GitHub Pages 公開
 - [変更履歴](CHANGELOG.md)
