@@ -24,6 +24,7 @@
 | GOV.UK Design System | <https://design-system.service.gov.uk/> | 19px の大きな文字、左側の絞り込み列、行の操作は「表示」リンク | 1 列、ラベル→ヒント→エラー→入力欄、任意のみ明示、エラーサマリーへフォーカス、「変更」リンク付きの回答確認 | 先頭の文章で要点を伝え、数値と説明を優先。グラフは月別の表内の棒だけ、ほかは見出し付きの表。左に絞り込み、末尾に「この数字の見方」 |
 | U.S. Web Design System | <https://designsystem.digital.gov/> | 正当性バナー、セリフ体の見出し、ボタン一体型の検索欄、狭い幅では縦積みの表、モーダルで詳細 | 「＊は必須項目です」の注記、エラー項目の左の赤い帯、赤いアラート、分割式のステップインジケーター | 見出し＋説明の明確な階層、4 つのサマリーボックス、番号つきの横棒、「データを表で表示」のアコーディオン、出典と基準日 |
 | Google Material Design 3 | <https://m3.material.io/> | 淡いトップバーとナビゲーションレール、検索バー・チェック付きフィルターチップ、密度を保った横スクロール表。詳細は中央ダイアログ | 手順・補足を分けた入力面、常時ラベル付きの Filled 型フィールド、赤い下線と理由、Filled / Outlined / Text の操作階層 | 条件を独立したパネルにまとめ、受付件数を大きいサーフェスで強調。月別の縦棒、状態のドーナツ＋文字の凡例、種別の横棒 |
+| Meta Astryx | <https://astryx.atmeta.com/> | 上部バーのない左サイドナビ、表示件数・処理状態・並び順の事実の帯、罫線のない表、絞り込み中の警告バナーと表の下の内訳。詳細は右側のシート | 上部の横向きの進行表示、必須を標準にして「任意」だけを表示、項目名の下に補足、欄の下の赤い枠でエラーと理由 | 固定の条件帯の下に4つの同じ大きさの指標タイル。月別は無彩色の縦棒、種別は横棒、状態は積み上げ棒と内訳の表 |
 | Plain | （HTML 標準） | ブラウザ標準の部品と最小限の CSS だけの基準線 | fieldset と label だけ。「（必須）」と「エラー：…」を文字で示す | グラフ・カードなし。見出しと表と文章だけで数値を示す |
 
 各デザインの「設計上の特徴」は、画面上部の見出し部分から確認できます。一覧では情報密度やナビゲーション、フォームではラベルやエラー、ダッシュボードでは指標や集計条件の配置などを説明しています。
@@ -42,5 +43,31 @@ Material 3 を開く共有 URL の例は[使い方の URL 仕様](usage.md#url-�
 
 - [Material 3](https://m3.material.io/)（[Navigation rail](https://m3.material.io/components/navigation-rail/overview)、[Search](https://m3.material.io/components/search/overview)、[Dialogs](https://m3.material.io/components/dialogs/overview)）
 - [Material Web の色の役割](https://github.com/material-components/material-web/blob/main/docs/theming/color.md)、[テキストフィールド](https://github.com/material-components/material-web/blob/main/docs/components/text-field.md)（実装の依存にはしていません）
+
+## Astryx の比較実装
+
+`astryx` も他のデザインと同じ**公開資料を参考にした HTML/CSS/JavaScript の独自実装**です。Astryx 公式の React コンポーネント（`@astryxdesign/core`）を導入・埋め込みするものではありません。
+
+**この画面で、Astryx 公式コンポーネントの操作性・性能・アクセシビリティは評価できません。** Astryx は React 19 以上を前提とし、実際のコンポーネントは StyleX と専用の挙動（テーブルの列フィルターなど）を持ちます。ここで比較できるのは、公開資料から読み取れる画面構成と操作の階層（サイドナビだけのシェル、表を中心にしたページ、必須を標準とするフォーム、条件帯と指標タイルのダッシュボード）の違いだけです。公式の部品が必要になった場合は、同じリポジトリ内の独立した検証領域で扱い、この比較サイトの実装とは切り分けます。
+
+参考にした要素と、実装で選んだ表現：
+
+| 参照元 | この比較実装での表現 |
+| --- | --- |
+| Neutral テーマ（無彩色の面、黒の accent、淡い罫線、角丸 6 / 10 / 12px、基準 14px、`--color-*` の状態色） | 白の面と薄いグレーの背景、黒の主操作、選択項目の淡いグレー。状態は文字・アイコン付きの淡いバッジ |
+| Table ページ（`table-page`）：事実は表の上、罫線なしの行＋ホバー、等幅数字、絞り込み中は警告バナー、空の結果とクリア | 表示件数などの事実の帯、罫線のない表、「条件をクリア」付きの警告バナーと空の結果、表の下の内訳 |
+| シェル（`shell-side-nav`）：上部バーのない左サイドナビ | グループ見出し付きの左サイドナビのみ。狭い枠ではメニューで展開 |
+| フォームウィザード（`form-wizard`）：上部の横向きの進行表示、1段階ずつ全幅 | 3段階の進行表示と、全幅の面に1段階ずつ表示 |
+| フォームの必須表示（`FormLayout` の `defaultOptionality`）：標準でない項目にだけ表示 | 必須を標準にして「任意」だけを表示し、先頭で規則を明示。チェックボックスだけは個別に「必須」と表示 |
+| ダッシュボード（`dashboard`）：全体で1つのフィルター帯、指標タイル→グラフ→表 | 固定の条件帯、4つの指標タイル、グラフ、処理状況の表 |
+
+独自の判断として、入力欄の境界は非テキストのコントラスト 3:1 を確保するため、Neutral テーマの淡い境界ではなく濃いグレー（`#848484`）にしています。書体は Figtree を指定していますが読み込まず、端末にない場合はローカルの日本語フォントで表示します。`@astryxdesign/*`、Google Fonts、実行時 CDN は使いません。
+
+参考にした公式の公開資料（GitHub の `main` ブランチ）：
+
+- [Astryx 公式サイト](https://astryx.atmeta.com/)、[Storybook](https://astryx.atmeta.com/storybook/)、[リポジトリ](https://github.com/meta/astryx)（[README](https://github.com/meta/astryx/blob/main/README.md)、[`@astryxdesign/core`](https://github.com/meta/astryx/tree/main/packages/core)）
+- Neutral テーマ：[`packages/themes/neutral`](https://github.com/meta/astryx/tree/main/packages/themes/neutral)（`neutralTheme.ts`、`neutral.spec.md`、`neutralPalettes.generated.ts`）
+- テンプレート：[`table-page`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/table-page)、[`form-wizard`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/form-wizard)、[`dashboard`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/dashboard)、[`shell-side-nav`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/shell-side-nav)
+- 部品の説明：[`Field`](https://github.com/meta/astryx/tree/main/packages/core/src/Field)、[`FormLayout`](https://github.com/meta/astryx/tree/main/packages/core/src/FormLayout)、[`Stepper`](https://github.com/meta/astryx/tree/main/packages/core/src/Stepper)、[`Banner`](https://github.com/meta/astryx/tree/main/packages/core/src/Banner)
 
 描画モジュールや CSS を追加・変更する手順は[開発資料](development.md#デザインを追加する)を参照してください。
