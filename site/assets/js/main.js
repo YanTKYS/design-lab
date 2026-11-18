@@ -460,6 +460,17 @@ function trapFocus(event, container) {
   }
 }
 
+/**
+ * そのペインのナビゲーションメニュー（<nav> を開閉する toggle-ui）だけを閉じる。
+ * バナー・アコーディオンなど他の一時状態や、もう一方のペインは変えない。
+ */
+function closeNavMenus(paneIndex) {
+  const { root, ui } = panes[paneIndex];
+  for (const button of root.querySelectorAll('[data-action="toggle-ui"][aria-controls]')) {
+    if (document.getElementById(button.getAttribute('aria-controls'))?.tagName === 'NAV') ui[button.dataset.key] = false;
+  }
+}
+
 function handleAction(action, el, pane) {
   const { id, key, value, target, gotoField: field, linkStatus: status, linkGroup: group, linkType: type } = el.dataset;
   switch (action) {
@@ -519,12 +530,18 @@ function handleAction(action, el, pane) {
     case 'nav': {
       const screen = NAV_SCREENS[target];
       if (!screen) {
+        // 未実装の画面は通知だけを出す。移動していないので、メニューはそのまま
         showNotice(`「${el.dataset.label ?? el.textContent.trim()}」画面`, `この画面は未実装です。${UNIMPLEMENTED_TEXT}`);
-      } else if (screen !== state.screen) {
+        break;
+      }
+      // 実装済みの画面を選んだら、同じ画面の再選択・詳細から一覧へ戻る場合も含め、メニューは役目を終えて閉じる
+      closeNavMenus(pane);
+      if (screen !== state.screen) {
         update({ screen, detail: null, notice: null }, { focus: { pane, selector: '[data-focus="heading"]' } });
       } else if (screen === 'list' && state.detail) {
         handleAction('close-detail', el, pane);
       } else {
+        render();
         applyFocus({ pane, selector: '[data-focus="heading"]' });
       }
       break;

@@ -228,3 +228,41 @@ test.describe('主要な画面幅でレイアウトが破綻しない', () => {
     });
   }
 });
+
+// 狭い幅では、メニューから移動したらそのペインのメニューだけが閉じ、移動先の見出しが見える（メニューを持つ全デザイン）
+const MENU = '[data-action="toggle-ui"][aria-controls]:not([aria-controls$="banner"])';
+
+test.describe('狭い幅：メニューから移動するとメニューが閉じる', () => {
+  for (const id of DESIGNS.filter((d) => d !== 'plain')) {
+    test(id, async ({ page }) => {
+      await page.goto(`?design=${id}&width=375`);
+      const p = pane(page);
+      const toggle = p.locator(MENU).first();
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await p.locator('nav [data-action="nav"][data-target="dashboard"]').first().click();
+      await expect(p.locator('[data-kpi="total"]')).toBeVisible();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      const heading = p.locator('[data-focus="heading"]');
+      await expect(heading).toBeFocused();
+      await expect(heading).toBeInViewport();
+    });
+  }
+
+  test('左右比較：操作したペインだけが閉じ、ほかの開閉状態は残る', async ({ page }) => {
+    await page.goto('?mode=compare&left=dads&right=uswds&width=375');
+    const [left, right] = [pane(page, 0), pane(page, 1)];
+    const banner = right.locator('[data-action="toggle-ui"][aria-controls$="banner"]');
+    await banner.click();
+    await left.locator(MENU).first().click();
+    await right.locator(MENU).first().click();
+    await left.locator('nav [data-action="nav"][data-target="dashboard"]').first().click();
+    await expect(left.locator(MENU).first()).toHaveAttribute('aria-expanded', 'false');
+    await expect(right.locator(MENU).first()).toHaveAttribute('aria-expanded', 'true');
+    await expect(banner).toHaveAttribute('aria-expanded', 'true');
+    // 未実装の画面は通知だけで、移動していないのでメニューは閉じない
+    await left.locator(MENU).first().click();
+    await left.locator('nav [data-action="nav"][data-target="settings"]').first().click();
+    await expect(left.locator(MENU).first()).toHaveAttribute('aria-expanded', 'true');
+  });
+});
