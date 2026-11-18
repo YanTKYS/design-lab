@@ -337,8 +337,16 @@ els.copy.addEventListener('click', async () => {
 });
 
 window.addEventListener('popstate', () => {
+  const before = state;
   state = parseState(location.search, DESIGN_IDS);
   render();
+  // 履歴で詳細から一覧へ戻ったときは、画面内の「戻る」（close-detail）と同じく、開いていた行の「詳細」を見える位置へ戻してフォーカスする。
+  // 一覧に無い行（絞り込みが違う場合など）は何もしない。進む（一覧→詳細）や別画面への移動でも何もしない。
+  if (before.screen === 'list' && state.screen === 'list' && before.detail && !state.detail) {
+    const selector = `[data-action="open-detail"][data-id="${before.detail}"]`;
+    const target = panes.find((pane) => !pane.section.hidden && pane.root.querySelector(selector));
+    if (target) applyFocus({ pane: target.index, selector });
+  }
 });
 
 function commitKeyword(value) {
