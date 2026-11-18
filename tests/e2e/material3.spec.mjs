@@ -113,6 +113,8 @@ test('Material 3: 375pxでナビ・検索・表スクロール・詳細を操作
   await expect(p.getByRole('navigation')).toBeVisible();
   await p.getByRole('link', { name: 'ダッシュボード', exact: true }).click();
   await expect(p.locator('[data-kpi="total"]')).toBeVisible();
+  await expect(p.getByRole('navigation')).toBeHidden(); // 移動したらメニューは閉じる
+  await p.getByRole('button', { name: 'ナビゲーション', exact: true }).click();
   await p.getByRole('link', { name: '申請一覧', exact: true }).click();
   await p.locator('[data-bind="keyword"]').fill('道路');
   await expect.poll(() => params(page).get('q')).toBe('道路');
