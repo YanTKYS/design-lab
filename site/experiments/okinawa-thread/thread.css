@@ -1,0 +1,1379 @@
+/* 沖縄テーマB案「糸の交点」（仮称）の試作。視覚の基準は docs/okinawa-ui-study/thread-*.png（Astra作のモック）。
+   濃藍の地・明るい無地の入力面・細い境界線・明朝の章見出し。本文左の格子帯、章の二重罫、項目名と値の縦軸で
+   「章／項目名／値」の交点と読み順を示す。色値はモックから採った候補値。外部フォント・画像・CDN は使わない。 */
+
+:root {
+  --th-ground: #19283f; /* 本文の地（濃藍） */
+  --th-bar: #18263b; /* システム名の帯 */
+  --th-hero: #243752; /* 見出し面 */
+  --th-rail: #213551; /* 左の格子帯・開いた行 */
+  --th-thread: #8aa8b2; /* 格子の糸 */
+  --th-rule: #6c8094; /* 章の二重罫・軸 */
+  --th-line: #45566e; /* 行の横罫 */
+  --th-head: #2c4057; /* 表頭 */
+  --th-text: #eeebe2;
+  --th-muted: #aebbc4;
+  --th-input: #f0f1e8; /* 明るい無地の入力面 */
+  --th-input-text: #1c3049;
+  --th-cream: #f2e8cd; /* 主操作・現在の手順・選択 */
+  --th-lead: #e2e8de; /* 先頭の指標行 */
+  --th-bar-fill: #afc7d1; /* 横棒 */
+  --th-focus: #ffd166; /* フォーカス（選択の生成りとは別の色と形） */
+  --th-error: #ffb0a3; /* エラーの文字（濃藍の地の上） */
+  --th-error-line: #ff8f80;
+  --th-mincho: 'BIZ UDPMincho', 'BIZ UDP明朝 Medium', 'Hiragino Mincho ProN', 'ヒラギノ明朝 ProN', 'Yu Mincho', '游明朝', 'Noto Serif JP', serif;
+  --th-gothic: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Noto Sans JP', 'Hiragino Sans', 'ヒラギノ角ゴシック', Meiryo, 'メイリオ', sans-serif;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--th-ground);
+  color: var(--th-text);
+  font-family: var(--th-gothic);
+  font-size: 16px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+svg {
+  flex: none;
+}
+
+.th-vh {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.th-num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.th-strong {
+  font-weight: 700;
+}
+
+.th-right {
+  text-align: right !important;
+}
+
+.th-muted {
+  color: var(--th-muted);
+  font-size: 14px;
+}
+
+.th-pre {
+  white-space: pre-wrap;
+}
+
+/* ---------- フォーカス：黄色の外枠と濃藍の間隔。プログラムで移した先にも出す ---------- */
+
+:focus-visible,
+[data-focus-ring]:focus {
+  outline: 3px solid var(--th-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--th-ground);
+}
+
+/* ---------- 試作の注記 ---------- */
+
+.th-experiment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 24px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: #e9e5d6;
+  color: #1c2a3c;
+  font-size: 13px;
+}
+
+.th-experiment p {
+  max-width: 76em;
+}
+
+.th-experiment a {
+  color: #1c2a3c;
+}
+
+.th-experiment__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.th-experiment :focus-visible {
+  outline-color: #1c2a3c;
+  box-shadow: none;
+}
+
+/* ---------- ヘッダー ---------- */
+
+.th-topbar__inner,
+.th-hero__inner,
+.th-app,
+.th-footer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 52px;
+  padding-right: 52px;
+}
+
+.th-topbar {
+  background: var(--th-bar);
+  border-bottom: 1px solid #6e8294;
+}
+
+.th-topbar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  min-height: 62px;
+}
+
+.th-topbar__mark {
+  color: var(--th-muted);
+}
+
+.th-topbar__org {
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.th-topbar__system {
+  padding-left: 12px;
+  border-left: 1px solid var(--th-muted);
+  font-size: 15px;
+}
+
+.th-nav {
+  margin-left: auto;
+}
+
+.th-nav__list {
+  display: flex;
+  gap: 8px;
+}
+
+.th-nav__item {
+  min-height: 44px;
+  padding: 8px 4px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.th-nav__item:hover {
+  border-bottom-color: var(--th-rule);
+}
+
+/* 現在の画面：太字＋下線＋aria-current */
+.th-nav__item[aria-current='page'] {
+  font-weight: 700;
+  border-bottom-color: var(--th-text);
+}
+
+.th-hero {
+  background: var(--th-hero);
+}
+
+.th-hero__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 128px;
+}
+
+.th-hero__title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--th-mincho);
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.th-hero__title:focus {
+  outline: 3px solid var(--th-focus);
+  outline-offset: 6px;
+  box-shadow: none;
+}
+
+/* 見出し端の十字絣の反復。見出しの文字や情報領域を覆わない右側に限る */
+.th-hero__pattern {
+  position: absolute;
+  top: 0;
+  right: 52px;
+  width: min(470px, 40%);
+  height: 100%;
+}
+
+/* ---------- 本文：左の格子帯 ---------- */
+
+.th-app {
+  position: relative;
+  padding-top: 24px;
+  padding-bottom: 32px;
+  padding-left: calc(52px + 36px);
+}
+
+.th-app::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  bottom: 32px;
+  left: 52px;
+  width: 16px;
+  border-left: 2px solid var(--th-thread);
+  border-right: 2px solid var(--th-thread);
+  background:
+    linear-gradient(90deg, transparent 5px, var(--th-thread) 5px 6px, transparent 6px, transparent 9px, var(--th-thread) 9px 10px, transparent 10px),
+    repeating-linear-gradient(to bottom, var(--th-thread) 0 1px, transparent 1px 7px),
+    var(--th-rail);
+}
+
+/* ---------- 共通の部品 ---------- */
+
+.th-label {
+  display: block;
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.th-help {
+  font-size: 14px;
+  color: var(--th-muted);
+}
+
+.th-input,
+.th-select {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--th-input);
+  border-radius: 0;
+  background: var(--th-input);
+  color: var(--th-input-text);
+  color-scheme: light;
+}
+
+.th-select {
+  max-width: 100%;
+}
+
+.th-select--sm {
+  min-height: 36px;
+  padding: 4px 8px;
+}
+
+.th-input::placeholder,
+.th-textarea::placeholder {
+  color: #5d6b78;
+  opacity: 1;
+}
+
+.th-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 1px solid var(--th-text);
+  border-radius: 0;
+  background: transparent;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* 主操作：生成りの塗り＋濃藍の文字（動詞） */
+.th-btn--primary {
+  border-color: var(--th-cream);
+  background: var(--th-cream);
+  color: var(--th-ground);
+}
+
+.th-btn--primary:hover {
+  background: #fff7e3;
+}
+
+.th-btn--ghost:hover {
+  background: var(--th-rail);
+}
+
+.th-btn:active {
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+
+.th-btn--sm {
+  min-height: 34px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.th-btn--text {
+  min-height: 32px;
+  padding: 2px;
+  border: 0;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.th-link,
+.th-link-button {
+  color: var(--th-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.th-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.th-link-button {
+  min-height: 32px;
+  padding: 2px;
+  border: 0;
+  background: none;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.th-empty {
+  padding: 24px 12px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* 章：上に二重の横罫。明朝の章見出しの前に小さな交点の印 */
+.th-chapter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--th-mincho);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.th-mark {
+  color: var(--th-muted);
+}
+
+.th-chapter-block {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  margin-top: 20px;
+  border-top: 3px double var(--th-rule);
+}
+
+.th-chapter-block > .th-chapter {
+  padding: 18px 12px 18px 0;
+  align-self: start;
+  font-size: 22px;
+}
+
+.th-chapter-block__rows {
+  min-width: 0;
+  border-left: 1px solid var(--th-rule);
+}
+
+.th-chapter-block--stack {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 28px;
+}
+
+.th-chapter-block--stack > .th-chapter {
+  padding: 14px 0 10px;
+}
+
+/* 項目名｜値の縦軸（フォームの行・確認・詳細・375pxの台帳） */
+.th-row {
+  display: grid;
+  grid-template-columns: 172px minmax(0, 1fr);
+  gap: 6px 12px;
+  padding: 12px 12px 12px;
+  border-bottom: 1px solid var(--th-line);
+}
+
+.th-row__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  padding-top: 2px;
+  font-weight: 700;
+}
+
+.th-req {
+  padding-left: 6px;
+  border-left: 1px solid var(--th-muted);
+  color: var(--th-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.th-row__value {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.th-row .th-input,
+.th-row .th-select {
+  width: 100%;
+}
+
+.th-textarea {
+  min-height: 6em;
+  resize: vertical;
+}
+
+.th-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.th-checkbox {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  accent-color: var(--th-cream);
+}
+
+/* エラー：淡い赤の文字＋「エラー」＋三角＋欄の太枠 */
+.th-row.is-invalid .th-input,
+.th-row.is-invalid .th-select {
+  border: 3px solid var(--th-error-line);
+}
+
+.th-row.is-invalid .th-checkbox {
+  outline: 3px solid var(--th-error-line);
+  outline-offset: 2px;
+}
+
+.th-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  color: var(--th-error);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.th-field-error svg {
+  margin-top: 3px;
+}
+
+.th-error-summary {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--th-error-line);
+  border-left-width: 6px;
+  background: #2b2537;
+}
+
+.th-error-summary__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--th-error);
+  font-size: 19px;
+}
+
+.th-error-summary ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  margin-top: 4px;
+}
+
+.th-error-summary .th-link-button {
+  color: var(--th-error);
+}
+
+/* 手順：四角の番号。現在は生成りの塗り＋太字 */
+.th-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 0;
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--th-rule);
+}
+
+.th-steps__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--th-muted);
+}
+
+.th-steps__item + .th-steps__item::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  margin: 0 12px;
+  background: var(--th-muted);
+}
+
+.th-steps__num {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.th-steps__item.is-current,
+.th-steps__item.is-done {
+  color: var(--th-text);
+}
+
+.th-steps__item.is-current {
+  font-weight: 700;
+}
+
+.th-steps__item.is-current .th-steps__num {
+  border-color: var(--th-cream);
+  background: var(--th-cream);
+  color: var(--th-ground);
+}
+
+.th-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  margin-bottom: 14px;
+  padding: 4px 10px;
+  border: 1px dashed var(--th-line);
+  font-size: 14px;
+  color: var(--th-muted);
+}
+
+.th-tools .th-link-button {
+  color: var(--th-muted);
+}
+
+.th-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 3px double var(--th-rule);
+}
+
+.th-sheet-lead {
+  padding: 12px;
+}
+
+.th-axis > div {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: 4px 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--th-line);
+}
+
+.th-axis dt {
+  padding-right: 12px;
+  border-right: 1px solid var(--th-rule);
+  color: var(--th-muted);
+  font-size: 14px;
+}
+
+.th-axis--confirm > div {
+  grid-template-columns: 12em minmax(0, 1fr) auto;
+}
+
+.th-axis--confirm dt {
+  color: var(--th-text);
+  font-weight: 700;
+}
+
+.th-axis__edit {
+  text-align: right;
+}
+
+/* ---------- 一覧 ---------- */
+
+.th-cond {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px 28px;
+  padding-bottom: 18px;
+}
+
+.th-search {
+  flex: 0 1 380px;
+  min-width: 0;
+}
+
+.th-search__row {
+  display: flex;
+  gap: 6px;
+}
+
+.th-search .th-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.th-search .th-help {
+  margin-top: 4px;
+}
+
+.th-status {
+  flex: 1 1 520px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  align-self: flex-start;
+}
+
+.th-status__items {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border: 1px solid var(--th-rule);
+}
+
+.th-status__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-height: 44px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.th-status__item + .th-status__item {
+  border-left: 1px solid var(--th-rule);
+}
+
+.th-status__item input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.th-status__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+}
+
+.th-status__count {
+  font-weight: 700;
+}
+
+.th-status__item:hover {
+  background: var(--th-rail);
+}
+
+/* 選択：生成りの塗り＋チェック＋太字。フォーカスは別の黄色い外枠 */
+.th-status__item.is-selected {
+  background: var(--th-cream);
+  color: var(--th-ground);
+  font-weight: 700;
+}
+
+.th-status__item:has(input:focus-visible) {
+  outline: 3px solid var(--th-focus);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.th-field-inline {
+  min-width: 0;
+}
+
+.th-field-inline .th-select {
+  min-width: 14rem;
+}
+
+.th-section--ledger {
+  border-top: 3px double var(--th-rule);
+}
+
+.th-result-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
+  padding: 14px 0 6px;
+}
+
+.th-count__num {
+  margin-right: 2px;
+  font-size: 26px;
+}
+
+.th-count__total {
+  margin-left: 6px;
+  color: var(--th-muted);
+}
+
+.th-scope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin: 4px 0 8px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--th-cream);
+  background: var(--th-rail);
+}
+
+.th-scope__title {
+  font-weight: 700;
+}
+
+.th-scope ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+
+.th-scope .th-btn {
+  margin-left: auto;
+}
+
+.th-filterline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  min-height: 40px;
+}
+
+.th-filterline__tag {
+  margin-right: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--th-text);
+  font-size: 13px;
+}
+
+.th-ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th-ledger th {
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--th-rule);
+  background: var(--th-head);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.th-sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.th-ledger th:not(.is-sorted) svg {
+  opacity: 0.55;
+}
+
+.th-ledger th.is-sorted .th-sort-button {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.th-ledger td {
+  padding: 10px;
+  border-bottom: 1px solid var(--th-line);
+  vertical-align: middle;
+}
+
+/* 受付番号と状態の列の右に縦軸を通す（番号→状態→値の読み順） */
+.th-ledger th:nth-child(2),
+.th-ledger td:nth-child(2) {
+  border-right: 1px solid var(--th-rule);
+}
+
+.th-ledger tr.is-open td {
+  background: var(--th-rail);
+  border-bottom-color: transparent;
+}
+
+.th-col-action {
+  width: 1%;
+  text-align: right;
+}
+
+.th-detail-row td {
+  padding: 0 10px 14px;
+  background: var(--th-rail);
+}
+
+.th-detail {
+  border-top: 1px dashed var(--th-rule);
+  padding-top: 10px;
+}
+
+.th-detail__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 0 0 6px 2px;
+}
+
+.th-detail__title {
+  font-family: var(--th-mincho);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.th-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 7px;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.th-badge[data-status='received'] {
+  color: #cfe0ea;
+}
+
+.th-badge[data-status='reviewing'] {
+  color: #fff;
+  background: var(--th-head);
+}
+
+.th-badge[data-status='returned'] {
+  color: #f2d27a;
+}
+
+.th-badge[data-status='approved'] {
+  color: #a8dcc0;
+}
+
+.th-badge[data-status='rejected'] {
+  color: #ddd6cf;
+  border-style: double;
+  border-width: 3px;
+}
+
+.th-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+}
+
+.th-sort .th-label {
+  margin: 0;
+}
+
+.th-cards {
+  display: grid;
+  border-top: 1px solid var(--th-rule);
+}
+
+.th-card {
+  padding: 6px 0 10px;
+  border-bottom: 1px solid var(--th-rule);
+}
+
+.th-card.is-open {
+  background: var(--th-rail);
+}
+
+.th-axis--card > div {
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  padding: 4px 8px;
+  border-bottom: 0;
+}
+
+.th-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 8px 0;
+}
+
+.th-card__actions .th-btn {
+  min-height: 44px;
+}
+
+.th-card .th-detail {
+  margin: 8px 8px 0;
+}
+
+/* ---------- ダッシュボード ---------- */
+
+.th-cond--dash {
+  padding-bottom: 18px;
+  border-bottom: 3px double var(--th-rule);
+}
+
+.th-cond__ref {
+  margin-left: auto;
+  align-self: center;
+  color: var(--th-muted);
+  font-size: 14px;
+}
+
+.th-cond--dash + .th-chapter-block {
+  border-top: 0;
+}
+
+.th-kpis {
+  border-left: 0;
+}
+
+.th-kpi {
+  display: grid;
+  grid-template-columns: 12em 7.5em minmax(0, 1fr) 8em;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 55px;
+  padding: 4px 12px;
+  border-bottom: 1px solid #718599;
+}
+
+.th-kpi dd {
+  margin: 0;
+}
+
+.th-kpi__name {
+  font-weight: 700;
+}
+
+.th-kpi__value {
+  white-space: nowrap;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.th-kpi__value small {
+  margin-left: 4px;
+  font-size: 15px;
+}
+
+.th-kpi__def {
+  font-size: 14px;
+  color: var(--th-muted);
+}
+
+/* 先頭の受付件数：明るい行で総数を示す。移動できるのは下線の「一覧を見る」だけ */
+.th-kpi--lead {
+  background: var(--th-lead);
+  color: #263951;
+  border-bottom-color: transparent;
+}
+
+.th-kpi--lead .th-kpi__def,
+.th-kpi--lead .th-link {
+  color: #263951;
+}
+
+.th-kpi--lead .th-link:focus-visible,
+.th-kpi--lead .th-link[data-focus-ring]:focus {
+  outline-color: #263951;
+  box-shadow: 0 0 0 2px var(--th-lead);
+}
+
+.th-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+}
+
+.th-hbars {
+  display: grid;
+  gap: 4px;
+  padding-top: 4px;
+}
+
+.th-hbars li {
+  display: grid;
+  grid-template-columns: 2.6em minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+}
+
+.th-hbars__track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 件数は棒の端のすぐ右に文字で添える（最長の棒でも件数が収まる幅を残す） */
+.th-hbars__bar {
+  display: block;
+  flex: none;
+  width: calc((100% - 3.5em) * var(--r));
+  min-width: 2px;
+  height: 6px;
+  background: var(--th-bar-fill);
+}
+
+.th-hbars__value {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.th-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th-table th,
+.th-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--th-line);
+  text-align: left;
+}
+
+.th-table thead th {
+  background: var(--th-head);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.th-table tbody th {
+  font-weight: 400;
+}
+
+.th-table .th-right {
+  width: 5.5em;
+}
+
+/* ---------- フッター ---------- */
+
+.th-footer {
+  padding-bottom: 28px;
+}
+
+.th-footer p {
+  padding-top: 16px;
+  border-top: 1px solid #53657d;
+  font-size: 13px;
+  color: var(--th-muted);
+}
+
+.th-noscript {
+  padding: 24px 0;
+}
+
+/* ---------- 中間幅：章見出しを上に置き、項目名｜値の軸は保つ ---------- */
+
+.th-app[data-layout='mid'] .th-chapter-block,
+.th-app[data-layout='narrow'] .th-chapter-block {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.th-app[data-layout='mid'] .th-chapter-block > .th-chapter,
+.th-app[data-layout='narrow'] .th-chapter-block > .th-chapter {
+  padding: 14px 0 8px;
+}
+
+.th-app[data-layout='mid'] .th-chapter-block__rows,
+.th-app[data-layout='narrow'] .th-chapter-block__rows {
+  border-left: 0;
+}
+
+.th-app[data-layout='mid'] .th-dash-grid,
+.th-app[data-layout='narrow'] .th-dash-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---------- 狭い幅（600px 未満）：項目名を値の直上に、左の帯を細く ---------- */
+
+.th-app[data-layout='narrow'] .th-row {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 10px 0 12px;
+}
+
+.th-app[data-layout='narrow'] .th-axis > div:not(.th-axis--card > div) {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.th-app[data-layout='narrow'] .th-axis--confirm > div {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.th-app[data-layout='narrow'] .th-axis--confirm dt {
+  grid-column: 1 / -1;
+}
+
+.th-app[data-layout='narrow'] .th-axis dt {
+  border-right: 0;
+}
+
+.th-app[data-layout='narrow'] .th-axis--card dt {
+  border-right: 1px solid var(--th-rule);
+}
+
+.th-app[data-layout='narrow'] .th-detail .th-axis > div {
+  padding: 6px 4px;
+}
+
+.th-app[data-layout='narrow'] .th-kpi {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'name value' 'def link';
+  padding: 10px 8px;
+}
+
+.th-app[data-layout='narrow'] .th-kpi__name {
+  grid-area: name;
+}
+
+.th-app[data-layout='narrow'] .th-kpi__value {
+  grid-area: value;
+  text-align: right;
+}
+
+.th-app[data-layout='narrow'] .th-kpi__def {
+  grid-area: def;
+}
+
+.th-app[data-layout='narrow'] .th-kpi__link {
+  grid-area: link;
+  text-align: right;
+}
+
+.th-app[data-layout='narrow'] .th-cond--dash .th-field-inline {
+  flex: 1 1 100%;
+}
+
+.th-app[data-layout='narrow'] .th-cond--dash .th-field-inline:nth-of-type(2) {
+  flex: 1 1 0;
+}
+
+.th-app[data-layout='narrow'] .th-field-inline .th-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.th-app[data-layout='narrow'] .th-cond__ref {
+  flex-basis: 100%;
+  margin-left: 0;
+}
+
+.th-app[data-layout='narrow'] .th-search {
+  flex: 1 1 100%;
+}
+
+.th-app[data-layout='narrow'] .th-chapter {
+  font-size: 21px;
+}
+
+.th-app[data-layout='narrow'] .th-steps__item + .th-steps__item::before {
+  width: 16px;
+  margin: 0 8px;
+}
+
+.th-app[data-layout='narrow'] .th-actions {
+  justify-content: flex-end;
+}
+
+@media (max-width: 599px) {
+  .th-topbar__inner,
+  .th-hero__inner,
+  .th-app,
+  .th-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .th-topbar__inner {
+    padding-top: 6px;
+  }
+
+  .th-topbar__org {
+    font-size: 18px;
+  }
+
+  .th-topbar__system {
+    font-size: 13px;
+  }
+
+  .th-nav {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+
+  .th-nav__list {
+    gap: 16px;
+  }
+
+  .th-nav__item {
+    min-height: 40px;
+    font-size: 14px;
+  }
+
+  .th-hero__inner {
+    min-height: 84px;
+  }
+
+  .th-hero__title {
+    font-size: 28px;
+  }
+
+  .th-hero__pattern {
+    right: 16px;
+    width: 30%;
+  }
+
+  .th-app {
+    padding-left: calc(16px + 18px);
+  }
+
+  .th-app::before {
+    left: 16px;
+    width: 8px;
+    border-width: 1px;
+    background:
+      linear-gradient(90deg, transparent 2.5px, var(--th-thread) 2.5px 3.5px, transparent 3.5px),
+      repeating-linear-gradient(to bottom, var(--th-thread) 0 1px, transparent 1px 7px),
+      var(--th-rail);
+  }
+}
+
+@media (max-width: 359px) {
+  .th-hero__title {
+    font-size: 24px;
+  }
+}
+
+/* 600〜759px：長い画面名（ダッシュボード）でも模様に重ならないよう、見出しと模様を少し小さくする */
+@media (min-width: 600px) and (max-width: 759px) {
+  .th-hero__title {
+    font-size: 36px;
+  }
+
+  .th-hero__pattern {
+    width: 34%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1199px) {
+  .th-topbar__inner,
+  .th-hero__inner,
+  .th-app,
+  .th-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .th-app {
+    padding-left: calc(24px + 32px);
+  }
+
+  .th-app::before {
+    left: 24px;
+  }
+
+  .th-hero__pattern {
+    right: 24px;
+  }
+}
+
+/* ---------- 強制カラー ---------- */
+
+@media (forced-colors: active) {
+  :focus-visible,
+  [data-focus-ring]:focus,
+  .th-status__item:has(input:focus-visible) {
+    outline-color: Highlight;
+  }
+
+  .th-status__item.is-selected,
+  .th-steps__item.is-current .th-steps__num {
+    outline: 2px solid CanvasText;
+  }
+
+  .th-hero__pattern,
+  .th-app::before {
+    display: none;
+  }
+}

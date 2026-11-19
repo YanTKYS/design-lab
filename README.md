@@ -50,4 +50,7 @@ npm test     # 別のターミナルでユニットテストを実行
 - [開発資料](docs/development.md)：構成、状態管理、デザイン・画面の追加、テスト、GitHub Pages 公開
 - [変更履歴](CHANGELOG.md)
 
-実験中の独立した試作：[琉球モダン・彩（申請一覧・新規申請・ダッシュボード）](https://yantkys.github.io/design-lab/experiments/ryukyu-modern/)（[設計案](docs/ryukyu-modern-concept.md)、[ソース](site/experiments/ryukyu-modern/)）。3画面を切り替えて操作できる独立した試作で、上記の比較デザイン・比較機能には含めていません。
+実験中の独立した試作（3画面を切り替えて操作できる。上記の比較デザイン・比較機能には含めていない）：
+
+- [琉球モダン・彩](https://yantkys.github.io/design-lab/experiments/ryukyu-modern/)（[設計案](docs/ryukyu-modern-concept.md)、[ソース](site/experiments/ryukyu-modern/)）
+- [糸の交点（仮称・沖縄テーマB案）](https://yantkys.github.io/design-lab/experiments/okinawa-thread/)（[設計と着想](docs/okinawa-ui-study/README.md)、[ソース](site/experiments/okinawa-thread/)）
