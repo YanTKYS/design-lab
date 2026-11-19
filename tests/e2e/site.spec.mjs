@@ -184,6 +184,69 @@ test('ブラウザの戻る操作で前の状態に戻る', async ({ page }) => 
   await expect(page.locator('.lab-wide-only input[name="design"][value="dads"]')).toBeChecked();
 });
 
+// 履歴で詳細から一覧へ戻ったとき、下方の行でも位置と操作対象を見失わない（画面内の「戻る」と同じ結果にそろえる）
+const DETAIL_ROW = 39;
+
+async function openDetailAndGoBack(page, id) {
+  await page.goto(`?design=${id}`);
+  const p = pane(page);
+  const open = p.locator('[data-action="open-detail"]').nth(DETAIL_ROW);
+  const rowId = await open.getAttribute('data-id');
+  await open.scrollIntoViewIfNeeded();
+  await open.click();
+  await expect.poll(() => query(page).get('detail')).toBe(rowId);
+  await page.goBack();
+  await expect.poll(() => query(page).get('detail')).toBeNull();
+  return p.locator(`[data-action="open-detail"][data-id="${rowId}"]`);
+}
+
+test.describe('ブラウザの戻るで詳細から一覧へ戻る', () => {
+  for (const id of DESIGNS) {
+    test(`${id}: 元の行の「詳細」が見えてフォーカスされる`, async ({ page }) => {
+      const row = await openDetailAndGoBack(page, id);
+      await expect(row).toBeFocused();
+      await expect(row).toBeInViewport();
+    });
+  }
+
+  test('dads 375px: 元の行へ戻り、画面内の「戻る」と同じ位置になる', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    const row = await openDetailAndGoBack(page, 'dads');
+    await expect(row).toBeFocused();
+    await expect(row).toBeInViewport();
+    const scrollTop = () => pane(page).locator('.pane__scroll').evaluate((el) => el.scrollTop);
+    const viaHistory = await scrollTop();
+    expect(viaHistory).toBeGreaterThan(0);
+    await row.click();
+    await pane(page).locator('.dads-detail-actions [data-action="close-detail"]').click();
+    await expect(row).toBeFocused();
+    expect(await scrollTop()).toBe(viaHistory);
+  });
+
+  test('検索条件を保ち、左右比較では行のあるペインへ戻り、進むと詳細が開く', async ({ page }) => {
+    await page.goto('?mode=compare&left=dads&right=carbon&width=1024&q=%E7%94%B3%E8%AB%8B');
+    const left = pane(page, 0);
+    const open = left.locator('[data-action="open-detail"]').nth(2);
+    const rowId = await open.getAttribute('data-id');
+    await open.click();
+    await page.goBack();
+    await expect(left.locator(`[data-action="open-detail"][data-id="${rowId}"]`)).toBeFocused();
+    await expect(keyword(left)).toHaveValue('申請');
+    await expect(pane(page, 1).locator('.cds-expanded-row')).toHaveCount(0);
+    await page.goForward();
+    await expect.poll(() => query(page).get('detail')).toBe(rowId);
+    await expect(left.locator('[data-focus="detail"]')).toHaveCount(1);
+  });
+
+  test('URL で直接開いた詳細は、閉じて戻っても一覧の行へフォーカスを奪わない', async ({ page }) => {
+    await page.goto('?design=dads&detail=2026-01041');
+    await pane(page).locator('.dads-detail-actions [data-action="close-detail"]').click();
+    await page.goBack();
+    await expect(pane(page).locator('[data-focus="detail"]')).toHaveCount(1);
+    await expect(pane(page).locator('[data-action="open-detail"]')).toHaveCount(0);
+  });
+});
+
 test('キーボードでデザインを切り替えられる', async ({ page }) => {
   await page.goto('?design=dads');
   await page.locator('.lab-wide-only input[name="design"][value="dads"]').focus();
