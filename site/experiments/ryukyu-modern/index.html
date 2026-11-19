@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>琉球モダン 申請一覧（試作）— Design Lab</title>
-    <meta name="description" content="Design Lab の実験中の独立した試作。Ryukyu Modern（琉球モダン）案の申請一覧を、比較サイトと同じ架空データで操作できる。" />
+    <title>琉球モダン・彩 申請一覧（試作）— Design Lab</title>
+    <meta name="description" content="Design Lab の実験中の独立した試作。Ryukyu Modern（琉球モダン）「彩」案の申請一覧を、比較サイトと同じ架空データで操作できる。" />
     <meta name="robots" content="noindex" />
     <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="ryukyu.css" />
@@ -12,17 +12,56 @@
   </head>
   <body>
     <div class="rm-experiment" role="note" aria-label="試作について">
-      <p>
-        <strong>実験中の独立した試作です。</strong>Ryukyu Modern（琉球モダン）案の<strong>申請一覧だけ</strong>を試せます。正式な比較デザインではなく、入力フォーム・ダッシュボード・左右比較・URL での共有はありません。データは比較サイトと同じ架空の71件です。
-      </p>
+      <p><strong>実験中の独立した試作（琉球モダン・彩）。</strong>申請一覧だけを試せます。正式な比較デザインではなく、入力フォーム・ダッシュボード・左右比較・URL 共有はありません。データは比較サイトと同じ架空の71件です。</p>
       <p class="rm-experiment__links">
         <a href="../../">比較サイトへ戻る</a>
-        <a href="https://github.com/YanTKYS/design-lab/blob/main/docs/ryukyu-modern-concept.md">設計案（GitHub）</a>
+        <a href="https://github.com/YanTKYS/design-lab/blob/main/docs/ryukyu-modern-visuals/README.md">彩のモックと設計判断（GitHub）</a>
       </p>
     </div>
+
+    <header class="rm-topbar">
+      <div class="rm-topbar__inner">
+        <svg class="rm-topbar__mark" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M12 3 21 8l-9 5-9-5z" /><path d="m3 12 9 5 9-5" /><path d="m3 16 9 5 9-5" />
+        </svg>
+        <span class="rm-topbar__org">さくら野市</span>
+        <span class="rm-topbar__system">申請管理システム</span>
+      </div>
+    </header>
+
+    <div class="rm-hero">
+      <div class="rm-hero__inner">
+        <h1 class="rm-hero__title">申請一覧</h1>
+      </div>
+      <!-- 見出しの装飾。藍型の染め分けから着想した自作の幾何図形で、意味を持たないため読み上げない。右端から幅に合わせて切り取る -->
+      <svg class="rm-hero__pattern" viewBox="0 0 8 2" preserveAspectRatio="xMinYMid slice" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="rm-tile" clipPathUnits="userSpaceOnUse"><rect width="1" height="1" /></clipPath>
+          <path id="rm-star" d="M.5 .14Q.5 .5 .86 .5Q.5 .5 .5 .86Q.5 .5 .14 .5Q.5 .5 .5 .14Z" />
+        </defs>
+        <g clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#174963" /><circle cx="1" cy="1" r=".62" fill="#316a62" /></g>
+        <g transform="translate(1 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#be563e" /><circle cx="1" cy="1" r=".95" fill="#f8e6b8" /><circle cx="1" cy="1" r=".68" fill="#be563e" /><circle cx="1" cy="1" r=".42" fill="#f8e6b8" /></g>
+        <g transform="translate(2 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#316a62" /><use href="#rm-star" fill="#e6b448" /></g>
+        <g transform="translate(3 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#8fb8a2" /><path d="M0 0H.28L.5 .34L.72 0H1L.5 .66Z" fill="#174963" /></g>
+        <g transform="translate(4 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#e6b448" /><circle cx="1" cy="1" r=".95" fill="#be563e" /><circle cx="1" cy="1" r=".66" fill="#e6b448" /><circle cx="1" cy="1" r=".38" fill="#be563e" /></g>
+        <g transform="translate(5 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#316a62" /><circle cx="0" cy="0" r=".62" fill="#8fb8a2" /></g>
+        <g transform="translate(6 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#174963" /><use href="#rm-star" fill="#e6b448" /></g>
+        <g transform="translate(7 0)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#be563e" /><circle cx="1" cy="1" r=".95" fill="#f8e6b8" /><circle cx="1" cy="1" r=".66" fill="#be563e" /><circle cx="1" cy="1" r=".38" fill="#f8e6b8" /></g>
+        <g transform="translate(0 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#316a62" /><use href="#rm-star" fill="#8fb8a2" /></g>
+        <g transform="translate(1 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#174963" /><circle cx="1" cy="0" r=".62" fill="#e6b448" /><rect y=".5" width=".5" height=".5" fill="#e6b448" /></g>
+        <g transform="translate(2 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#f8e6b8" /><path d="M0 0H1L.5 .62Z" fill="#be563e" /></g>
+        <g transform="translate(3 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#316a62" /><circle cx="1" cy="1" r=".95" fill="#8fb8a2" /><circle cx="1" cy="1" r=".68" fill="#316a62" /><circle cx="1" cy="1" r=".42" fill="#8fb8a2" /></g>
+        <g transform="translate(4 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#f8e6b8" /><circle cx="1" cy="0" r=".62" fill="#be563e" /></g>
+        <g transform="translate(5 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#e6b448" /><path d="M0 0H.28L.5 .34L.72 0H1L.5 .66Z" fill="#174963" /></g>
+        <g transform="translate(6 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#316a62" /><circle cx="1" cy="1" r=".95" fill="#8fb8a2" /><circle cx="1" cy="1" r=".66" fill="#316a62" /><circle cx="1" cy="1" r=".38" fill="#8fb8a2" /></g>
+        <g transform="translate(7 1)" clip-path="url(#rm-tile)"><rect width="1" height="1" fill="#be563e" /><use href="#rm-star" fill="#f8e6b8" /></g>
+      </svg>
+    </div>
+
     <div class="rm-app" id="rm-app" data-layout="wide">
       <noscript><p class="rm-noscript">この試作の表示には JavaScript が必要です。</p></noscript>
     </div>
+    <footer class="rm-footer"><p>さくら野市（架空の自治体）</p></footer>
     <div class="rm-vh" id="rm-live" aria-live="polite"></div>
   </body>
 </html>
