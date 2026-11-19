@@ -1,0 +1,641 @@
+/* Ryukyu Modern（琉球モダン）申請一覧の試作。設計の正本は docs/ryukyu-modern-concept.md。
+   名称と色値は設計案の仮称・候補値。外部フォント・画像・図案は使わない。 */
+
+:root {
+  --rm-limestone: #f7f3e8; /* 索引と地（石灰岩） */
+  --rm-wall: #e3d9c2; /* 地と台帳を分ける石積みの帯 */
+  --rm-wall-line: #cfc3a6;
+  --rm-paper: #fff; /* 記録面（台帳） */
+  --rm-ink: #263238; /* 本文（墨） */
+  --rm-ink-muted: #4c585c;
+  --rm-indigo: #204b60; /* 琉球藍：主操作・選択 */
+  --rm-indigo-pale: #e6eef1;
+  --rm-tile: #ac4d3a; /* 赤瓦：台帳見出しの短い罫だけに使う */
+  --rm-sea: #237a76; /* 承認済 */
+  --rm-ochre: #765000; /* 補正依頼 */
+  --rm-rule: #d8d2c4; /* 台帳の横罫 */
+  --rm-input: #64716f; /* 入力境界 */
+  --rm-radius: 4px;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--rm-limestone);
+  color: var(--rm-ink);
+  font-family: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Hiragino Kaku Gothic ProN', Meiryo, 'メイリオ', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+.rm-vh {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.rm-num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- フォーカス：白い2pxの間隔＋墨色3pxの実線。プログラムで移した先にも出す ---------- */
+
+:focus-visible,
+[data-focus-ring]:focus {
+  outline: 3px solid var(--rm-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--rm-paper);
+}
+
+/* ---------- 試作の注記（アプリの外側） ---------- */
+
+.rm-experiment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--rm-ink);
+  color: #fff;
+  font-size: 14px;
+}
+
+.rm-experiment p {
+  max-width: 72em;
+}
+
+.rm-experiment a {
+  color: #fff;
+}
+
+.rm-experiment__links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rm-experiment :focus-visible {
+  outline-color: #fff;
+  box-shadow: 0 0 0 2px var(--rm-ink);
+}
+
+/* ---------- 枠・見出し ---------- */
+
+.rm-app {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.rm-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--rm-wall-line);
+}
+
+.rm-header__org {
+  font-size: 14px;
+  color: var(--rm-ink-muted);
+}
+
+.rm-header__system {
+  font-weight: 700;
+}
+
+.rm-main {
+  padding: 24px;
+}
+
+.rm-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.rm-label {
+  display: block;
+  font-weight: 700;
+}
+
+.rm-help {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--rm-ink-muted);
+}
+
+/* ---------- 検索 ---------- */
+
+.rm-search {
+  margin-top: 16px;
+  max-width: 44rem;
+}
+
+.rm-search__row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.rm-input,
+.rm-select {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--rm-input);
+  border-radius: var(--rm-radius);
+  background: var(--rm-paper);
+}
+
+.rm-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.rm-select {
+  max-width: 100%;
+}
+
+/* ---------- ボタン：主操作は藍の塗り、副操作は藍の輪郭、文字ボタンは下線 ---------- */
+
+.rm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--rm-indigo);
+  border-radius: var(--rm-radius);
+  background: var(--rm-paper);
+  color: var(--rm-indigo);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rm-btn svg {
+  flex: none;
+}
+
+.rm-btn--primary {
+  background: var(--rm-indigo);
+  color: #fff;
+}
+
+.rm-btn--secondary:hover {
+  background: var(--rm-indigo-pale);
+}
+
+/* 押下時は内側の縁を太くする（色の変化だけに頼らない） */
+.rm-btn:active {
+  box-shadow: inset 0 0 0 2px var(--rm-indigo);
+}
+
+.rm-btn--primary:active {
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+.rm-btn--sm {
+  min-height: 32px;
+  padding: 2px 12px;
+  font-size: 14px;
+}
+
+.rm-btn--text {
+  min-height: 32px;
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- 本体：石灰岩の地に置いた索引と、石積みの帯で区切った白い台帳 ---------- */
+
+.rm-body {
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+  align-items: start;
+}
+
+.rm-app:not([data-layout='wide']) .rm-body {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rm-index {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.rm-index__title {
+  padding: 0;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.rm-index ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rm-wall-line);
+}
+
+.rm-index__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 8px 4px 4px;
+  border-bottom: 1px solid var(--rm-wall-line);
+  cursor: pointer;
+}
+
+.rm-index__item input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--rm-indigo);
+}
+
+/* 選択：選択丸＋太字＋左の藍の柱（形と文字でも分かる）。フォーカス：枠（選択とは別に描く） */
+.rm-index__item.is-selected {
+  font-weight: 700;
+  box-shadow: inset 4px 0 0 var(--rm-indigo);
+  background: var(--rm-paper);
+}
+
+.rm-index__item input:focus-visible {
+  outline: 0;
+  box-shadow: none;
+}
+
+.rm-index__item:has(input:focus-visible) {
+  outline: 3px solid var(--rm-ink);
+  outline-offset: 2px;
+}
+
+.rm-index__count {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.rm-index__unit {
+  margin-left: 2px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.rm-ledger {
+  min-width: 0;
+  background: var(--rm-paper);
+  border: 1px solid var(--rm-wall-line);
+  border-left: 6px solid var(--rm-wall);
+  border-radius: var(--rm-radius);
+  padding: 16px 16px 8px;
+}
+
+.rm-field {
+  margin-bottom: 16px;
+}
+
+.rm-field .rm-select {
+  margin-top: 8px;
+  min-width: 14rem;
+}
+
+/* ---------- 件数と条件 ---------- */
+
+.rm-result-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  padding-bottom: 12px;
+}
+
+/* 赤瓦は台帳の始まりを示す、この短い罫の1か所だけ */
+.rm-result-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rm-result-title::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 4px;
+  margin-bottom: 6px;
+  background: var(--rm-tile);
+}
+
+.rm-count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.rm-filtered {
+  padding: 0 8px;
+  border: 1px solid var(--rm-indigo);
+  border-radius: var(--rm-radius);
+  color: var(--rm-indigo);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rm-conditions {
+  font-size: 14px;
+}
+
+.rm-count__num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 台帳（表） ---------- */
+
+.rm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rm-table th {
+  padding: 0 8px 8px;
+  border-bottom: 2px solid var(--rm-ink);
+  text-align: left;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.rm-sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rm-table th:not(.is-sorted) svg {
+  color: var(--rm-ink-muted);
+}
+
+.rm-table th.is-sorted .rm-sort-button {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+.rm-table td {
+  height: 56px;
+  padding: 8px;
+  border-bottom: 1px solid var(--rm-rule);
+  vertical-align: top;
+}
+
+.rm-cell-id {
+  white-space: nowrap;
+}
+
+.rm-cell-id .rm-btn {
+  display: flex;
+  margin-top: 4px;
+}
+
+.rm-row.is-open td {
+  border-bottom: 0;
+  background: var(--rm-indigo-pale);
+}
+
+.rm-detail-row td {
+  height: auto;
+  padding: 0 8px 16px;
+  border-bottom: 2px solid var(--rm-indigo);
+  background: var(--rm-indigo-pale);
+}
+
+.rm-empty {
+  padding: 24px 8px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---------- 詳細（対象の記録の直後） ---------- */
+
+.rm-detail {
+  padding: 16px;
+  border: 1px solid var(--rm-indigo);
+  border-radius: var(--rm-radius);
+  background: var(--rm-paper);
+}
+
+.rm-detail__title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.rm-pairs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 8px 24px;
+  margin: 12px 0 16px;
+}
+
+.rm-pairs > div {
+  display: grid;
+  grid-template-columns: 6em minmax(0, 1fr);
+  gap: 8px;
+}
+
+.rm-pairs dt {
+  font-size: 14px;
+  color: var(--rm-ink-muted);
+}
+
+/* ---------- 状態バッジ：正式な状態名を常に出し、形（アイコン・枠）でも区別する ---------- */
+
+.rm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  border: 1px solid currentColor;
+  border-radius: var(--rm-radius);
+  background: var(--rm-paper);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rm-badge[data-status='received'] {
+  color: var(--rm-indigo);
+}
+
+.rm-badge[data-status='reviewing'] {
+  color: var(--rm-indigo);
+  background: var(--rm-indigo-pale);
+}
+
+.rm-badge[data-status='returned'] {
+  color: var(--rm-ochre);
+}
+
+.rm-badge[data-status='approved'] {
+  color: var(--rm-sea);
+}
+
+.rm-badge[data-status='rejected'] {
+  color: var(--rm-ink);
+  border-style: double;
+  border-width: 3px;
+}
+
+/* ---------- 狭い幅（600px 未満）：縦に読む台帳 ---------- */
+
+.rm-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+.rm-sort .rm-label {
+  width: 100%;
+}
+
+.rm-sort .rm-select {
+  flex: 1;
+  min-width: 8rem;
+}
+
+.rm-cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--rm-ink);
+}
+
+.rm-card {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rm-rule);
+}
+
+.rm-card.is-open {
+  padding: 12px 8px;
+  margin: 0 -8px;
+  background: var(--rm-indigo-pale);
+  border-bottom: 2px solid var(--rm-indigo);
+}
+
+.rm-pairs--card {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  margin: 0;
+}
+
+.rm-pairs--card > div {
+  grid-template-columns: 5.5em minmax(0, 1fr);
+}
+
+.rm-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.rm-card__actions .rm-btn {
+  min-height: 44px;
+}
+
+.rm-card .rm-detail {
+  margin-top: 12px;
+}
+
+.rm-app[data-layout='narrow'] .rm-header,
+.rm-app[data-layout='narrow'] .rm-main {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.rm-app[data-layout='narrow'] .rm-ledger {
+  padding: 12px;
+  border-left-width: 4px;
+}
+
+.rm-app[data-layout='narrow'] .rm-field .rm-select {
+  width: 100%;
+}
+
+.rm-app[data-layout='narrow'] .rm-search__row .rm-btn {
+  flex: none;
+}
+
+/* ---------- フッター ---------- */
+
+.rm-footer {
+  padding: 16px 24px 32px;
+  font-size: 14px;
+  color: var(--rm-ink-muted);
+}
+
+.rm-noscript {
+  padding: 24px;
+}
+
+/* ---------- 強制カラー：システム色の輪郭を残す ---------- */
+
+@media (forced-colors: active) {
+  :focus-visible,
+  [data-focus-ring]:focus,
+  .rm-index__item:has(input:focus-visible) {
+    outline-color: Highlight;
+  }
+
+  .rm-index__item.is-selected {
+    outline: 2px solid CanvasText;
+  }
+
+  .rm-result-title::before {
+    background: CanvasText;
+  }
+}
