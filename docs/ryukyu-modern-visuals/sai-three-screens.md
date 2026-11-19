@@ -1,5 +1,7 @@
 # 琉球モダン・彩を3画面で比べる
 
+> 実装：3画面を[動く試作](https://yantkys.github.io/design-lab/experiments/ryukyu-modern/)に反映した。同じ寸法の画面写真は 新規申請 [1280px](impl-sai-form-1280.png)・[375px](impl-sai-form-375.png)、ダッシュボード [1280px](impl-sai-dashboard-1280.png)・[375px](impl-sai-dashboard-375.png)、申請一覧 [1280px](impl-sai-1280.png)・[375px](impl-sai-375.png)（上部の「試作」注記は比較のため非表示にして撮影）。
+
 最初に[見出しの模様を外した比較画像](sai-bodies.png)を見る。上から、申請一覧の実装、新規申請の設計案、ダッシュボードの設計案。砂色の帯で条件や現在地を読み取り、その下の白地で個々の値を確かめる順序を共通にした。
 
 | 幅 | 申請一覧（実装済み） | 新規申請 | ダッシュボード |

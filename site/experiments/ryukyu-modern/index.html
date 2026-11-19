@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>琉球モダン・彩 申請一覧（試作）— Design Lab</title>
-    <meta name="description" content="Design Lab の実験中の独立した試作。Ryukyu Modern（琉球モダン）「彩」案の申請一覧を、比較サイトと同じ架空データで操作できる。" />
+    <title>申請一覧（琉球モダン・彩 試作）— Design Lab</title>
+    <meta name="description" content="Design Lab の実験中の独立した試作。Ryukyu Modern（琉球モダン）「彩」案の申請一覧・新規申請・ダッシュボードを、比較サイトと同じ架空データで操作できる。" />
     <meta name="robots" content="noindex" />
     <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="ryukyu.css" />
@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="rm-experiment" role="note" aria-label="試作について">
-      <p><strong>実験中の独立した試作（琉球モダン・彩）。</strong>申請一覧だけを試せます。正式な比較デザインではなく、入力フォーム・ダッシュボード・左右比較・URL 共有はありません。データは比較サイトと同じ架空の71件です。</p>
+      <p><strong>実験中の独立した試作（琉球モダン・彩）。</strong>申請一覧・新規申請・ダッシュボードの3画面を試せます。正式な比較デザインではなく、左右比較・URL 共有はありません。データは比較サイトと同じ架空の71件で、入力内容は送信・保存しません。</p>
       <p class="rm-experiment__links">
         <a href="../../">比較サイトへ戻る</a>
         <a href="https://github.com/YanTKYS/design-lab/blob/main/docs/ryukyu-modern-visuals/README.md">彩のモックと設計判断（GitHub）</a>
@@ -26,12 +26,13 @@
         </svg>
         <span class="rm-topbar__org">さくら野市</span>
         <span class="rm-topbar__system">申請管理システム</span>
+        <nav class="rm-nav" id="rm-nav" aria-label="画面の切替"></nav>
       </div>
     </header>
 
     <div class="rm-hero">
       <div class="rm-hero__inner">
-        <h1 class="rm-hero__title">申請一覧</h1>
+        <h1 class="rm-hero__title" id="rm-title" tabindex="-1">申請一覧</h1>
       </div>
       <!-- 見出しの装飾。藍型の染め分けから着想した自作の幾何図形で、意味を持たないため読み上げない。右端から幅に合わせて切り取る -->
       <svg class="rm-hero__pattern" viewBox="0 0 8 2" preserveAspectRatio="xMinYMid slice" aria-hidden="true" focusable="false">
