@@ -1,21 +1,43 @@
-// Ryukyu Modern（琉球モダン）「彩」申請一覧の試作。
-// 視覚の基準は docs/ryukyu-modern-visuals/（彩のモック）、情報設計の正本は docs/ryukyu-modern-concept.md。
-// データ・検索・件数・並べ替えは比較サイトの共通モデル（query.js / data.js）をそのまま使い、
-// この試作では一覧の操作に必要な状態とイベントだけを持つ（URL・履歴・ほかの画面は扱わない）。
+// Ryukyu Modern（琉球モダン）「彩」の3画面試作（申請一覧・新規申請・ダッシュボード）。
+// 視覚の基準は docs/ryukyu-modern-visuals/（彩のモックと sai-three-screens.md）。
+// データ・検索・件数・並べ替え・入力検証・集計は比較サイトの共通モデル（query.js / form.js / dashboard.js）をそのまま使い、
+// この試作では画面の切替と各画面の状態・イベントだけを持つ。状態はメモリのみで、URL・履歴・ストレージには書かない。
 
 import { COLUMNS, DEFAULT_SORT } from '../../assets/js/data.js';
+import { DEFAULT_PERIOD, EMPTY_SCOPE, buildDashboardModel, listStateFor } from '../../assets/js/dashboard.js';
+import { back, complete, createForm, fillSample, hasErrors, setValue, submit, buildFormModel } from '../../assets/js/form.js';
 import { attr, html, raw } from '../../assets/js/html.js';
 import { icon } from '../../assets/js/icons.js';
 import { patch } from '../../assets/js/morph.js';
 import { buildModel, countText, formatDate, nextSort } from '../../assets/js/query.js';
+import { dashboardView } from './ryukyu-dashboard.js';
+import { formView } from './ryukyu-form.js';
 
 const app = document.getElementById('rm-app');
+const nav = document.getElementById('rm-nav');
+const title = document.getElementById('rm-title');
 const live = document.getElementById('rm-live');
 
-/** 試作の状態（メモリのみ）。detail は開いている受付番号（同時に1件）。 */
-const state = { keyword: '', status: '', sort: { ...DEFAULT_SORT }, detail: null };
+const SCREENS = [
+  { id: 'list', label: '申請一覧' },
+  { id: 'form', label: '新規申請' },
+  { id: 'dashboard', label: 'ダッシュボード' },
+];
 
-/** 枠の幅による構成：wide＝検索と6択の横索引を同じ帯に、mid＝状態はセレクト、narrow＝縦に読む台帳。 */
+/** 試作の状態（メモリのみ）。一覧の条件・集計条件・入力中のフォームは、画面を行き来しても保つ。 */
+const state = {
+  screen: 'list',
+  keyword: '',
+  status: '',
+  sort: { ...DEFAULT_SORT },
+  detail: null, // 一覧で開いている受付番号（同時に1件）
+  scope: { ...EMPTY_SCOPE }, // ダッシュボードから引き継いだ条件
+  period: DEFAULT_PERIOD,
+  dept: '',
+};
+let form = createForm();
+
+/** 枠の幅による構成：wide＝検索と6択の横索引を同じ帯に、mid＝状態はセレクト、narrow＝縦に読む台帳・1列のフォーム。 */
 const layoutOf = (width) => (width < 600 ? 'narrow' : width < 960 ? 'mid' : 'wide');
 /** 判定は左右の余白を除いた内容の幅で行う（表や索引が実際に使える幅）。 */
 const contentWidth = () => {
@@ -30,7 +52,7 @@ const funnel = raw(
   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/></svg>',
 );
 
-/* ---------- 表示 ---------- */
+/* ---------- 申請一覧 ---------- */
 
 function badge(status) {
   const name = STATUS_ICONS[status.value];
@@ -51,7 +73,7 @@ function keywordSearch(model) {
   </form>`;
 }
 
-/** PC の横索引：全6択を同じ順で横に並べ、0件も残す。件数は検索語に一致した内訳。選択は塗り・チェック・太字で示す。 */
+/** PC の横索引：全6択を同じ順で横に並べ、0件も残す。件数は検索語・引継ぎ条件に一致した内訳。選択は塗り・チェック・太字で示す。 */
 function statusIndex(model) {
   return html`<fieldset class="rm-index">
     <legend class="rm-label">処理状態</legend>
@@ -77,20 +99,33 @@ function statusSelect(model) {
   </div>`;
 }
 
+/** ダッシュボードから引き継いだ条件。検索語・状態とは別に表示し、専用の操作で解除する。 */
+function scopeBox(model) {
+  if (!model.scope.active) return '';
+  return html`<div class="rm-scope" data-scope>
+    <p class="rm-scope__title">ダッシュボードから引き継いだ条件</p>
+    <ul class="rm-scope__items">${model.scope.items.map((i) => html`<li>${i.label}：<strong>${i.text}</strong></li>`)}</ul>
+    <button type="button" class="rm-btn rm-btn--secondary rm-btn--sm" data-action="clear-scope">引き継ぎを解除</button>
+  </div>`;
+}
+
 function resultHead(model) {
   const status = model.statusOptions.find((o) => o.selected && o.value);
   const terms = [model.keyword, status?.label].filter(Boolean);
   return html`<div class="rm-result-head">
-      <h2 class="rm-result-title" id="rm-result-title">検索結果</h2>
-      <p class="rm-count"><strong class="rm-count__num">${model.shown}</strong>件<span class="rm-count__total">／ 全${model.total}件</span></p>
+      <h2 class="rm-result-title" id="rm-result-title" tabindex="-1">検索結果</h2>
+      <p class="rm-count">
+        <strong class="rm-count__num">${model.shown}</strong>件<span class="rm-count__total">／ ${model.scope.active ? '引き継いだ条件の' : ''}全${model.total}件</span>
+      </p>
     </div>
+    ${scopeBox(model)}
     <div class="rm-filterline">
       ${model.filtered
         ? html`<p class="rm-filterline__text">${funnel}<span>絞り込み中</span>${terms.map(
               (t, i) => html`${i ? html`<span class="rm-filterline__sep" aria-hidden="true">/</span>` : ''}<strong>${t}</strong>`,
             )}</p>
             <button type="button" class="rm-btn rm-btn--text" data-action="clear">条件をクリア</button>`
-        : html`<p class="rm-filterline__text rm-filterline__text--none">絞り込みなし（すべての申請）</p>`}
+        : html`<p class="rm-filterline__text rm-filterline__text--none">検索語・処理状態の絞り込みなし</p>`}
     </div>`;
 }
 
@@ -194,7 +229,7 @@ function cards(model) {
   </ol>`;
 }
 
-function view(model) {
+function listView(model) {
   return html`<div class="rm-band">
       ${keywordSearch(model)} ${layout === 'wide' ? statusIndex(model) : statusSelect(model)}
     </div>
@@ -203,33 +238,56 @@ function view(model) {
     </section>`;
 }
 
-/* ---------- 状態の更新 ---------- */
+/* ---------- 描画 ---------- */
 
-function currentModel() {
-  return buildModel({ ...state, screen: 'list' });
+const listModel = () => buildModel({ ...state, screen: 'list' });
+
+function renderNav() {
+  patch(
+    nav,
+    html`<ul class="rm-nav__list">
+      ${SCREENS.map(
+        (s) => html`<li><button type="button" class="rm-nav__item" data-action="go" data-screen="${s.id}" ${attr('aria-current', s.id === state.screen && 'page')}>${s.label}</button></li>`,
+      )}
+    </ul>`.toString(),
+  );
 }
 
+let shown = null; // 前回描いた画面と手順。変わったときは差分更新せず入れ替える（別画面の入力欄を再利用しない）
+
 function render() {
-  const model = currentModel();
-  // 開いている詳細が絞り込みで一覧から外れたら閉じる（一覧に無い記録の詳細は出さない）
-  if (state.detail && !model.rows.some((r) => r.id === state.detail)) {
-    state.detail = null;
-    return render();
+  if (state.screen === 'list') {
+    const model = listModel();
+    // 開いている詳細が絞り込みで一覧から外れたら閉じる（一覧に無い記録の詳細は出さない）
+    if (state.detail && !model.rows.some((r) => r.id === state.detail)) {
+      state.detail = null;
+      return render();
+    }
   }
+  const label = SCREENS.find((s) => s.id === state.screen).label;
+  title.textContent = label;
+  document.title = `${label}（琉球モダン・彩 試作）— Design Lab`;
+  renderNav();
   app.dataset.layout = layout;
-  patch(app, view(model).toString());
-  return model;
+  app.dataset.screen = state.screen;
+  const view =
+    state.screen === 'form' ? formView(buildFormModel(form)) : state.screen === 'dashboard' ? dashboardView(buildDashboardModel(state)) : listView(listModel());
+  const key = `${state.screen}:${form.step}`;
+  patch(app, view.toString(), { replace: shown !== null && shown !== key });
+  shown = key;
+}
+
+function announce(text) {
+  live.textContent = '';
+  setTimeout(() => {
+    live.textContent = text;
+  }, 50);
 }
 
 let announceTimer;
 function announceCount() {
   clearTimeout(announceTimer);
-  announceTimer = setTimeout(() => {
-    live.textContent = '';
-    setTimeout(() => {
-      live.textContent = `検索結果 ${countText(currentModel())}`;
-    }, 50);
-  }, 500);
+  announceTimer = setTimeout(() => announce(`検索結果 ${countText(listModel())}`), 500);
 }
 
 /** プログラムで移したフォーカスにも枠を出す（:focus-visible はマウス操作の直後に出ないため）。 */
@@ -242,6 +300,17 @@ function moveFocus(el) {
 
 /** 閉じた後の戻り先：その記録の「詳細」ボタン。 */
 const toggleButton = (id) => app.querySelector(`[data-action="toggle-detail"][data-id="${id}"]`);
+const fieldEl = (name) => app.querySelector(`[data-field="${name}"]`);
+
+/* ---------- 操作 ---------- */
+
+function go(screen) {
+  if (!SCREENS.some((s) => s.id === screen)) return;
+  state.screen = screen;
+  render();
+  window.scrollTo(0, 0);
+  moveFocus(title);
+}
 
 let keywordTimer;
 
@@ -267,34 +336,92 @@ function closeDetail() {
   moveFocus(toggleButton(id));
 }
 
+function updateForm(next) {
+  if (next === form) return;
+  form = next;
+  render();
+}
+
+function commitField(el) {
+  updateForm(setValue(form, el.dataset.field, el.type === 'checkbox' ? el.checked : el.value));
+}
+
+/** 「確認へ」：エラーがあれば入力にとどまりサマリーへ、なければ確認画面へ進む。 */
+function submitEntry() {
+  updateForm(submit(form));
+  if (hasErrors(form.errors)) {
+    moveFocus(app.querySelector('[data-focus="error-summary"]'));
+    announce(`入力エラーが${Object.keys(form.errors).length}件あります`);
+  } else {
+    moveFocus(app.querySelector('.rm-sheet__title'));
+    announce('確認画面です。内容を確認してください');
+  }
+}
+
+function openList(link) {
+  Object.assign(state, listStateFor(state, link), { screen: 'list' });
+  render();
+  window.scrollTo(0, 0);
+  moveFocus(title);
+  const model = listModel();
+  announce(`申請一覧を表示しました。${model.scope.summary || '引き継いだ条件なし'}。${countText(model)}`);
+}
+
+function setCondition(name, value) {
+  state[name] = value;
+  render();
+  const d = buildDashboardModel(state);
+  announce(`${d.scopeText}で集計しました。受付${d.total}件、処理待ち${d.pending}件、処理完了${d.done}件、処理完了率${d.rate}`);
+}
+
 /* ---------- イベント ---------- */
 
+nav.addEventListener('click', (event) => {
+  const el = event.target.closest('[data-action="go"]');
+  if (el) go(el.dataset.screen);
+});
+
 app.addEventListener('input', (event) => {
-  if (event.target.id !== 'rm-kw' || event.isComposing) return; // IME 変換中は確定まで待つ
-  const { value } = event.target;
-  clearTimeout(keywordTimer);
-  keywordTimer = setTimeout(() => setKeyword(value), 250);
+  const el = event.target;
+  if (event.isComposing) return; // IME 変換中は確定まで待つ
+  if (el.id === 'rm-kw') {
+    const { value } = el;
+    clearTimeout(keywordTimer);
+    keywordTimer = setTimeout(() => setKeyword(value), 250);
+  } else if (el.dataset.field) {
+    commitField(el);
+  }
 });
 
 app.addEventListener('compositionend', (event) => {
   if (event.target.id === 'rm-kw') setKeyword(event.target.value);
+  else if (event.target.dataset.field) commitField(event.target);
 });
 
 app.addEventListener('submit', (event) => {
   event.preventDefault();
+  if (event.target.dataset.form === 'entry') {
+    submitEntry();
+    return;
+  }
   setKeyword(app.querySelector('#rm-kw').value);
   announceCount();
 });
 
 app.addEventListener('change', (event) => {
-  const { bind } = event.target.dataset;
+  const el = event.target;
+  const { bind } = el.dataset;
   if (bind === 'status') {
-    state.status = event.target.value;
+    state.status = el.value;
     render();
     announceCount();
   } else if (bind === 'sort-key') {
-    state.sort = nextSort(state.sort, event.target.value);
+    state.sort = nextSort(state.sort, el.value);
     render();
+  } else if (bind === 'period' || bind === 'dept') {
+    setCondition(bind, el.value);
+  } else if (el.dataset.field) {
+    commitField(el);
   }
 });
 
@@ -302,29 +429,80 @@ app.addEventListener('click', (event) => {
   const el = event.target.closest('[data-action]');
   if (!el) return;
   const { action, id, key } = el.dataset;
-  if (action === 'sort') {
-    state.sort = nextSort(state.sort, key);
-    render();
-  } else if (action === 'sort-dir') {
-    state.sort = { ...state.sort, dir: state.sort.dir === 'asc' ? 'desc' : 'asc' };
-    render();
-  } else if (action === 'toggle-detail') {
-    if (state.detail === id) closeDetail();
-    else openDetail(id);
-  } else if (action === 'close-detail') {
-    closeDetail();
-  } else if (action === 'clear') {
-    clearTimeout(keywordTimer);
-    state.keyword = '';
-    state.status = '';
-    render();
-    moveFocus(app.querySelector('#rm-kw'));
-    announceCount();
+  if (el.tagName === 'A') event.preventDefault();
+  switch (action) {
+    case 'go':
+      go(el.dataset.screen);
+      break;
+    case 'sort':
+      state.sort = nextSort(state.sort, key);
+      render();
+      break;
+    case 'sort-dir':
+      state.sort = { ...state.sort, dir: state.sort.dir === 'asc' ? 'desc' : 'asc' };
+      render();
+      break;
+    case 'toggle-detail':
+      if (state.detail === id) closeDetail();
+      else openDetail(id);
+      break;
+    case 'close-detail':
+      closeDetail();
+      break;
+    case 'clear':
+      clearTimeout(keywordTimer);
+      state.keyword = '';
+      state.status = '';
+      render();
+      moveFocus(app.querySelector('#rm-kw'));
+      announceCount();
+      break;
+    case 'clear-scope':
+      state.scope = { ...EMPTY_SCOPE };
+      render();
+      moveFocus(app.querySelector('#rm-result-title')); // 解除ボタンは消えるので、結果の見出しへ移す
+      announceCount();
+      break;
+    case 'focus-field':
+      moveFocus(fieldEl(el.dataset.gotoField));
+      break;
+    case 'form-back': {
+      const target = el.dataset.gotoField;
+      updateForm(back(form));
+      // 項目の「修正」はその欄へ、「入力に戻る」は編集の先頭へ戻す
+      moveFocus(fieldEl(target || 'name'));
+      break;
+    }
+    case 'form-confirm':
+      updateForm(complete(form));
+      moveFocus(app.querySelector('.rm-sheet__title'));
+      announce('申請の入力が完了しました（試作のため、送信・保存はされません）');
+      break;
+    case 'form-restart':
+      updateForm(createForm());
+      moveFocus(fieldEl('name'));
+      break;
+    case 'form-sample': {
+      const kind = el.dataset.kind;
+      updateForm(kind === 'clear' ? createForm() : fillSample(kind));
+      announce(kind === 'valid' ? '入力例を入れました' : kind === 'invalid' ? `入力エラーを再現しました。${Object.keys(form.errors).length}件のエラーがあります` : '入力内容をクリアしました');
+      break;
+    }
+    case 'open-list':
+      openList({ status: el.dataset.linkStatus, group: el.dataset.linkGroup, type: el.dataset.linkType });
+      break;
+    case 'reset-conditions':
+      state.period = DEFAULT_PERIOD;
+      state.dept = '';
+      setCondition('period', DEFAULT_PERIOD);
+      break;
+    default:
+      break;
   }
 });
 
 app.addEventListener('keydown', (event) => {
-  // 変換確定の Enter で検索が二重に確定しないようにする（Safari は確定後に keyCode 229 の Enter が来る）
+  // 変換確定の Enter で検索・送信が確定しないようにする（Safari は確定後に keyCode 229 の Enter が来る）
   if (event.key === 'Enter' && (event.isComposing || event.keyCode === 229)) {
     event.preventDefault();
     return;
@@ -335,7 +513,7 @@ app.addEventListener('keydown', (event) => {
   }
 });
 
-// 幅が変わったら構成だけを切り替える。条件・並び・開いている詳細はそのまま引き継ぐ。
+// 幅が変わったら構成だけを切り替える。条件・並び・開いている詳細・入力値はそのまま引き継ぐ。
 new ResizeObserver(() => {
   const next = layoutOf(contentWidth());
   if (next === layout) return;
