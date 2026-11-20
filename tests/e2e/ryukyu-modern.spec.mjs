@@ -154,3 +154,29 @@ test('琉球モダン試作（彩）ダッシュボード：既定の集計、�
   await expect(page.locator('#rm-app')).toHaveAttribute('data-layout', 'narrow');
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 });
+
+test('琉球モダン試作（彩）：検索語の入力直後に画面を移っても、保留中の検索が後から状態を上書きしない', async ({ page }) => {
+  // 時計を止めて「入力直後（250ms の保留中）に移動」を毎回同じ順序で再現する。待ち時間は足さず、時計を進めて確かめる
+  await page.clock.install();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(URL);
+  const nav = page.getByRole('navigation', { name: '画面の切替' });
+
+  // 集計 → 処理待ちの一覧：検索語は空で、保留中の検索が過ぎても 19 件のまま
+  await page.locator('#rm-kw').fill('保育');
+  await nav.getByRole('button', { name: 'ダッシュボード' }).click();
+  await page.locator('.rm-kpi--pending').getByRole('link', { name: /一覧を見る/ }).click();
+  await page.clock.runFor(1000);
+  await expect(page.locator('.rm-count__num')).toHaveText('19');
+  await expect(page.locator('[data-scope]')).toContainText('処理待ち');
+  await expect(page.locator('#rm-kw')).toHaveValue('');
+
+  // 通常の移動：確定前の入力も失われず、戻ると検索が反映されている
+  await page.getByRole('button', { name: '引き継ぎを解除' }).click();
+  await page.locator('#rm-kw').fill('道路');
+  await nav.getByRole('button', { name: 'ダッシュボード' }).click();
+  await page.clock.runFor(1000);
+  await nav.getByRole('button', { name: '申請一覧' }).click();
+  await expect(page.locator('#rm-kw')).toHaveValue('道路');
+  await expect(page.locator('.rm-count__num')).toHaveText(String(countOf({ keyword: '道路' })));
+});
