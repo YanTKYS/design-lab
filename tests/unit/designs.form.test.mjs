@@ -166,6 +166,6 @@ test('全デザインでフォームの構造（見出し・必須表記・エ�
   ].join();
   assert.equal(new Set(outputs.map(signature)).size >= 4, true, '必須・エラーの示し方に違いがある');
   // フォームのマークアップが共通化されていない（class の接頭辞が全て異なる）
-  const prefixes = outputs.map((o) => o.match(/class="(ds-\w+)"/)[1]);
+  const prefixes = outputs.map((o) => o.match(/class="(ds-[\w-]+)"/)[1]);
   assert.equal(new Set(prefixes).size, DESIGNS.length);
 });

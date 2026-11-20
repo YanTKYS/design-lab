@@ -23,6 +23,8 @@
 
 案Bを[独立した3画面の試作](https://yantkys.github.io/design-lab/experiments/okinawa-thread/)にした（[ソース](../../site/experiments/okinawa-thread/)）。現行「彩」の[試作](https://yantkys.github.io/design-lab/experiments/ryukyu-modern/)は別ページのまま残している。一覧はモックがないため、番号と状態の列を先に読み、選んだ記録の直下に同じ項目軸で詳細を差し込む形に展開した。画面写真（上部の試作注記は非表示）：申請一覧 [1280px](impl-thread-list-1280.png)・[375px](impl-thread-list-375.png)、新規申請 [1280px](impl-thread-form-1280.png)・[375px](impl-thread-form-375.png)、ダッシュボード [1280px](impl-thread-dashboard-1280.png)・[375px](impl-thread-dashboard-375.png)。
 
+**比較サイト本体への登録。** 案Bは「糸の交点」（ID `okinawa-thread`、名称は仮称）として、比較サイトの9番目のデザインに登録した。本体での表示：申請一覧 [1280px](site-thread-list-1280.png)・[375px](site-thread-list-375.png)、新規申請 [1280px](site-thread-form-1280.png)・[375px](site-thread-form-375.png)、ダッシュボード [1280px](site-thread-dashboard-1280.png)・[375px](site-thread-dashboard-375.png)。独立した試作との違いは[デザイン比較ガイド](../comparison-guide.md#糸の交点独自の沖縄テーマ)にまとめた。
+
 ## 案A　庇と通路（仮称）
 
 **参照した事実。** 名護市は市庁舎の設計について、街側に重なるアサギテラス、ルーバーがつくる日陰、外廊下などを通る風の道を説明している。市民との対話の場をどう開くかという、沖縄本島北部の一つの公共建築に着目した。[名護市「名護市庁舎概要」](https://www.city.nago.okinawa.jp/about/2018072000468/)

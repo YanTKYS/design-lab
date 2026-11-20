@@ -1,7 +1,7 @@
 import { countOf } from './expected.mjs';
 import { expect, test } from './fixtures.mjs';
 
-import { DESIGN_IDS as DESIGNS } from '../../site/assets/js/designs/index.js';
+import { DESIGN_IDS as DESIGNS, getDesign } from '../../site/assets/js/designs/index.js';
 
 const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const root = (page, index = 0) => pane(page, index).locator('.pane__root');
@@ -119,8 +119,8 @@ test.describe('各デザインの入力フォーム', () => {
         const errorId = describedBy.split(' ').find((v) => v.endsWith('-error'));
         await expect(p.locator(`[id="${errorId}"]`)).toBeVisible();
       }
-      // フォーカス：GOV.UK はエラーサマリー、ほかは最初のエラー項目
-      if (id === 'govuk') await expect(p.locator('[data-focus="error-summary"]')).toBeFocused();
+      // フォーカス：デザインの宣言（errorFocus）に従い、エラーサマリー（GOV.UK・糸の交点）か最初のエラー項目へ
+      if (getDesign(id).errorFocus === 'summary') await expect(p.locator('[data-focus="error-summary"]')).toBeFocused();
       else await expect(field(page, 'name')).toBeFocused();
       await expect(page.locator('#lab-live')).toContainText('7件');
       // 確認画面へは進まない

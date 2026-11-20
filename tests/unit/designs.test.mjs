@@ -17,7 +17,7 @@ const count = (htmlText, needle) => htmlText.split(needle).length - 1;
 test('登録済みのデザインと順序', () => {
   assert.deepEqual(
     DESIGNS.map((d) => d.id),
-    ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain', 'material3', 'astryx'],
+    ['dads', 'carbon', 'fluent', 'govuk', 'uswds', 'plain', 'material3', 'astryx', 'okinawa-thread'],
   );
 });
 

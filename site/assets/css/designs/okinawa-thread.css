@@ -1,0 +1,1347 @@
+/* 糸の交点（沖縄テーマの独自デザイン・名称は仮称）。すべて .ds-okinawa-thread 配下に限定する。
+   濃藍の地・明るい無地の入力面・細い境界線・明朝の章見出し。本文左の格子帯、章の二重罫、項目名と値の縦軸で
+   「章／項目名／値」の交点と読み順を示す。色値は独立した試作（site/experiments/okinawa-thread/）と同じ。
+   幅の切り替えは比較ペインの幅（@container frame）で行う。外部フォント・画像・CDN は使わない。 */
+
+.ds-okinawa-thread {
+  --ot-ground: #19283f;
+  --ot-bar: #18263b;
+  --ot-hero: #243752;
+  --ot-rail: #213551;
+  --ot-thread: #8aa8b2;
+  --ot-rule: #6c8094;
+  --ot-line: #45566e;
+  --ot-head: #2c4057;
+  --ot-text: #eeebe2;
+  --ot-muted: #aebbc4;
+  --ot-input: #f0f1e8;
+  --ot-input-text: #1c3049;
+  --ot-cream: #f2e8cd;
+  --ot-lead: #e2e8de;
+  --ot-bar-fill: #afc7d1;
+  --ot-focus: #ffd166;
+  --ot-error: #ffb0a3;
+  --ot-error-line: #ff8f80;
+  --ot-mincho: 'BIZ UDPMincho', 'BIZ UDP明朝 Medium', 'Hiragino Mincho ProN', 'ヒラギノ明朝 ProN', 'Yu Mincho', '游明朝', 'Noto Serif JP', serif;
+  --ot-pad: 52px;
+  --ot-share: 0.4; /* 見出し面の右端の模様が占める割合 */
+  min-height: 100%;
+  background: var(--ot-ground);
+  color: var(--ot-text);
+  font:
+    400 16px/1.55 'BIZ UDPGothic',
+    'BIZ UDPゴシック',
+    'Noto Sans JP',
+    'Hiragino Sans',
+    'ヒラギノ角ゴシック',
+    Meiryo,
+    sans-serif;
+  overflow-wrap: anywhere;
+  color-scheme: dark;
+}
+
+.ds-okinawa-thread *,
+.ds-okinawa-thread *::before,
+.ds-okinawa-thread *::after {
+  box-sizing: border-box;
+}
+
+.ds-okinawa-thread :is(h2, h3, h4, p, dl, dd, ul, ol) {
+  margin: 0;
+}
+
+.ds-okinawa-thread :is(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.ds-okinawa-thread :is(button, input, select, textarea) {
+  font: inherit;
+  color: inherit;
+}
+
+.ds-okinawa-thread svg {
+  flex: none;
+}
+
+.ds-okinawa-thread .ot-num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ds-okinawa-thread .ot-strong {
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-right {
+  text-align: right;
+}
+
+.ds-okinawa-thread .ot-muted {
+  color: var(--ot-muted);
+  font-size: 14px;
+}
+
+.ds-okinawa-thread .ot-pre {
+  white-space: pre-wrap;
+}
+
+/* フォーカス：黄色の外枠と濃藍の間隔（選択の生成りとは別の色と形）。プログラムで移した先にも出す */
+.ds-okinawa-thread :focus-visible,
+.ds-okinawa-thread [data-focus]:focus {
+  outline: 3px solid var(--ot-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--ot-ground);
+}
+
+/* ---------- 帯・見出し面 ---------- */
+
+.ds-okinawa-thread .ot-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 60px;
+  padding: 0 var(--ot-pad);
+  background: var(--ot-bar);
+  border-bottom: 1px solid #6e8294;
+}
+
+.ds-okinawa-thread .ot-topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ds-okinawa-thread .ot-topbar__mark {
+  color: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-topbar__org {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-topbar__system {
+  padding-left: 12px;
+  border-left: 1px solid var(--ot-muted);
+  font-size: 15px;
+}
+
+.ds-okinawa-thread .ot-menu {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  margin-left: auto;
+  padding: 4px 12px;
+  border: 1px solid var(--ot-rule);
+  background: none;
+  cursor: pointer;
+}
+
+.ds-okinawa-thread .ot-nav {
+  margin-left: auto;
+}
+
+.ds-okinawa-thread .ot-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.ds-okinawa-thread .ot-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 2px;
+  border-bottom: 3px solid transparent;
+  color: var(--ot-text);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.ds-okinawa-thread .ot-nav a:hover {
+  border-bottom-color: var(--ot-rule);
+}
+
+/* 現在の画面：太字＋下線＋aria-current */
+.ds-okinawa-thread .ot-nav a[aria-current] {
+  font-weight: 700;
+  border-bottom-color: var(--ot-text);
+}
+
+.ds-okinawa-thread .ot-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 128px;
+  padding: 0 var(--ot-pad);
+  background: var(--ot-hero);
+}
+
+.ds-okinawa-thread .ot-hero__title {
+  position: relative;
+  z-index: 1;
+  /* 右端の模様（見出し面の幅の --ot-share）の左端から 12px 手前までに収め、長い画面名は折り返す */
+  max-width: calc((1 - var(--ot-share)) * 100% - 2 * var(--ot-share) * var(--ot-pad) - 12px);
+  font-family: var(--ot-mincho);
+  font-size: 44px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.ds-okinawa-thread .ot-hero__title:focus {
+  outline-offset: 6px;
+  box-shadow: none;
+}
+
+/* 見出し端の十字絣の反復：見出しの文字や情報領域を覆わない右側に限る */
+.ds-okinawa-thread .ot-hero__pattern {
+  position: absolute;
+  top: 0;
+  right: var(--ot-pad);
+  width: min(470px, calc(var(--ot-share) * 100%));
+  height: 100%;
+}
+
+/* ---------- 本文：左の格子帯 ---------- */
+
+.ds-okinawa-thread .ot-body {
+  position: relative;
+  padding: 24px var(--ot-pad) 32px calc(var(--ot-pad) + 36px);
+}
+
+.ds-okinawa-thread .ot-body::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  bottom: 32px;
+  left: var(--ot-pad);
+  width: 16px;
+  border-left: 2px solid var(--ot-thread);
+  border-right: 2px solid var(--ot-thread);
+  background:
+    linear-gradient(90deg, transparent 5px, var(--ot-thread) 5px 6px, transparent 6px, transparent 9px, var(--ot-thread) 9px 10px, transparent 10px),
+    repeating-linear-gradient(to bottom, var(--ot-thread) 0 1px, transparent 1px 7px),
+    var(--ot-rail);
+}
+
+.ds-okinawa-thread .ot-footer {
+  padding: 0 var(--ot-pad) 28px;
+}
+
+.ds-okinawa-thread .ot-footer p {
+  padding-top: 14px;
+  border-top: 1px solid #53657d;
+  font-size: 13px;
+  color: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--ot-cream);
+  background: var(--ot-rail);
+}
+
+.ds-okinawa-thread .ot-notice p {
+  flex: 1;
+  min-width: 12em;
+}
+
+/* ---------- 部品 ---------- */
+
+.ds-okinawa-thread .ot-label {
+  display: block;
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-help {
+  font-size: 14px;
+  color: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-input {
+  min-height: 44px;
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--ot-input);
+  border-radius: 0;
+  background: var(--ot-input);
+  color: var(--ot-input-text);
+  color-scheme: light;
+}
+
+.ds-okinawa-thread .ot-input::placeholder {
+  color: #5d6b78;
+  opacity: 1;
+}
+
+.ds-okinawa-thread .ot-textarea {
+  min-height: 6em;
+  resize: vertical;
+}
+
+.ds-okinawa-thread .ot-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 1px solid var(--ot-text);
+  border-radius: 0;
+  background: transparent;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* 主操作：生成りの塗り＋濃藍の文字（動詞） */
+.ds-okinawa-thread .ot-btn--primary {
+  border-color: var(--ot-cream);
+  background: var(--ot-cream);
+  color: var(--ot-ground);
+}
+
+.ds-okinawa-thread .ot-btn--primary:hover {
+  background: #fff7e3;
+}
+
+.ds-okinawa-thread .ot-btn--ghost:hover:not(:disabled) {
+  background: var(--ot-rail);
+}
+
+.ds-okinawa-thread .ot-btn:active:not(:disabled) {
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+
+.ds-okinawa-thread .ot-btn:disabled {
+  border-color: var(--ot-line);
+  color: var(--ot-muted);
+  cursor: default;
+}
+
+.ds-okinawa-thread .ot-btn--sm {
+  min-height: 34px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ds-okinawa-thread .ot-btn--text {
+  min-height: 32px;
+  padding: 2px;
+  border: 0;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ds-okinawa-thread .ot-link,
+.ds-okinawa-thread .ot-link-button {
+  color: var(--ot-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ds-okinawa-thread .ot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ds-okinawa-thread .ot-link-button {
+  min-height: 32px;
+  padding: 2px;
+  border: 0;
+  background: none;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.ds-okinawa-thread .ot-empty {
+  padding: 24px 12px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 7px;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ds-okinawa-thread .ot-badge[data-tone='received'] {
+  color: #cfe0ea;
+}
+
+.ds-okinawa-thread .ot-badge[data-tone='reviewing'] {
+  color: #fff;
+  background: var(--ot-head);
+}
+
+.ds-okinawa-thread .ot-badge[data-tone='returned'] {
+  color: #f2d27a;
+}
+
+.ds-okinawa-thread .ot-badge[data-tone='approved'] {
+  color: #a8dcc0;
+}
+
+.ds-okinawa-thread .ot-badge[data-tone='rejected'] {
+  color: #ddd6cf;
+  border-style: double;
+  border-width: 3px;
+}
+
+/* ---------- 章：上に二重の横罫、明朝の章見出し、項目名｜値の縦軸 ---------- */
+
+.ds-okinawa-thread .ot-chapter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--ot-mincho);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.ds-okinawa-thread .ot-mark {
+  color: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-chapter-block {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  margin-top: 20px;
+  border-top: 3px double var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-chapter-block > .ot-chapter {
+  align-self: start;
+  padding: 18px 12px 18px 0;
+}
+
+.ds-okinawa-thread .ot-chapter-block__rows {
+  min-width: 0;
+  border-left: 1px solid var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-chapter-block--stack {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 28px;
+}
+
+.ds-okinawa-thread .ot-chapter-block--stack > .ot-chapter {
+  padding: 14px 0 10px;
+}
+
+.ds-okinawa-thread .ot-lead {
+  padding: 12px;
+}
+
+.ds-okinawa-thread .ot-axis > div {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: 4px 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ot-line);
+}
+
+.ds-okinawa-thread .ot-axis dt {
+  padding-right: 12px;
+  border-right: 1px solid var(--ot-rule);
+  color: var(--ot-muted);
+  font-size: 14px;
+}
+
+.ds-okinawa-thread .ot-axis--confirm > div {
+  grid-template-columns: 12em minmax(0, 1fr) auto;
+}
+
+.ds-okinawa-thread .ot-axis--confirm dt {
+  color: var(--ot-text);
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-axis__edit {
+  text-align: right;
+}
+
+/* ---------- 一覧 ---------- */
+
+.ds-okinawa-thread .ot-cond {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px 28px;
+  padding-bottom: 18px;
+}
+
+.ds-okinawa-thread .ot-search {
+  flex: 0 1 380px;
+  min-width: 0;
+}
+
+.ds-okinawa-thread .ot-search__row {
+  display: flex;
+  gap: 6px;
+}
+
+.ds-okinawa-thread .ot-search .ot-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-okinawa-thread .ot-search .ot-help {
+  margin-top: 4px;
+}
+
+.ds-okinawa-thread .ot-status {
+  flex: 1 1 520px;
+  align-self: flex-start;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ds-okinawa-thread .ot-status__items {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--ot-rule);
+  background: var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-status__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-height: 44px;
+  padding: 6px 10px;
+  background: var(--ot-ground);
+  cursor: pointer;
+}
+
+.ds-okinawa-thread .ot-status__item input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ds-okinawa-thread .ot-status__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+}
+
+.ds-okinawa-thread .ot-status__count {
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-status__item:hover {
+  background: var(--ot-rail);
+}
+
+/* 選択：生成りの塗り＋チェック＋太字。フォーカスは別の黄色い外枠 */
+.ds-okinawa-thread .ot-status__item.is-selected {
+  background: var(--ot-cream);
+  color: var(--ot-ground);
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-status__item input:focus-visible {
+  outline: 0;
+  box-shadow: none;
+}
+
+.ds-okinawa-thread .ot-status__item:has(input:focus-visible) {
+  z-index: 1;
+  outline: 3px solid var(--ot-focus);
+  outline-offset: 2px;
+}
+
+.ds-okinawa-thread .ot-ledger-section {
+  border-top: 3px double var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-result-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
+  padding: 14px 0 6px;
+}
+
+.ds-okinawa-thread .ot-count {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-okinawa-thread .ot-result-head__new {
+  margin-left: auto;
+  align-self: center;
+}
+
+.ds-okinawa-thread .ot-scope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin: 4px 0 8px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--ot-cream);
+  background: var(--ot-rail);
+}
+
+.ds-okinawa-thread .ot-scope__title {
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-scope ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+
+.ds-okinawa-thread .ot-scope .ot-btn {
+  margin-left: auto;
+}
+
+.ds-okinawa-thread .ot-filterline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  min-height: 40px;
+}
+
+.ds-okinawa-thread .ot-filterline__tag {
+  margin-right: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--ot-text);
+  font-size: 13px;
+}
+
+.ds-okinawa-thread .ot-ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ds-okinawa-thread .ot-ledger th {
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--ot-rule);
+  background: var(--ot-head);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.ds-okinawa-thread .ot-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.ds-okinawa-thread .ot-ledger th:not(.is-sorted) svg {
+  opacity: 0.55;
+}
+
+.ds-okinawa-thread .ot-ledger th.is-sorted .ot-sort {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.ds-okinawa-thread .ot-ledger td {
+  padding: 10px;
+  border-bottom: 1px solid var(--ot-line);
+  vertical-align: middle;
+}
+
+/* 受付番号と状態の列の右に縦軸を通す（番号→状態→値の読み順） */
+.ds-okinawa-thread .ot-ledger :is(th, td):nth-child(2) {
+  border-right: 1px solid var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-ledger tr.is-open td {
+  background: var(--ot-rail);
+  border-bottom-color: transparent;
+}
+
+.ds-okinawa-thread .ot-col-action {
+  width: 1%;
+  text-align: right;
+}
+
+.ds-okinawa-thread .ot-ledger td.ot-col-action {
+  white-space: nowrap;
+}
+
+.ds-okinawa-thread .ot-detail-row td {
+  padding: 0 10px 14px;
+  background: var(--ot-rail);
+}
+
+.ds-okinawa-thread .ot-detail {
+  padding-top: 10px;
+  border-top: 1px dashed var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-ledger-section > .ot-detail {
+  margin-bottom: 12px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--ot-rule);
+  background: var(--ot-rail);
+}
+
+.ds-okinawa-thread .ot-detail__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 0 0 6px 2px;
+}
+
+.ds-okinawa-thread .ot-detail__title {
+  font-family: var(--ot-mincho);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.ds-okinawa-thread .ot-detail__note {
+  padding: 0 2px 6px;
+}
+
+/* ---------- フォーム ---------- */
+
+.ds-okinawa-thread .ot-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 0;
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-steps__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-steps__item + .ot-steps__item::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  margin: 0 12px;
+  background: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-steps__num {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-steps__item:is(.is-current, .is-done) {
+  color: var(--ot-text);
+}
+
+.ds-okinawa-thread .ot-steps__item.is-current {
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-steps__item.is-current .ot-steps__num {
+  border-color: var(--ot-cream);
+  background: var(--ot-cream);
+  color: var(--ot-ground);
+}
+
+.ds-okinawa-thread .ot-row {
+  display: grid;
+  grid-template-columns: 172px minmax(0, 1fr);
+  gap: 6px 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--ot-line);
+}
+
+.ds-okinawa-thread .ot-row__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  padding-top: 2px;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-req {
+  padding-left: 6px;
+  border-left: 1px solid var(--ot-muted);
+  color: var(--ot-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.ds-okinawa-thread .ot-row__value {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ds-okinawa-thread .ot-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ds-okinawa-thread .ot-checkbox {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  accent-color: var(--ot-cream);
+}
+
+/* エラー：淡い赤の文字＋「エラー」＋三角＋欄の太枠 */
+.ds-okinawa-thread .ot-row.is-invalid .ot-input {
+  border: 3px solid var(--ot-error-line);
+}
+
+.ds-okinawa-thread .ot-row.is-invalid .ot-checkbox {
+  outline: 3px solid var(--ot-error-line);
+  outline-offset: 2px;
+}
+
+.ds-okinawa-thread .ot-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  color: var(--ot-error);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-field-error svg {
+  margin-top: 3px;
+}
+
+.ds-okinawa-thread .ot-error-summary {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--ot-error-line);
+  border-left-width: 6px;
+  background: #2b2537;
+}
+
+.ds-okinawa-thread .ot-error-summary__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ot-error);
+  font-size: 19px;
+}
+
+.ds-okinawa-thread .ot-error-summary ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  margin-top: 4px;
+}
+
+.ds-okinawa-thread .ot-error-summary .ot-link-button {
+  color: var(--ot-error);
+}
+
+.ds-okinawa-thread .ot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 3px double var(--ot-rule);
+}
+
+/* ---------- ダッシュボード ---------- */
+
+.ds-okinawa-thread .ot-scope-text {
+  margin-bottom: 12px;
+  color: var(--ot-muted);
+}
+
+.ds-okinawa-thread .ot-cond--dash {
+  border-bottom: 3px double var(--ot-rule);
+}
+
+.ds-okinawa-thread .ot-field {
+  min-width: 0;
+}
+
+.ds-okinawa-thread .ot-field .ot-input {
+  min-width: 14rem;
+}
+
+.ds-okinawa-thread .ot-definitions {
+  flex-basis: 100%;
+  color: var(--ot-muted);
+  font-size: 14px;
+}
+
+.ds-okinawa-thread .ot-definitions summary {
+  min-height: 32px;
+  padding-top: 4px;
+  cursor: pointer;
+}
+
+.ds-okinawa-thread .ot-definitions .ot-axis {
+  margin: 8px 0;
+}
+
+.ds-okinawa-thread .ot-cond--dash + .ot-chapter-block {
+  border-top: 0;
+}
+
+.ds-okinawa-thread .ot-kpi {
+  display: grid;
+  grid-template-columns: 12em 7.5em minmax(0, 1fr) 8em;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 55px;
+  padding: 4px 12px;
+  border-bottom: 1px solid #718599;
+}
+
+.ds-okinawa-thread .ot-kpi__name {
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-kpi__value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.ds-okinawa-thread .ot-kpi__value small {
+  margin-left: 4px;
+  font-size: 15px;
+}
+
+.ds-okinawa-thread .ot-kpi__def {
+  font-size: 14px;
+  color: var(--ot-muted);
+}
+
+/* 先頭の受付件数：明るい行で総数を示す。移動できるのは下線の「一覧を見る」だけ */
+.ds-okinawa-thread .ot-kpi--lead {
+  border-bottom-color: transparent;
+  background: var(--ot-lead);
+  color: #263951;
+}
+
+.ds-okinawa-thread .ot-kpi--lead :is(.ot-kpi__def, .ot-link) {
+  color: #263951;
+}
+
+.ds-okinawa-thread .ot-kpi--lead .ot-link:focus-visible {
+  outline-color: #263951;
+  box-shadow: 0 0 0 2px var(--ot-lead);
+}
+
+.ds-okinawa-thread .ot-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+}
+
+.ds-okinawa-thread .ot-hbars {
+  display: grid;
+  gap: 4px;
+  padding-top: 4px;
+}
+
+.ds-okinawa-thread .ot-hbars li {
+  display: grid;
+  grid-template-columns: 2.6em minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+}
+
+.ds-okinawa-thread .ot-hbars__track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 件数は棒の端のすぐ右に文字で添える（最長の棒でも件数が収まる幅を残す） */
+.ds-okinawa-thread .ot-hbars__bar {
+  display: block;
+  flex: none;
+  width: calc((100% - 3.5em) * var(--r));
+  min-width: 2px;
+  height: 6px;
+  background: var(--ot-bar-fill);
+}
+
+.ds-okinawa-thread .ot-hbars__value {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ds-okinawa-thread .ot-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ds-okinawa-thread .ot-table :is(th, td) {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--ot-line);
+  text-align: left;
+}
+
+.ds-okinawa-thread .ot-table thead th {
+  background: var(--ot-head);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.ds-okinawa-thread .ot-table tbody th {
+  font-weight: 400;
+}
+
+.ds-okinawa-thread .ot-table .ot-right {
+  width: 5.5em;
+  text-align: right;
+}
+
+/* ---------- 比較ペインの幅による切り替え ---------- */
+
+@container frame (max-width: 1199px) {
+  .ds-okinawa-thread {
+    --ot-pad: 24px;
+  }
+
+  .ds-okinawa-thread .ot-body {
+    padding-left: calc(var(--ot-pad) + 32px);
+  }
+}
+
+/* 中間幅：章見出しを上に置き、状態の6択は2段に。項目名｜値の軸は保つ */
+@container frame (max-width: 939px) {
+  .ds-okinawa-thread .ot-chapter-block {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ds-okinawa-thread .ot-chapter-block > .ot-chapter {
+    padding: 14px 0 8px;
+  }
+
+  .ds-okinawa-thread .ot-chapter-block__rows {
+    border-left: 0;
+  }
+
+  .ds-okinawa-thread .ot-status__items {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ds-okinawa-thread .ot-dash-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ds-okinawa-thread .ot-kpi {
+    grid-template-columns: 10em 6.5em minmax(0, 1fr) auto;
+  }
+}
+
+/* 760px 未満（左右比較の各ペインを含む）：表を行ごとのラベル付きの縦の台帳に組み替える（DOM は表のまま） */
+@container frame (max-width: 759px) {
+  .ds-okinawa-thread .ot-ledger,
+  .ds-okinawa-thread .ot-ledger tbody,
+  .ds-okinawa-thread .ot-ledger tr,
+  .ds-okinawa-thread .ot-ledger td {
+    display: block;
+    width: auto;
+  }
+
+  .ds-okinawa-thread .ot-ledger thead,
+  .ds-okinawa-thread .ot-ledger thead tr {
+    display: block;
+  }
+
+  .ds-okinawa-thread .ot-ledger thead tr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 12px;
+    padding: 4px 8px;
+    background: var(--ot-head);
+  }
+
+  .ds-okinawa-thread .ot-ledger th {
+    padding: 0;
+    border: 0 !important;
+    background: none;
+  }
+
+  .ds-okinawa-thread .ot-ledger th.ot-col-action {
+    display: none;
+  }
+
+  .ds-okinawa-thread .ot-ledger tbody tr.ot-ledger-row {
+    padding: 6px 0 10px;
+    border-bottom: 1px solid var(--ot-rule);
+  }
+
+  .ds-okinawa-thread .ot-ledger td {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    gap: 8px;
+    padding: 4px 8px;
+    border: 0 !important;
+  }
+
+  .ds-okinawa-thread .ot-ledger td[data-label]::before {
+    content: attr(data-label);
+    padding-right: 8px;
+    border-right: 1px solid var(--ot-rule);
+    color: var(--ot-muted);
+    font-size: 14px;
+  }
+
+  .ds-okinawa-thread .ot-ledger td > .ot-badge {
+    justify-self: start;
+  }
+
+  .ds-okinawa-thread .ot-ledger td.ot-col-action {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ds-okinawa-thread .ot-ledger td.ot-col-action .ot-btn {
+    min-height: 44px;
+  }
+
+  .ds-okinawa-thread .ot-ledger .ot-detail-row td,
+  .ds-okinawa-thread .ot-ledger td.ot-empty {
+    display: block;
+  }
+
+  .ds-okinawa-thread .ot-hero__title {
+    font-size: 34px;
+  }
+
+  .ds-okinawa-thread {
+    --ot-share: 0.34;
+  }
+}
+
+/* 狭い枠（600px 未満）：項目名を値の直上に、左の帯を細く、表は行ごとにラベル付きで縦に読む */
+@container frame (max-width: 599px) {
+  .ds-okinawa-thread {
+    --ot-pad: 16px;
+  }
+
+  .ds-okinawa-thread .ot-topbar {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .ds-okinawa-thread .ot-topbar__org {
+    font-size: 18px;
+  }
+
+  .ds-okinawa-thread .ot-topbar__system {
+    font-size: 13px;
+  }
+
+  .ds-okinawa-thread .ot-menu {
+    display: inline-flex;
+  }
+
+  .ds-okinawa-thread .ot-nav {
+    display: none;
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+
+  .ds-okinawa-thread .ot-nav.is-open {
+    display: block;
+  }
+
+  .ds-okinawa-thread .ot-nav ul {
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--ot-line);
+  }
+
+  .ds-okinawa-thread .ot-hero {
+    min-height: 84px;
+  }
+
+  .ds-okinawa-thread .ot-hero__title {
+    font-size: 28px;
+  }
+
+  .ds-okinawa-thread {
+    --ot-share: 0.3;
+  }
+
+  .ds-okinawa-thread .ot-body {
+    padding-left: calc(var(--ot-pad) + 18px);
+  }
+
+  .ds-okinawa-thread .ot-body::before {
+    width: 8px;
+    border-width: 1px;
+    background:
+      linear-gradient(90deg, transparent 2.5px, var(--ot-thread) 2.5px 3.5px, transparent 3.5px),
+      repeating-linear-gradient(to bottom, var(--ot-thread) 0 1px, transparent 1px 7px),
+      var(--ot-rail);
+  }
+
+  .ds-okinawa-thread .ot-chapter {
+    font-size: 20px;
+  }
+
+  .ds-okinawa-thread .ot-search {
+    flex: 1 1 100%;
+  }
+
+  .ds-okinawa-thread .ot-status__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ds-okinawa-thread .ot-result-head__new {
+    margin-left: 0;
+  }
+
+
+  .ds-okinawa-thread .ot-row {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px 0 12px;
+  }
+
+  .ds-okinawa-thread .ot-axis > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .ds-okinawa-thread .ot-axis dt {
+    border-right: 0;
+  }
+
+  .ds-okinawa-thread .ot-axis--confirm > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ds-okinawa-thread .ot-axis--confirm dt {
+    grid-column: 1 / -1;
+  }
+
+  .ds-okinawa-thread .ot-steps__item + .ot-steps__item::before {
+    width: 16px;
+    margin: 0 8px;
+  }
+
+  .ds-okinawa-thread .ot-actions {
+    justify-content: flex-end;
+  }
+
+  .ds-okinawa-thread .ot-field {
+    flex: 1 1 100%;
+  }
+
+  .ds-okinawa-thread .ot-field .ot-input {
+    min-width: 0;
+  }
+
+  .ds-okinawa-thread .ot-kpi {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'name value' 'def link';
+    padding: 10px 8px;
+  }
+
+  .ds-okinawa-thread .ot-kpi__name {
+    grid-area: name;
+  }
+
+  .ds-okinawa-thread .ot-kpi__value {
+    grid-area: value;
+    text-align: right;
+  }
+
+  .ds-okinawa-thread .ot-kpi__def {
+    grid-area: def;
+  }
+
+  .ds-okinawa-thread .ot-kpi__link {
+    grid-area: link;
+    text-align: right;
+  }
+}
+
+@container frame (max-width: 359px) {
+  .ds-okinawa-thread .ot-hero__title {
+    font-size: 24px;
+  }
+}
+
+/* ---------- 強制カラー ---------- */
+
+@media (forced-colors: active) {
+  .ds-okinawa-thread :focus-visible,
+  .ds-okinawa-thread [data-focus]:focus,
+  .ds-okinawa-thread .ot-status__item:has(input:focus-visible) {
+    outline-color: Highlight;
+  }
+
+  .ds-okinawa-thread .ot-status__item.is-selected,
+  .ds-okinawa-thread .ot-steps__item.is-current .ot-steps__num {
+    outline: 2px solid CanvasText;
+  }
+
+  .ds-okinawa-thread .ot-hero__pattern,
+  .ds-okinawa-thread .ot-body::before {
+    display: none;
+  }
+}
