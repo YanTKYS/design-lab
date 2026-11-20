@@ -1,0 +1,332 @@
+/* 業務メモ：okinawa-thread-ui Skill（tokens.css と references/）を適用した見本。
+   design-lab の比較サイトの CSS は使わず、この画面の部品だけを書いている。 */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ot-ground);
+  color: var(--ot-text);
+  font-family: var(--ot-font-gothic);
+  font-size: 16px;
+  line-height: var(--ot-line-height);
+  overflow-wrap: anywhere;
+}
+
+h1, h2, h3, p, dl, dd, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; }
+
+:focus-visible,
+[tabindex="-1"]:focus {
+  outline: var(--ot-focus-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--ot-ground);
+}
+
+.ot-visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.ot-skip {
+  position: absolute; left: 8px; top: -48px; z-index: 1;
+  background: var(--ot-cream); color: var(--ot-ground); padding: 8px 12px;
+}
+.ot-skip:focus { top: 8px; }
+
+/* ---------- 帯と見出し面 ---------- */
+
+.ot-topbar {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+  padding: 10px var(--pad);
+  background: var(--ot-topbar);
+  border-bottom: 1px solid var(--ot-line);
+}
+.ot-topbar__org { color: var(--ot-muted); font-size: 14px; }
+.ot-topbar__system { font-family: var(--ot-font-mincho); font-size: 18px; }
+
+:root { --pad: 52px; --pattern-w: min(400px, 38%); }
+
+.ot-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 30px var(--pad) 32px;
+  background: var(--ot-hero);
+}
+.ot-hero__title,
+.ot-hero__lead {
+  position: relative;
+  max-width: calc(100% - var(--pattern-w) - 24px);
+}
+.ot-hero__title { font-family: var(--ot-font-mincho); font-size: 30px; line-height: 1.4; }
+.ot-hero__lead { margin-top: 8px; color: var(--ot-muted); }
+.ot-hero__pattern {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: var(--pattern-w);
+  background: url(assets/thread-pattern.svg) right top / 136px 128px repeat;
+  border-left: 1px solid var(--ot-rule);
+}
+
+/* ---------- 本文：左の格子帯 ---------- */
+
+.ot-body {
+  position: relative;
+  padding: 24px var(--pad) 32px calc(var(--pad) + 36px);
+}
+.ot-body:focus { outline: none; box-shadow: none; }
+.ot-body::before {
+  content: '';
+  position: absolute; top: 24px; bottom: 32px; left: var(--pad);
+  width: var(--ot-rail-width);
+  border-left: 2px solid var(--ot-thread);
+  border-right: 2px solid var(--ot-thread);
+  background:
+    linear-gradient(90deg, transparent 5px, var(--ot-thread) 5px 6px, transparent 6px 9px, var(--ot-thread) 9px 10px, transparent 10px),
+    repeating-linear-gradient(to bottom, var(--ot-thread) 0 1px, transparent 1px 7px),
+    var(--ot-rail);
+}
+
+.ot-status:not(:empty) {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  border-left: 4px solid var(--ot-cream);
+  background: var(--ot-hero);
+}
+
+.ot-footer { padding: 0 var(--pad) 28px; }
+.ot-footer p {
+  padding-top: 14px;
+  border-top: 1px solid var(--ot-line);
+  font-size: 13px;
+  color: var(--ot-muted);
+}
+
+/* ---------- 章と項目軸 ---------- */
+
+.ot-chapter {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  margin-bottom: 36px;
+  padding-top: 16px;
+  border-top: var(--ot-chapter-rule);
+}
+.ot-chapter[hidden] { display: none; }
+.ot-chapter__title {
+  padding-right: 16px;
+  border-right: var(--ot-axis);
+  font-family: var(--ot-font-mincho);
+  font-size: 20px;
+  line-height: 1.5;
+}
+.ot-chapter__title::before { content: '+'; margin-right: .4em; color: var(--ot-thread); font-family: var(--ot-font-gothic); }
+.ot-chapter__body { min-width: 0; padding-left: 20px; }
+
+.ot-sub { margin: 20px 0 6px; font-size: 15px; color: var(--ot-muted); font-weight: 400; }
+
+.ot-field {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 0 16px;
+  padding: 12px 0;
+  border-bottom: var(--ot-row-line);
+}
+.ot-field > label,
+.ot-field__label {
+  padding-right: 12px;
+  border-right: var(--ot-axis);
+  font-weight: 700;
+}
+.ot-mark {
+  margin-left: .6em; padding-left: .6em;
+  border-left: 1px solid var(--ot-rule);
+  font-size: 13px; font-weight: 400; color: var(--ot-muted);
+}
+.ot-hint { margin-top: 4px; font-size: 14px; color: var(--ot-muted); }
+
+.ot-field input,
+.ot-field select,
+.ot-field textarea {
+  width: 100%;
+  max-width: 36em;
+  padding: 8px 10px;
+  background: var(--ot-input);
+  color: var(--ot-input-text);
+  border: 1px solid var(--ot-rule);
+  border-radius: 0;
+}
+.ot-field input[type="date"] { max-width: 14em; }
+.ot-field textarea { resize: vertical; }
+
+/* ---------- 選択肢（絞り込み・ラジオ） ---------- */
+
+.ot-choices, .ot-radios { display: flex; flex-wrap: wrap; gap: 8px; }
+.ot-choice {
+  padding: 6px 12px;
+  background: transparent;
+  color: var(--ot-text);
+  border: 1px solid var(--ot-thread);
+  border-radius: 0;
+  cursor: pointer;
+}
+.ot-choice[aria-pressed="true"] {
+  background: var(--ot-cream);
+  color: var(--ot-ground);
+  border-color: var(--ot-cream);
+  font-weight: 700;
+}
+.ot-choice[aria-pressed="true"]::before { content: '✓ '; }
+
+.ot-radio { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 6px; border: 1px solid var(--ot-line); }
+.ot-radio input { width: 18px; height: 18px; accent-color: var(--ot-cream); }
+.ot-radio:has(input:checked) { border-color: var(--ot-cream); font-weight: 700; }
+
+/* ---------- 操作 ---------- */
+
+.ot-primary,
+.ot-secondary {
+  min-height: 40px;
+  padding: 7px 18px;
+  border-radius: 0;
+  cursor: pointer;
+}
+.ot-primary { background: var(--ot-cream); color: var(--ot-ground); border: 1px solid var(--ot-cream); font-weight: 700; }
+.ot-secondary { background: transparent; color: var(--ot-text); border: 1px solid var(--ot-thread); }
+.ot-textlink {
+  padding: 4px 2px;
+  background: none; border: 0;
+  color: var(--ot-text);
+  text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+a { color: var(--ot-text); text-underline-offset: 3px; }
+
+.ot-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  padding: 14px 0 10px;
+}
+.ot-count { margin-right: auto; }
+.ot-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 18px; }
+
+/* ---------- 台帳 ---------- */
+
+.ot-ledger { width: 100%; border-collapse: collapse; }
+.ot-ledger th,
+.ot-ledger td {
+  padding: 9px 10px;
+  border-bottom: var(--ot-row-line);
+  text-align: left;
+  vertical-align: top;
+}
+.ot-ledger thead th { background: var(--ot-header); font-size: 14px; font-weight: 700; }
+.ot-ledger :is(th, td):nth-child(1),
+.ot-ledger :is(th, td):nth-child(2) { border-right: var(--ot-axis); white-space: nowrap; }
+.ot-ledger td:nth-child(1) { font-variant-numeric: tabular-nums; }
+.ot-ledger td:nth-child(4) { white-space: nowrap; }
+.ot-ledger td:nth-child(5) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ot-ledger td:last-child { text-align: right; white-space: nowrap; }
+.ot-ledger tr.is-open > td { border-bottom-color: transparent; }
+
+.ot-state { display: inline-flex; align-items: center; gap: 6px; }
+.ot-state::before { content: ''; width: 10px; height: 10px; border: 2px solid currentColor; }
+.ot-state[data-tone="doing"]::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+.ot-state[data-tone="done"]::before { background: currentColor; }
+
+.ot-ledger .ot-detail > td { padding: 0 10px 16px; border-right: 0; text-align: left; white-space: normal; }
+.ot-detail__inner {
+  padding: 12px 14px;
+  border: 1px solid var(--ot-rule);
+  border-top: 3px solid var(--ot-thread);
+  background: var(--ot-rail);
+}
+.ot-axis { display: grid; grid-template-columns: 8em minmax(0, 1fr); }
+.ot-axis dt,
+.ot-axis dd { padding: 6px 0; border-bottom: var(--ot-row-line); }
+.ot-axis dt { padding-right: 12px; border-right: var(--ot-axis); color: var(--ot-muted); }
+.ot-axis dd { padding-left: 12px; white-space: pre-wrap; }
+.ot-detail .ot-actions { padding-top: 12px; }
+
+.ot-empty { padding: 16px 0; border-bottom: var(--ot-row-line); }
+
+/* ---------- 行型の指標と横棒 ---------- */
+
+.ot-kpi {
+  display: grid;
+  grid-template-columns: 9em 6em minmax(0, 1fr) 7em;
+  gap: 4px 14px;
+  align-items: baseline;
+  padding: 9px 12px;
+  border-bottom: var(--ot-row-line);
+}
+.ot-kpi--lead { background: var(--ot-lead); color: var(--ot-ground); }
+.ot-kpi--lead a { color: var(--ot-ground); }
+.ot-kpi dt { font-weight: 700; }
+.ot-kpi .v { font-size: 22px; font-variant-numeric: tabular-nums; }
+.ot-kpi .d { font-size: 14px; color: var(--ot-muted); }
+.ot-kpi--lead .d { color: var(--ot-input-text); }
+
+.ot-bar {
+  display: grid;
+  grid-template-columns: 6em minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 5px 0;
+}
+.ot-bar__track { display: flex; align-items: center; gap: .5em; }
+.ot-bar__fill { height: 14px; background: var(--ot-bar); width: calc((100% - 3.5em) * var(--r)); }
+
+/* ---------- エラー ---------- */
+
+.ot-errors {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 3px solid var(--ot-error-line);
+}
+.ot-errors h3 { font-size: 17px; color: var(--ot-error); }
+.ot-errors ul { margin-top: 6px; padding-left: 1.2em; list-style: disc; }
+.ot-errors a { color: var(--ot-error); }
+.ot-error { margin-top: 4px; color: var(--ot-error); font-weight: 700; }
+.ot-field.is-error input,
+.ot-field.is-error select,
+.ot-field.is-error textarea { border: 3px solid var(--ot-error-line); }
+
+/* ---------- 中間の幅 ---------- */
+
+@media (max-width: 960px) {
+  :root { --pad: 24px; }
+  .ot-chapter { grid-template-columns: 1fr; }
+  .ot-chapter__title { padding: 0 0 8px; border-right: 0; }
+  .ot-chapter__body { padding-left: 0; }
+}
+
+/* ---------- 狭い幅：項目名を値の直上、表はラベル付きの塊 ---------- */
+
+@media (max-width: 599px) {
+  :root { --pad: 16px; --pattern-w: 96px; }
+  .ot-hero { padding-top: 22px; padding-bottom: 22px; }
+  .ot-hero__title { font-size: 24px; }
+  .ot-body { padding-left: calc(var(--pad) + 20px); }
+  .ot-body::before {
+    width: 8px;
+    background: repeating-linear-gradient(to bottom, var(--ot-thread) 0 1px, transparent 1px 7px), var(--ot-rail);
+  }
+  .ot-field { grid-template-columns: 1fr; }
+  .ot-field > label,
+  .ot-field__label { padding: 0 0 4px; border-right: 0; }
+
+  .ot-kpi { grid-template-columns: minmax(0, 1fr) auto; }
+  .ot-kpi .d { grid-column: 1 / -1; }
+  .ot-kpi dd:last-child { grid-column: 1 / -1; }
+  .ot-kpi dd:last-child:empty { display: none; }
+
+  .ot-ledger thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ot-ledger, .ot-ledger tbody, .ot-ledger tr, .ot-ledger td { display: block; }
+  .ot-ledger tr:not(.ot-detail) { padding: 8px 0; border-bottom: var(--ot-row-line); }
+  .ot-ledger td { padding: 3px 0; border: 0 !important; white-space: normal !important; text-align: left !important; }
+  .ot-ledger td[data-label] { display: grid; grid-template-columns: 4.5em minmax(0, 1fr); gap: 8px; }
+  .ot-ledger td[data-label]::before { content: attr(data-label); color: var(--ot-muted); font-size: 14px; border-right: var(--ot-axis); }
+  .ot-ledger .ot-detail > td { padding: 0 0 12px; }
+  .ot-axis { grid-template-columns: 1fr; }
+  .ot-axis dt { border-right: 0; padding-bottom: 0; border-bottom: 0; }
+  .ot-axis dd { padding-left: 0; }
+}

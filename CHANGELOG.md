@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 実験：「糸の交点」を再利用できる Agent Skill（`skills/okinawa-thread-ui/`）として切り出した。`SKILL.md`（手順と自己点検）、守る規則・調整してよい点・避ける実装と画面の型（`references/`）、色・書体・罫のトークンと自作の十字の模様（`assets/`）。比較サイトの CSS・JS は含めない。Claude Code（`.claude/skills/`）・Codex（`.agents/skills/`）への導入方法と確認状況を [skills/README.md](skills/README.md) に記載。Skill を別の業務（業務メモの管理）に当てはめた見本と[検証記録](examples/okinawa-thread-memo/VERIFICATION.md)を `examples/okinawa-thread-memo/` に追加（同じ作業の中で作成し、独立したエージェントでは未検証）。比較サイト・9デザイン・試作は変更していない。
 - 9番目の比較デザインとして「糸の交点」（`okinawa-thread`、独自の沖縄テーマ・名称は仮称）を追加。独立した試作で評価した情報構造を、比較サイトの描画契約（一覧・入力フォーム・ダッシュボード、単独／左右比較・URL の復元）に合わせて組み直した。公式のデザインシステムではないため、比較ペインの見出しのリンクは「設計と着想」と表示する。独立した試作（「彩」「糸の交点」）は残している。
 - 実験：沖縄テーマB案「糸の交点」（仮称）を、独立した3画面の試作として追加（`site/experiments/okinawa-thread/`、[設計と着想](docs/okinawa-ui-study/README.md)）。濃藍の地、見出し端の十字絣の自作パターン、本文左の格子帯、章・項目名・値の軸、行型の指標と横棒。検索・入力検証・集計は共通モデルを使い、入力内容は送信・保存しない。既存の「彩」の試作・比較サイト・8デザインは変更していない。
 - 実験：琉球モダン・彩の試作を3画面に拡張（[設計メモ](docs/ryukyu-modern-visuals/sai-three-screens.md)）。同じ公開先で申請一覧・新規申請・ダッシュボードを切り替えられる。入力・検証・確認・完了は `form.js`、集計と一覧への条件の引き継ぎは `dashboard.js` をそのまま使い、入力内容は送信・保存しない。一覧に、ダッシュボードから引き継いだ条件の表示と解除を追加。画面写真を `docs/ryukyu-modern-visuals/impl-sai-*.png` に追加・更新。
