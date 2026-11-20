@@ -72,7 +72,7 @@ tests/
 
 ## デザインを追加する
 
-1. `site/assets/js/designs/<id>.js`（枠と一覧）・`<id>.form.js`（フォーム）・`<id>.dashboard.js`（ダッシュボード）を作ります。デフォルトエクスポートには `id`・`name`・`shortName`・`url`・`summary`・`traits`（一覧の特徴）・`formTraits`（フォームの特徴）・`dashboardTraits`（ダッシュボードの特徴）・`errorFocus`（`'summary'`：エラーサマリーへ、`'field'`：最初のエラー項目へフォーカス）・`render(model, ctx)` を持たせます。`render` は `model.screen`（`'list'` / `'form'` / `'dashboard'`）で画面を切り替えます。
+1. `site/assets/js/designs/<id>.js`（枠と一覧）・`<id>.form.js`（フォーム）・`<id>.dashboard.js`（ダッシュボード）を作ります。デフォルトエクスポートには `id`・`name`・`shortName`・`url`・`summary`・`traits`（一覧の特徴）・`formTraits`（フォームの特徴）・`dashboardTraits`（ダッシュボードの特徴）・`errorFocus`（`'summary'`：エラーサマリーへ、`'field'`：最初のエラー項目へフォーカス）・`render(model, ctx)` を持たせます。公式のデザインシステムではない独自のデザインでは、任意の `urlLabel`（例：「設計と着想」）で、比較ペインの見出しのリンク名「公式サイト」を置き換えます。`render` は `model.screen`（`'list'` / `'form'` / `'dashboard'`）で画面を切り替えます。
 2. `site/assets/css/designs/<id>.css` を作り、すべてのセレクターを `.ds-<id>` 配下に限定します。幅による切り替えは `@media` ではなく `@container frame (...)` を使います。
 3. `site/assets/js/designs/index.js` の `DESIGNS` と `site/index.html` の `<link>` に追加します。既存のデザイン ID は共有 URL で使うため変更しません。
 

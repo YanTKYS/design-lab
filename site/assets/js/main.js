@@ -265,7 +265,7 @@ function renderPaneHead(design, pane) {
       <p class="pane__name">${design.name}</p>
       <p class="pane__summary">${design.summary}</p>
       <a class="pane__link" href="${design.url}" target="_blank" rel="noopener noreferrer"
-        >公式サイト${icon('external', { size: 14 })}<span class="visually-hidden">（${design.name}、新しいタブで開く）</span></a
+        >${design.urlLabel ?? '公式サイト'}${icon('external', { size: 14 })}<span class="visually-hidden">（${design.name}、新しいタブで開く）</span></a
       >
     </div>
     <details class="pane__traits" ${pane.traitsOpen ? 'open' : ''}>

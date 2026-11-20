@@ -14,11 +14,11 @@
 
 どのデザインから見比べるかは[デザイン選定ガイド](design-selection.md)、見比べるときの観点と記録の形式は [UI 品質レビュー観点](ui-quality-review.md)を参照してください。
 
-公開ドキュメントを参考にした独自実装であり、公式準拠やデザインシステムの優劣を示すものではありません。**視認性の好みと業務効率の評価は別**です。このサイトでの見比べを業務効率の測定結果や性能ランキングとして扱わず、採用を検討する業務の利用者・操作・端末に即した評価の材料として使ってください。
+既存の8デザインは公開ドキュメントを参考にした独自実装、「糸の交点」はこのサイト独自の沖縄テーマのデザインです。いずれも公式準拠やデザインシステムの優劣を示すものではありません。**視認性の好みと業務効率の評価は別**です。このサイトでの見比べを業務効率の測定結果や性能ランキングとして扱わず、採用を検討する業務の利用者・操作・端末に即した評価の材料として使ってください。
 
 ## デザインごとの特徴
 
-| デザイン | 公式サイト | 一覧画面の特徴 | 入力フォームの特徴 | ダッシュボードの特徴 |
+| デザイン | 公式サイト（独自案は設計資料） | 一覧画面の特徴 | 入力フォームの特徴 | ダッシュボードの特徴 |
 | --- | --- | --- | --- | --- |
 | デジタル庁デザインシステム | <https://design.digital.go.jp/dads/> | 16px・行間1.7の本文、検索条件パネル、罫線つきの表、黄色＋黒のフォーカス。詳細は別ページ | 「※必須」「任意」をラベル横に明示、補足はラベル直下、エラーは欄の直下に「＊」付き＋通知バナー、ステップ表示 | 見出し付きセクションを 1 列で積み、数値は 48px の太字。縦棒は値を棒の上に直接表示し、積み上げ棒は模様＋ラベル＋数値＋割合で区別、すべてのグラフに表 |
 | IBM Carbon Design System | <https://carbondesignsystem.com/> | 黒い UI シェル＋サイドナビ、ツールバー一体型のデータテーブル、行の展開で詳細 | 2 カラム、入力例は欄の中・補足は欄の下、任意のみ明示、欄内の警告アイコン、インライン通知、隙間なく並ぶボタンセット | 薄いタイルを 1px の隙間で敷き詰めた高密度。ツールバーにフィルター、ドーナツ＋凡例テーブル、小さな縦棒・横棒 |
@@ -27,6 +27,7 @@
 | U.S. Web Design System | <https://designsystem.digital.gov/> | 正当性バナー、セリフ体の見出し、ボタン一体型の検索欄、狭い幅では縦積みの表、モーダルで詳細 | 「＊は必須項目です」の注記、エラー項目の左の赤い帯、赤いアラート、分割式のステップインジケーター | 見出し＋説明の明確な階層、4 つのサマリーボックス、番号つきの横棒、「データを表で表示」のアコーディオン、出典と基準日 |
 | Google Material Design 3 | <https://m3.material.io/> | 淡いトップバーとナビゲーションレール、検索バー・チェック付きフィルターチップ、密度を保った横スクロール表。詳細は中央ダイアログ | 手順・補足を分けた入力面、常時ラベル付きの Filled 型フィールド、赤い下線と理由、Filled / Outlined / Text の操作階層 | 条件を独立したパネルにまとめ、受付件数を大きいサーフェスで強調。月別の縦棒、状態のドーナツ＋文字の凡例、種別の横棒 |
 | Meta Astryx | <https://astryx.atmeta.com/> | 上部バーのない左サイドナビ、表示件数・処理状態・並び順の事実の帯、罫線のない表、絞り込み中の警告バナーと表の下の内訳。詳細は右側のシート | 上部の横向きの進行表示、必須を標準にして「任意」だけを表示、項目名の下に補足、欄の下の赤い枠でエラーと理由 | 固定の条件帯の下に4つの同じ大きさの指標タイル。月別は無彩色の縦棒、種別は横棒、状態は積み上げ棒と内訳の表 |
+| 糸の交点（独自の沖縄テーマ・仮称） | [設計と着想](okinawa-ui-study/README.md) | 濃藍の地に本文左の格子帯。受付番号→処理状態を先頭に固定し、その右に縦軸。詳細は選んだ行の直下に「項目名｜値」の軸で差し込む。狭い枠では行ごとにラベル付きで縦に読む | 「章｜項目名｜入力欄」の3本の軸、明朝の章見出しと二重罫、「必須」「任意」を縦線で添える。エラーサマリーへフォーカス | 「指標名→値→定義→一覧へ」の行型の指標、月を縦にたどる横棒、状態・種別の件数と割合の表 |
 | Plain | （HTML 標準） | ブラウザ標準の部品と最小限の CSS だけの基準線 | fieldset と label だけ。「（必須）」と「エラー：…」を文字で示す | グラフ・カードなし。見出しと表と文章だけで数値を示す |
 
 各デザインの「設計上の特徴」は、画面上部の見出し部分から確認できます。一覧では情報密度やナビゲーション、フォームではラベルやエラー、ダッシュボードでは指標や集計条件の配置などを説明しています。
@@ -71,5 +72,11 @@ Material 3 を開く共有 URL の例は[使い方の URL 仕様](usage.md#url-�
 - Neutral テーマ：[`packages/themes/neutral`](https://github.com/meta/astryx/tree/main/packages/themes/neutral)（`neutralTheme.ts`、`neutral.spec.md`、`neutralPalettes.generated.ts`）
 - テンプレート：[`table-page`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/table-page)、[`form-wizard`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/form-wizard)、[`dashboard`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/dashboard)、[`shell-side-nav`](https://github.com/meta/astryx/tree/main/packages/cli/assets/templates/pages/shell-side-nav)
 - 部品の説明：[`Field`](https://github.com/meta/astryx/tree/main/packages/core/src/Field)、[`FormLayout`](https://github.com/meta/astryx/tree/main/packages/core/src/FormLayout)、[`Stepper`](https://github.com/meta/astryx/tree/main/packages/core/src/Stepper)、[`Banner`](https://github.com/meta/astryx/tree/main/packages/core/src/Banner)
+
+## 糸の交点（独自の沖縄テーマ）
+
+`okinawa-thread` は、ほかの8デザインと違い、**公開されたデザインシステムを参考にした実装ではありません**。宮古上布の経糸・緯糸・十字絣に着想した、このサイト独自の比較デザインです（名称「糸の交点」は仮称）。宮古上布の公式デザインや伝統工芸の再現、沖縄全域を代表する様式ではありません。着想と2案の比較は[沖縄をテーマにした業務画面の再探索](okinawa-ui-study/README.md)、採用前の独立した試作は[糸の交点の試作](https://yantkys.github.io/design-lab/experiments/okinawa-thread/)にあります。
+
+比較サイトでは、独立した試作で評価した情報構造（格子帯、章の二重罫、項目名と値の軸、行型の指標、横棒）を、ほかのデザインと同じ描画の仕組み・URL・左右比較に合わせて組み直しました。独立した試作との主な違いは、件数の表記（比較サイト共通の「71件中 1件」）、行の詳細を Esc ではなくボタンで閉じること（比較サイトの行内の詳細の扱いに合わせた）、試作用の入力例ボタンを置かないこと（比較サイト上部の「入力データ」を使う）、狭い枠での表の組み替えを CSS だけで行うことです。明朝体が端末にない場合は、章見出しもゴシックで表示されます。
 
 描画モジュールや CSS を追加・変更する手順は[開発資料](development.md#デザインを追加する)を参照してください。

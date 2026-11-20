@@ -44,7 +44,7 @@
 | パラメータ | 内容 | 例 |
 | --- | --- | --- |
 | `screen` | 画面（省略時は申請一覧。`form`：入力フォーム、`dashboard`：ダッシュボード） | `screen=dashboard` |
-| `design` | 単独表示のデザイン ID（`dads` / `carbon` / `fluent` / `govuk` / `uswds` / `plain` / `material3` / `astryx`） | `design=govuk` |
+| `design` | 単独表示のデザイン ID（`dads` / `carbon` / `fluent` / `govuk` / `uswds` / `plain` / `material3` / `astryx` / `okinawa-thread`） | `design=govuk` |
 | `mode`, `left`, `right` | 左右比較と左右のデザイン | `mode=compare&left=dads&right=carbon` |
 | `width` | 表示幅（`1280` / `1024` / `768` / `375`） | `width=1024` |
 | `q` | キーワード | `q=保育` |
