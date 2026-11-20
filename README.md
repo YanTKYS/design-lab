@@ -48,6 +48,7 @@ npm test     # 別のターミナルでユニットテストを実行
 - [UI 品質レビュー観点](docs/ui-quality-review.md)：操作シナリオに基づくレビュー手順、AI が生成した画面の装飾の見分け方、依頼例と記録の形式
 - [使い方](docs/usage.md)：操作方法、共有 URL、入力情報の扱い、ダッシュボードの集計仕様
 - [開発資料](docs/development.md)：構成、状態管理、デザイン・画面の追加、テスト、GitHub Pages 公開
+- [Agent Skills](skills/README.md)：「糸の交点」をほかのアプリへ適用するための Skill（Claude Code・Codex への導入方法、[適用見本の検証記録](examples/okinawa-thread-memo/VERIFICATION.md)）
 - [変更履歴](CHANGELOG.md)
 
 実験中の独立した試作（3画面を切り替えて操作できる。上記の比較デザイン・比較機能には含めていない）：

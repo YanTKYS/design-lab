@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>業務メモ — 糸の交点 Skill の適用見本</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="ot-skip" href="#main">本文へ移動</a>
+
+  <header class="ot-topbar">
+    <span class="ot-topbar__org">架空市 総務課</span>
+    <strong class="ot-topbar__system">業務メモ</strong>
+  </header>
+
+  <div class="ot-hero">
+    <h1 class="ot-hero__title">メモ管理</h1>
+    <p class="ot-hero__lead">担当の作業メモを、番号と状態で追いかけます。入力した内容はこのページの中だけで扱い、再読み込みすると初期の見本に戻ります。</p>
+    <span class="ot-hero__pattern" aria-hidden="true"></span>
+  </div>
+
+  <main id="main" class="ot-body" tabindex="-1">
+    <p id="status" class="ot-status" role="status" aria-live="polite"></p>
+
+    <section class="ot-chapter" aria-labelledby="ch-summary">
+      <h2 id="ch-summary" class="ot-chapter__title">集計</h2>
+      <div class="ot-chapter__body">
+        <dl id="kpis" class="ot-kpis"></dl>
+        <h3 class="ot-sub">分類ごとの件数</h3>
+        <ul id="bars" class="ot-bars"></ul>
+      </div>
+    </section>
+
+    <section class="ot-chapter" aria-labelledby="ch-list" id="list">
+      <h2 id="ch-list" class="ot-chapter__title">メモ一覧</h2>
+      <div class="ot-chapter__body">
+        <div class="ot-field">
+          <label for="q">件名・本文で検索</label>
+          <div>
+            <input id="q" type="search" autocomplete="off" aria-describedby="q-hint">
+            <p id="q-hint" class="ot-hint">入力すると一覧がすぐに絞り込まれます。</p>
+          </div>
+        </div>
+        <div class="ot-field">
+          <span class="ot-field__label" id="state-label">状態</span>
+          <div class="ot-choices" role="group" aria-labelledby="state-label" id="state-filter"></div>
+        </div>
+        <div class="ot-toolbar">
+          <p id="count" class="ot-count"></p>
+          <button type="button" class="ot-textlink" id="clear">条件をクリア</button>
+          <button type="button" class="ot-primary" id="new">新しいメモを書く</button>
+        </div>
+        <table class="ot-ledger">
+          <caption class="ot-visually-hidden">メモ一覧（番号・状態・件名・分類・期日）</caption>
+          <thead>
+            <tr><th scope="col">番号</th><th scope="col">状態</th><th scope="col">件名</th><th scope="col">分類</th><th scope="col">期日</th><th scope="col"><span class="ot-visually-hidden">操作</span></th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p id="empty" class="ot-empty" hidden>条件に合うメモはありません。検索語を変えるか、「条件をクリア」を選んでください。</p>
+      </div>
+    </section>
+
+    <section class="ot-chapter" aria-labelledby="ch-form" id="form-chapter" hidden>
+      <h2 id="ch-form" class="ot-chapter__title" tabindex="-1">メモの入力</h2>
+      <div class="ot-chapter__body">
+        <div id="errors" class="ot-errors" tabindex="-1" hidden></div>
+        <form id="form" novalidate>
+          <div class="ot-field" id="f-title">
+            <label for="title">件名<span class="ot-mark">必須</span></label>
+            <div>
+              <input id="title" name="title" autocomplete="off" aria-describedby="title-hint">
+              <p id="title-hint" class="ot-hint">40字以内。何の作業かが一覧で分かる名前にします。</p>
+            </div>
+          </div>
+          <div class="ot-field" id="f-category">
+            <label for="category">分類<span class="ot-mark">必須</span></label>
+            <div>
+              <select id="category" name="category">
+                <option value="">選んでください</option>
+              </select>
+            </div>
+          </div>
+          <div class="ot-field" id="f-state">
+            <span class="ot-field__label" id="state-input-label">状態<span class="ot-mark">必須</span></span>
+            <div class="ot-radios" role="radiogroup" aria-labelledby="state-input-label" id="state-input"></div>
+          </div>
+          <div class="ot-field" id="f-due">
+            <label for="due">期日<span class="ot-mark">任意</span></label>
+            <div>
+              <input id="due" name="due" type="date" aria-describedby="due-hint">
+              <p id="due-hint" class="ot-hint">決まっていなければ空けておきます。</p>
+            </div>
+          </div>
+          <div class="ot-field" id="f-body">
+            <label for="body">本文<span class="ot-mark">任意</span></label>
+            <div>
+              <textarea id="body" name="body" rows="5" aria-describedby="body-hint"></textarea>
+              <p id="body-hint" class="ot-hint">400字以内。経緯・相手先・次にすることなど。</p>
+            </div>
+          </div>
+          <div class="ot-actions">
+            <button type="submit" class="ot-primary">保存する</button>
+            <button type="button" class="ot-secondary" id="cancel">入力をやめる</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ot-footer">
+    <p>「糸の交点」は宮古上布に着想した独自のデザイン（名称は仮称）です。公式の意匠・伝統工芸の再現ではありません。メモの内容は架空です。</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
