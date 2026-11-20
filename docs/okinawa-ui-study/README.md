@@ -19,6 +19,10 @@
 
 深緑の見出しの脇に、赤瓦色・黄金・藍の円弧や角形が並ぶ。3画面を切り替えても同じ帯が現れ、同じシステムだと認識する手掛かりになる。本文では、砂色の面が検索条件・手順・集計条件の置き場を示し、藍の罫が記録の始まりを示す。一方、本文だけの4指標は均等な区画として読める。染め分けや石積みという由来をそこから特定する手掛かりは乏しい。これは今回の画面観察と制作者の解釈で、地域の利用者による識別結果はまだない。[動く3画面](https://yantkys.github.io/design-lab/experiments/ryukyu-modern/)・[3画面の設計メモ](../ryukyu-modern-visuals/sai-three-screens.md)・[初期案](../ryukyu-modern-concept.md)
 
+## 案Bの動く試作
+
+案Bを[独立した3画面の試作](https://yantkys.github.io/design-lab/experiments/okinawa-thread/)にした（[ソース](../../site/experiments/okinawa-thread/)）。現行「彩」の[試作](https://yantkys.github.io/design-lab/experiments/ryukyu-modern/)は別ページのまま残している。一覧はモックがないため、番号と状態の列を先に読み、選んだ記録の直下に同じ項目軸で詳細を差し込む形に展開した。画面写真（上部の試作注記は非表示）：申請一覧 [1280px](impl-thread-list-1280.png)・[375px](impl-thread-list-375.png)、新規申請 [1280px](impl-thread-form-1280.png)・[375px](impl-thread-form-375.png)、ダッシュボード [1280px](impl-thread-dashboard-1280.png)・[375px](impl-thread-dashboard-375.png)。
+
 ## 案A　庇と通路（仮称）
 
 **参照した事実。** 名護市は市庁舎の設計について、街側に重なるアサギテラス、ルーバーがつくる日陰、外廊下などを通る風の道を説明している。市民との対話の場をどう開くかという、沖縄本島北部の一つの公共建築に着目した。[名護市「名護市庁舎概要」](https://www.city.nago.okinawa.jp/about/2018072000468/)
