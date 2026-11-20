@@ -306,6 +306,7 @@ const fieldEl = (name) => app.querySelector(`[data-field="${name}"]`);
 
 function go(screen) {
   if (!SCREENS.some((s) => s.id === screen)) return;
+  flushKeyword();
   state.screen = screen;
   render();
   window.scrollTo(0, 0);
@@ -313,6 +314,14 @@ function go(screen) {
 }
 
 let keywordTimer;
+
+/** 検索語の保留中のタイマーを止め、入力欄にある内容を状態へ確定する（画面を離れる前に呼ぶ）。
+ *  タイマーを消すだけだと未確定の入力が失われ、残したままだと離れた後の画面状態を上書きする。 */
+function flushKeyword() {
+  clearTimeout(keywordTimer);
+  const input = app.querySelector('#rm-kw');
+  if (input) state.keyword = input.value;
+}
 
 function setKeyword(value) {
   clearTimeout(keywordTimer);
@@ -359,6 +368,7 @@ function submitEntry() {
 }
 
 function openList(link) {
+  clearTimeout(keywordTimer); // 保留中の検索語が、引き継いだ条件（検索語は空）を後から上書きしない
   Object.assign(state, listStateFor(state, link), { screen: 'list' });
   render();
   window.scrollTo(0, 0);
