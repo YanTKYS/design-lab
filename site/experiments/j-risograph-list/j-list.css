@@ -1,0 +1,115 @@
+/* J「二色刷り」（仮称）申請一覧の試作。生成りの紙に青と蛍光ピンクの2色。ピンクは飾りと選択の地に限り、状態は記号と文字で示す。 */
+:root {
+  --jl-paper: #f3eee2;
+  --jl-blue: #2948a0;     /* 青の版：文字・罫・操作 */
+  --jl-ink: #23397f;      /* 本文の青（紙の上で 9:1 程度） */
+  --jl-muted: #4c5a8c;
+  --jl-pink: #ff579b;     /* ピンクの版：飾り */
+  --jl-pink-soft: #fac4db;
+  --jl-field: #fffdf8;
+  --jl-font: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--jl-paper); color: var(--jl-ink); font: 15px/1.6 var(--jl-font); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.jl-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--jl-ink); outline-offset: 3px; box-shadow: 0 0 0 7px #fff3c0; }
+
+.jl-experiment { padding: 8px 44px; background: #e9e2d2; font-size: 13px; }
+.jl-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.jl-experiment a { color: var(--jl-ink); }
+
+.jl-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 0 44px; min-height: 54px; border-bottom: 2px solid var(--jl-blue); }
+.jl-top__org { font-size: 20px; font-weight: 900; }
+.jl-top__system { font-size: 13px; }
+.jl-nav { margin-left: auto; }
+.jl-nav ul { display: flex; gap: 6px; }
+.jl-nav a, .jl-nav__off { display: block; padding: 3px 12px; border-radius: 999px; color: var(--jl-ink); font-size: 14px; text-decoration: none; }
+.jl-nav a[aria-current] { background: var(--jl-blue); color: var(--jl-paper); font-weight: 900; box-shadow: 3px 2px 0 var(--jl-pink); }
+.jl-nav__off { color: #7581a8; }
+.jl-top__user { margin-left: 28px; font-size: 14px; }
+
+.jl-main { max-width: 1280px; margin: 0 auto; padding: 0 44px 48px; }
+.jl-link { padding: 0; background: none; border: 0; color: var(--jl-ink); font-weight: 900; text-decoration: underline wavy var(--jl-pink); text-underline-offset: 5px; cursor: pointer; }
+
+/* 表題：版ずれの見出し、件数、網点のにじみと青い円 */
+.jl-hero { position: relative; display: flex; align-items: flex-end; gap: 26px; height: 180px; padding-bottom: 20px; border-bottom: 2px solid var(--jl-blue); overflow: hidden; }
+.jl-hero h1 { position: relative; z-index: 1; font-size: 64px; font-weight: 900; letter-spacing: .04em; line-height: 1; color: var(--jl-blue); white-space: nowrap; }
+.jl-hero h1::before { content: attr(data-text); position: absolute; left: 4px; top: 3px; z-index: -1; color: var(--jl-pink); mix-blend-mode: multiply; white-space: nowrap; }
+.jl-hero__count { position: relative; z-index: 1; font-size: 22px; font-weight: 900; }
+.jl-hero__count b { font-size: 54px; line-height: 1; margin-right: 4px; color: var(--jl-blue); }
+.jl-hero__count span { font-size: 15px; font-weight: 400; }
+.jl-hero__dots { position: absolute; right: -40px; top: -60px; width: 520px; height: 300px; background: radial-gradient(circle, var(--jl-pink) 0 3.2px, transparent 3.6px) 0 0 / 10px 10px; -webkit-mask-image: radial-gradient(closest-side, #000 20%, transparent 100%); mask-image: radial-gradient(closest-side, #000 20%, transparent 100%); mix-blend-mode: multiply; }
+.jl-hero__sun { position: absolute; right: 170px; top: 40px; width: 190px; height: 190px; border-radius: 50%; background: var(--jl-blue); mix-blend-mode: multiply; }
+
+/* 検索・処理状態・条件 */
+.jl-tools { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 12px 30px; align-items: center; padding: 18px 0 12px; }
+.jl-search { display: flex; align-items: center; gap: 10px; }
+.jl-search label { font-size: 13px; font-weight: 900; letter-spacing: .08em; }
+.jl-search input { flex: 1; min-width: 0; min-height: 42px; padding: 6px 14px; background: var(--jl-field); color: var(--jl-ink); border: 2px solid var(--jl-blue); border-radius: 999px; }
+.jl-search button { min-height: 42px; padding: 6px 20px; background: var(--jl-blue); color: var(--jl-paper); border: 0; border-radius: 999px; font-weight: 900; cursor: pointer; }
+.jl-status { display: flex; flex-wrap: wrap; gap: 8px; }
+.jl-status button { min-height: 38px; padding: 4px 14px; background: none; border: 2px solid var(--jl-blue); border-radius: 999px; font-weight: 900; cursor: pointer; }
+.jl-status button span { margin-left: 6px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.jl-status button[aria-pressed="true"] { background: var(--jl-blue); color: var(--jl-paper); box-shadow: 3px 3px 0 var(--jl-pink); }
+.jl-cond { grid-column: 1 / -1; font-size: 14px; }
+.jl-cond__tag { display: inline-block; margin-right: 10px; padding: 0 8px; background: var(--jl-ink); color: var(--jl-paper); font-size: 12px; font-weight: 900; }
+
+/* 表：罫は青の点線。選んだ行は網点の地＋左の青い帯＋「表示中」 */
+.jl-table { width: 100%; border-collapse: collapse; }
+.jl-table th { padding: 10px 12px; text-align: left; font-size: 13px; border-top: 2px solid var(--jl-blue); border-bottom: 2px solid var(--jl-blue); }
+.jl-sort { padding: 0; background: none; border: 0; font-weight: 900; cursor: pointer; }
+.jl-sort span { margin-left: 4px; }
+th[aria-sort="none"] .jl-sort span { color: #8a93b8; }
+.jl-table td { padding: 14px 12px; border-bottom: 2px dotted rgba(41, 72, 160, .5); vertical-align: middle; }
+.jl-id, .jl-date { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; }
+.jl-name { font-size: 16px; font-weight: 900; }
+.jl-st { white-space: nowrap; font-weight: 700; }
+.jl-st span { margin-right: 6px; }
+.jl-act { text-align: right; }
+.jl-act button { min-height: 36px; padding: 4px 16px; background: none; border: 2px solid var(--jl-blue); border-radius: 999px; font-weight: 900; cursor: pointer; }
+.jl-table tr.is-open td { background: radial-gradient(circle, var(--jl-pink-soft) 0 1.6px, transparent 2px) 0 0 / 6px 6px; border-bottom: 0; }
+.jl-table tr.is-open td:first-child { box-shadow: inset 6px 0 0 var(--jl-blue); padding-left: 18px; }
+.jl-table tr.is-open .jl-act button { background: var(--jl-blue); color: var(--jl-paper); }
+.jl-open-tag { display: block; width: fit-content; margin-top: 2px; padding: 0 6px; background: var(--jl-ink); color: var(--jl-paper); font-size: 11px; }
+.jl-detail-row td { padding: 0 12px 18px; background: radial-gradient(circle, var(--jl-pink-soft) 0 1.6px, transparent 2px) 0 0 / 6px 6px; border-bottom: 2px solid var(--jl-blue); }
+.jl-detail-row td:first-child { box-shadow: inset 6px 0 0 var(--jl-blue); }
+.jl-detail { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0 30px; padding: 16px 20px; background: var(--jl-field); border: 2px solid var(--jl-blue); border-radius: 14px; box-shadow: 5px 5px 0 var(--jl-pink); }
+.jl-detail h2 { font-size: 18px; font-weight: 900; }
+.jl-detail__id p { font-size: 24px; font-weight: 900; color: var(--jl-blue); margin-bottom: 8px; }
+.jl-dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 26px; margin: 0; }
+.jl-dl div { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); padding: 6px 0; border-bottom: 2px dotted rgba(41, 72, 160, .35); }
+.jl-dl dt { font-size: 13px; font-weight: 700; }
+.jl-dl dd { margin: 0; }
+.jl-empty { padding: 36px 0; text-align: center; font-weight: 900; border-top: 2px solid var(--jl-blue); border-bottom: 2px solid var(--jl-blue); }
+
+@media (max-width: 759px) {
+  .jl-experiment, .jl-top { padding-left: 16px; padding-right: 16px; }
+  .jl-nav { order: 1; width: 100%; margin: 4px 0 8px; }
+  .jl-nav ul { justify-content: space-between; gap: 0; }
+  .jl-nav a, .jl-nav__off { font-size: 13px; padding: 3px 8px; }
+  .jl-top__user { margin-left: auto; }
+  .jl-main { padding: 0 16px 32px; }
+  .jl-hero { flex-wrap: wrap; align-content: flex-end; gap: 4px 16px; height: auto; min-height: 150px; }
+  .jl-hero h1 { font-size: 44px; }
+  .jl-hero__count b { font-size: 40px; }
+  .jl-hero__dots { width: 300px; height: 220px; right: -90px; }
+  .jl-hero__sun { display: none; }
+  .jl-hero__dots { opacity: .7; }
+  .jl-tools { grid-template-columns: 1fr; }
+  .jl-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .jl-table, .jl-table tbody, .jl-table tr, .jl-table td { display: block; }
+  .jl-table tr:not(.jl-detail-row) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 10px; border-bottom: 2px dotted rgba(41, 72, 160, .5); }
+  .jl-table td { padding: 0; border: 0; }
+  .jl-table td[data-label="処理状態"] { grid-column: 1; }
+  .jl-table td[data-label="申請者"], .jl-table td[data-label="申請種別"], .jl-table td[data-label="受付日"] { grid-column: 1 / -1; }
+  .jl-table td[data-label="受付日"]::before { content: '受付日　'; font-weight: 400; font-size: 13px; }
+  .jl-act { grid-column: 2; grid-row: 1; }
+  .jl-table tr.is-open { box-shadow: inset 6px 0 0 var(--jl-blue); padding-left: 16px; background: radial-gradient(circle, var(--jl-pink-soft) 0 1.6px, transparent 2px) 0 0 / 6px 6px; border-bottom: 0; }
+  .jl-table tr.is-open td, .jl-table tr.is-open td:first-child { background: none; box-shadow: none; padding-left: 0; }
+  .jl-detail-row td { padding: 0 8px 14px 14px; }
+  .jl-detail { grid-template-columns: 1fr; gap: 8px; padding: 14px; box-shadow: 4px 4px 0 var(--jl-pink); }
+  .jl-dl { grid-template-columns: 1fr; }
+}
