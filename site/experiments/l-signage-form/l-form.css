@@ -1,0 +1,202 @@
+/* L「標示盤」（仮称）新規申請フォームの試作。視覚の基準は docs/l-form-study/images/l-form-revised-1280.png。 */
+
+:root {
+  --ls-ground: #202321;   /* ページの地 */
+  --ls-gap: #191c19;      /* 区画の継ぎ目 */
+  --ls-rail: #282d28;     /* 左の列（章名） */
+  --ls-cell: #262a27;     /* 右の列（入力欄の区画） */
+  --ls-bar: #30342f;      /* 表題の帯 */
+  --ls-foot-l: #2e332e;
+  --ls-foot-r: #252925;
+  --ls-field: #343a34;    /* 入力欄 */
+  --ls-field-line: #858f7f;
+  --ls-field-under: #a5ae9e;
+  --ls-rule: #495146;     /* 区画の中の罫 */
+  --ls-text: #f1efe5;
+  --ls-muted: #a6aba2;
+  --ls-amber: #f4b741;    /* 現在の手順・主操作 */
+  --ls-amber-line: #d79f3d;
+  --ls-ink: #24251f;      /* 琥珀の上の文字 */
+  --ls-error: #ff9f8f;    /* エラーの文字と枠（暗い地の上） */
+  --ls-focus: #fffaf0;
+  --ls-top: #efeee6;
+  --ls-font: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', '游ゴシック', 'Noto Sans JP', Meiryo, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--ls-ground); color: var(--ls-text); font: 15px/1.6 var(--ls-font); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.ls-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* フォーカス：琥珀（現在地・主操作）と混同しない、生成りの外枠 */
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--ls-focus); outline-offset: 2px; }
+
+/* ---------- 試作の注記と上部の帯 ---------- */
+
+.ls-experiment { padding: 8px 44px; background: #3b3f38; color: #e6e4da; font-size: 13px; }
+.ls-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.ls-experiment a { color: #ffe0a3; }
+
+.ls-top { background: var(--ls-top); color: #2a2b27; }
+.ls-top__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 0 14px; padding: 0 44px; min-height: 50px; }
+.ls-top__mark { color: #2a2b27; }
+.ls-top__org { font-size: 19px; font-weight: 700; }
+.ls-top__system { font-size: 14px; }
+.ls-nav { margin-left: 34px; }
+.ls-nav ul { display: flex; gap: 26px; }
+.ls-nav a, .ls-nav__off { display: block; padding: 13px 0 11px; color: #2a2b27; font-size: 14px; text-decoration: none; border-bottom: 3px solid transparent; }
+.ls-nav a:hover { text-decoration: underline; }
+.ls-nav a[aria-current] { font-weight: 700; border-bottom-color: #272928; }
+.ls-nav__off { color: #6b6c66; }
+.ls-top__user { margin-left: auto; font-size: 14px; }
+
+/* ---------- パネル ---------- */
+
+.ls-main { padding: 26px 44px 48px; }
+.ls-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; max-width: 1192px; margin: 0 auto 14px; padding: 6px 12px; border: 1px dashed #6d7468; font-size: 13px; color: var(--ls-muted); }
+.ls-panel { display: grid; gap: 0; max-width: 1192px; margin: 0 auto; background: var(--ls-gap); border-top: 3px solid #bcc1b2; border-bottom: 2px solid #858c7d; }
+.ls-row { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 0 3px; }
+/* 表題の段・下段の前後だけ太い継ぎ目、章の間は細い罫。罫線（琥珀）は章の間も途切れない */
+.ls-head { margin-bottom: 3px; }
+.ls-foot { margin-top: 3px; }
+.ls-row:not(.ls-head) + .ls-row:not(.ls-foot) > * { border-top: 1px solid #3a4038; }
+
+/* 表題の段：左に現在の手順（琥珀のドット文字）、右に画面名 */
+.ls-now { display: flex; align-items: center; gap: 12px; min-height: 80px; padding: 0 18px; background: var(--ls-amber); color: var(--ls-ink); }
+.ls-now .ls-dots { width: 66px; height: 42px; }
+.ls-now .ls-dots .on { fill: var(--ls-ink); }
+.ls-now .ls-dots .off { fill: var(--ls-ink); opacity: .13; }
+.ls-now__label { font-size: 28px; font-weight: 700; }
+.ls-now__tag { padding: 0 5px; border: 1.5px solid #6a5118; font-size: 13px; font-weight: 700; line-height: 1.5; }
+.ls-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 22px; background: var(--ls-bar); }
+.ls-title { font-size: 40px; font-weight: 700; letter-spacing: .02em; }
+.ls-back { color: var(--ls-text); font-size: 14px; }
+
+/* 章の段：左の列に琥珀の罫線を通し、章名へ枝を出す */
+.ls-rail { position: relative; padding: 22px 16px 22px 64px; background: var(--ls-rail); }
+.ls-rail::before { content: ''; position: absolute; left: 36px; top: -1px; bottom: 0; width: 3px; background: var(--ls-amber-line); }
+.ls-chapter .ls-rail::after { content: ''; position: absolute; left: 36px; top: 36px; width: 16px; height: 3px; background: var(--ls-amber-line); }
+.ls-chapter:last-of-type .ls-rail::before { bottom: auto; height: 39px; } /* 最後の章で罫線が止まる */
+.ls-panel[data-step="done"] .ls-rail::before { bottom: auto; height: 39px; }
+.ls-chapter__title { font-size: 19px; font-weight: 700; line-height: 1.5; }
+.ls-chapter__err { margin-top: 6px; color: var(--ls-error); font-size: 14px; font-weight: 700; }
+.ls-chapter__err::before { content: '!'; display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; margin-right: 6px; border: 1.5px solid currentColor; border-radius: 50%; font-size: 12px; }
+
+.ls-cells { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: var(--ls-cell); }
+.ls-cell { padding: 16px 20px 14px; border-bottom: 1px solid var(--ls-rule); }
+.ls-cell:nth-child(odd):not(.ls-cell--wide) { border-right: 1px solid #4e554b; }
+.ls-cell--wide { grid-column: 1 / -1; }
+.ls-cell:last-child, .ls-cell--wide:last-child { border-bottom: 0; }
+.ls-cells > .ls-cell:nth-last-child(2):nth-child(odd):not(.ls-cell--wide) { border-bottom: 0; }
+.ls-cell__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.ls-label { font-size: 16px; font-weight: 700; }
+.ls-req { padding: 0 6px; border: 1px solid var(--ls-muted); font-size: 12px; line-height: 1.6; }
+.ls-opt { font-size: 12px; color: var(--ls-muted); }
+.ls-hint { margin-top: 6px; font-size: 13px; color: var(--ls-muted); }
+
+.ls-input { display: block; width: 100%; min-height: 40px; padding: 6px 12px; background: var(--ls-field); color: var(--ls-text); border: 1px solid var(--ls-field-line); border-bottom: 2px solid var(--ls-field-under); border-radius: 0; font-size: 16px; }
+.ls-input::placeholder { color: #8b9186; }
+.ls-input:focus { border-color: var(--ls-amber); }
+.ls-select { appearance: none; padding-right: 36px; background: var(--ls-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23f1efe5' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; }
+.ls-textarea { min-height: 5.5em; resize: vertical; line-height: 1.6; }
+input[type="date"].ls-input { color-scheme: dark; max-width: 100%; }
+.ls-check { display: flex; align-items: flex-start; gap: 10px; }
+.ls-checkbox { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--ls-amber); }
+
+/* エラー：文字「エラー」と理由、欄の太い枠、章名の横の件数。色だけに頼らない */
+.ls-cell.is-invalid { box-shadow: inset 4px 0 0 var(--ls-error); }
+.ls-cell.is-invalid .ls-input { border: 2px solid var(--ls-error); }
+.ls-cell.is-invalid .ls-checkbox { outline: 2px solid var(--ls-error); outline-offset: 2px; }
+.ls-field-error { display: flex; align-items: baseline; gap: 8px; margin-top: 6px; color: var(--ls-error); font-size: 14px; }
+.ls-field-error__mark { flex: none; display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; border: 1.5px solid currentColor; border-radius: 50%; font-size: 12px; font-weight: 700; }
+.ls-alert .ls-rail { padding-top: 18px; }
+.ls-alert__tag { display: inline-flex; align-items: center; gap: 6px; color: var(--ls-error); font-weight: 700; }
+.ls-alert__tag span { display: inline-grid; place-items: center; width: 1.4em; height: 1.4em; border: 1.5px solid currentColor; border-radius: 50%; font-size: 12px; }
+.ls-errors { padding: 16px 20px; background: var(--ls-cell); box-shadow: inset 4px 0 0 var(--ls-error); }
+.ls-errors h2 { font-size: 17px; color: var(--ls-error); }
+.ls-errors p { font-size: 13px; color: var(--ls-muted); }
+.ls-errors ul { margin-top: 6px; display: grid; gap: 2px; }
+.ls-link { padding: 0; background: none; border: 0; color: var(--ls-text); font-weight: 700; text-decoration: underline; text-decoration-color: var(--ls-amber); text-underline-offset: 3px; cursor: pointer; }
+
+/* 確認と完了 */
+.ls-lead p { padding: 16px 20px; background: var(--ls-cell); color: var(--ls-muted); }
+.ls-value { min-height: 1.6em; font-size: 16px; white-space: pre-wrap; }
+.ls-value.is-empty { color: var(--ls-muted); }
+.ls-fix { font-size: 14px; }
+.ls-done { font-size: 24px; font-weight: 700; }
+
+/* 下段：次の手順と、そこへ進むボタンを、同じ段の点線でつなぐ */
+.ls-foot { min-height: 66px; }
+.ls-next { display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 8px 18px; background: var(--ls-foot-l); }
+.ls-next__item { display: flex; align-items: center; gap: 8px; color: var(--ls-muted); font-size: 13px; }
+.ls-next__item .ls-dots { width: 30px; height: 19px; }
+.ls-next__item .ls-dots .on { fill: currentColor; }
+.ls-next__item .ls-dots .off { fill: currentColor; opacity: .14; }
+.ls-next__item.is-next { color: var(--ls-text); font-size: 15px; font-weight: 700; }
+.ls-next__item.is-next .ls-dots { width: 38px; height: 24px; }
+.ls-next__done { padding: 0 4px; border: 1px solid currentColor; font-size: 11px; }
+.ls-actions { display: flex; align-items: center; gap: 0 14px; padding: 8px 0 8px 0; background: var(--ls-foot-r); }
+.ls-actions > :first-child:not(.ls-connector) { margin-left: 20px; }
+.ls-connector { flex: 1; min-width: 24px; border-top: 2px dashed var(--ls-amber-line); opacity: .75; }
+.ls-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 50px; padding: 8px 22px; border: 0; font-size: 17px; font-weight: 700; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.ls-btn--primary { min-width: 160px; background: var(--ls-amber); color: var(--ls-ink); }
+.ls-btn--ghost { background: transparent; color: var(--ls-text); border: 1.5px solid var(--ls-muted); min-height: 44px; }
+.ls-btn__arrow { font-size: 22px; line-height: 1; }
+/* 主ボタンに触れると、左の「次の手順」も琥珀に点く */
+.ls-foot:has(.ls-btn--primary:is(:hover, :focus-visible)) .ls-next__item.is-next { color: var(--ls-amber); }
+.ls-foot:has(.ls-btn--primary:is(:hover, :focus-visible)) .ls-connector { opacity: 1; border-top-style: solid; }
+
+.ls-noscript { padding: 24px 0; }
+
+/* ---------- 中間の幅：入力欄を1列に ---------- */
+
+@media (max-width: 999px) {
+  .ls-main { padding: 20px 24px 40px; }
+  .ls-experiment, .ls-top__inner { padding-left: 24px; padding-right: 24px; }
+  .ls-row { grid-template-columns: 180px minmax(0, 1fr); }
+  .ls-cells { grid-template-columns: minmax(0, 1fr); }
+  .ls-cell:nth-child(odd):not(.ls-cell--wide) { border-right: 0; }
+  .ls-cells > .ls-cell:nth-last-child(2):nth-child(odd):not(.ls-cell--wide) { border-bottom: 1px solid var(--ls-rule); }
+  .ls-now__label { font-size: 22px; }
+  .ls-now .ls-dots { width: 52px; height: 33px; }
+  .ls-title { font-size: 30px; }
+  .ls-nav { margin-left: 16px; }
+  .ls-nav ul { gap: 16px; }
+}
+
+/* ---------- 狭い幅：縦に1列。罫線は左端に通したまま、章名を欄の上に置く ---------- */
+
+@media (max-width: 639px) {
+  .ls-main { padding: 14px 0 32px; }
+  .ls-experiment, .ls-top__inner { padding-left: 16px; padding-right: 16px; }
+  .ls-tools { margin: 0 16px 12px; }
+  .ls-top__inner { gap: 0 10px; }
+  .ls-nav { order: 1; width: 100%; margin-left: 0; }
+  .ls-nav ul { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 0; }
+  .ls-nav a, .ls-nav__off { padding: 8px 0; font-size: 13px; }
+  .ls-top__user { font-size: 13px; }
+  .ls-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .ls-titlebar { flex-wrap: wrap; padding: 12px 16px; }
+  .ls-title { font-size: 28px; }
+  .ls-now { min-height: 64px; padding: 0 16px; }
+  .ls-rail { padding: 14px 16px 10px 52px; }
+  .ls-rail::before { left: 24px; }
+  .ls-chapter .ls-rail::after { left: 24px; top: 26px; }
+  .ls-chapter:last-of-type .ls-rail::before, .ls-panel[data-step="done"] .ls-rail::before { height: 29px; }
+  /* 罫線を章名の帯から入力欄の左まで通す（最後の章では章名で止まる） */
+  .ls-cells, .ls-errors, .ls-lead p { background: linear-gradient(var(--ls-amber-line), var(--ls-amber-line)) 24px 0 / 3px 100% no-repeat, var(--ls-cell); }
+  .ls-chapter:last-of-type .ls-cells, .ls-panel[data-step="done"] .ls-cells { background: var(--ls-cell); }
+  .ls-cell { padding: 14px 16px 12px 44px; }
+  .ls-errors, .ls-lead p { padding-left: 44px; }
+  .ls-chapter:last-of-type .ls-cell, .ls-panel[data-step="done"] .ls-cell { padding-left: 16px; }
+  .ls-cell.is-invalid { box-shadow: inset 4px 0 0 var(--ls-error); }
+  .ls-alert .ls-rail { padding-top: 12px; }
+  .ls-foot { min-height: 0; }
+  .ls-next { flex-direction: row; flex-wrap: wrap; gap: 4px 18px; padding: 10px 16px; }
+  .ls-actions { flex-wrap: wrap; gap: 10px; padding: 12px 16px 16px; }
+  .ls-actions > :first-child:not(.ls-connector) { margin-left: 0; }
+  .ls-connector { display: none; }
+  .ls-btn { width: 100%; }
+}
