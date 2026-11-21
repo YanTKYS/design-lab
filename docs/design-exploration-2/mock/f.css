@@ -1,0 +1,86 @@
+/* 案F「透かし」（仮称）：絞り込みで外れた記録を消さず、1件1マスの「透かしの壁」として元の位置に残す。 */
+@import url(base.css);
+
+:root {
+  --f-ground: #f3f2ee; --f-row: #ffffff; --f-ink: #202124; --f-ink2: #575a60; --f-rule: #d5d3cd;
+  --f-block: #8a847a; --f-light: #fff3c4; /* 壁のマスと、透かしから差す光 */
+  --f-act: #0d6767; --f-focus: #f2b705;
+}
+body { background: var(--f-ground); color: var(--f-ink); }
+:focus-visible { outline: 3px solid var(--f-ink); outline-offset: 2px; box-shadow: 0 0 0 6px var(--f-focus); }
+
+.f-top { display: flex; align-items: center; gap: 24px; padding: 12px 52px; background: var(--f-row); border-bottom: 1px solid var(--f-rule); }
+.f-brand b { font-size: 20px; margin-right: 12px; }
+.f-brand span { font-size: 14px; color: var(--f-ink2); }
+.f-nav { margin-left: auto; }
+.f-nav ul { display: flex; gap: 4px; }
+.f-nav a { display: block; padding: 6px 12px; color: var(--f-act); font-weight: 700; }
+.f-nav a[aria-current] { color: var(--f-ink); text-decoration: none; box-shadow: inset 0 -4px 0 var(--f-ink); }
+.f-user { font-size: 14px; color: var(--f-ink2); }
+
+.f-main { max-width: 1280px; margin: 0 auto; padding: 24px 52px 40px; }
+h1 { font-size: 30px; }
+.f-search { margin-top: 16px; max-width: 760px; }
+.f-search label, .f-chips legend { font-weight: 700; }
+.f-search div { display: flex; gap: 8px; margin-top: 4px; }
+.f-search input { flex: 1; min-height: 44px; padding: 8px 12px; border: 1px solid #7b776f; border-radius: 4px; background: #fff; }
+.f-search p { font-size: 14px; color: var(--f-ink2); }
+.f-primary { min-height: 44px; padding: 8px 20px; background: var(--f-act); color: #fff; border: 0; border-radius: 4px; font-weight: 700; }
+.f-secondary { min-height: 38px; padding: 4px 14px; background: #fff; color: var(--f-act); border: 1px solid var(--f-act); border-radius: 4px; font-weight: 700; }
+.f-text { padding: 0; background: none; border: 0; color: var(--f-act); font-weight: 700; text-decoration: underline; white-space: nowrap; }
+.f-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.f-chips legend { float: left; margin-right: 8px; }
+.f-chips button { min-height: 38px; padding: 4px 12px; background: #fff; border: 1px solid #b9b5ad; border-radius: 4px; color: var(--f-act); font-weight: 700; }
+.f-chips button small { margin-left: 6px; font-weight: 400; color: var(--f-ink2); font-size: 14px; }
+.f-chips button[aria-pressed="true"] { background: var(--f-act); color: #fff; border-color: var(--f-act); }
+.f-chips button[aria-pressed="true"] small { color: #fff; }
+
+.f-count { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin: 20px 0 6px; }
+.f-count b { font-size: 21px; }
+.f-count span { color: var(--f-ink2); }
+.f-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 8px; font-size: 13px; color: var(--f-ink2); }
+.f-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* 1マス＝1件。マスの透かしの形が処理状態（形だけで区別し、色は変えない） */
+.f-blocks { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #c4bfb5; }
+.f-blocks i, .f-legend i { position: relative; display: inline-block; width: 18px; height: 18px; background: var(--f-block); }
+.f-blocks i::before, .f-legend i::before { content: ''; position: absolute; inset: 4px; background: var(--f-light); }
+i[data-s="received"]::before { border-radius: 50%; }
+i[data-s="reviewing"]::before { border-radius: 8px 0 0 8px; right: 8px; }
+i[data-s="returned"]::before { inset: 4px; transform: rotate(45deg) scale(.85); }
+i[data-s="approved"]::before { inset: 3px; clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%); }
+i[data-s="rejected"]::before { inset: 7.5px 3px; }
+
+/* 一覧：該当する記録は「開口」（白い行）、外れた記録は「壁」（灰の帯）として並び順の位置に残す */
+.f-table thead th { padding: 8px 10px; text-align: left; font-size: 14px; color: var(--f-ink2); border-bottom: 2px solid var(--f-ink); }
+.f-open td { padding: 12px 10px; background: var(--f-row); border-bottom: 1px solid var(--f-rule); vertical-align: top; }
+.f-open td:first-child { box-shadow: inset 4px 0 0 var(--f-light), inset 6px 0 0 #e0b84a; }
+.f-idbtn { padding: 0; background: none; border: 0; color: var(--f-act); font-weight: 700; text-decoration: underline; font-variant-numeric: tabular-nums; }
+.f-status { font-weight: 700; }
+.f-wall td { padding: 0; }
+.f-wall__in { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; padding: 7px 10px; background: #e7e5df; border-bottom: 1px solid var(--f-rule); }
+.f-wall__text { font-size: 14px; color: var(--f-ink2); }
+.f-wall__text b { margin: 0 4px; color: var(--f-ink); }
+.f-wall__range { margin-left: 8px; }
+.f-wall .f-text { margin-left: auto; font-size: 14px; }
+.f-open.is-open td { background: #fffaf0; }
+.f-detail > td { padding: 0 10px 14px; background: #fffaf0; border-bottom: 1px solid var(--f-rule); }
+.f-detail section { padding: 12px 16px; background: #fff; border: 1px solid var(--f-rule); border-radius: 4px; }
+.f-detail__head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.f-detail h3 { font-size: 17px; }
+.f-detail dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin-top: 6px; }
+.f-detail dl div { display: grid; grid-template-columns: 6em minmax(0, 1fr); padding: 5px 0; border-bottom: 1px solid #ebe9e4; }
+.f-detail dt { color: var(--f-ink2); font-size: 14px; }
+
+@media (max-width: 599px) {
+  .f-top { flex-wrap: wrap; padding: 10px 16px; gap: 6px 12px; }
+  .f-nav { margin-left: 0; width: 100%; order: 1; }
+  .f-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .f-nav a { text-align: center; }
+  .f-main { padding: 20px 16px 32px; }
+  .f-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .f-table, .f-table tbody, .f-table tr, .f-table td { display: block; }
+  .f-open td { border: 0; padding: 2px 10px; }
+  .f-open { padding: 8px 0; background: var(--f-row); border-bottom: 1px solid var(--f-rule); }
+  .f-detail dl { grid-template-columns: minmax(0, 1fr); }
+}

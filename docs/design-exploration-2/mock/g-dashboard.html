@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ダッシュボード｜案G 表座と裏座（静的モック）</title><link rel="stylesheet" href="g.css"></head>
+<body class="g"><header class="g-top"><p class="g-brand"><b>さくら野市</b><span>申請管理システム</span></p><nav class="g-nav" aria-label="メインメニュー"><ul><li><a href="#">申請一覧</a></li><li><a href="#">新規申請</a></li><li><a href="#" aria-current="page">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav><p class="g-user">審査担当 A</p></header>
+<main class="g-main">
+  <h1>ダッシュボード</h1>
+  <form class="g-engawa" aria-label="集計の条件" onsubmit="return false">
+    <div><label for="period">対象期間</label><select id="period"><option selected>令和8年度（4月〜）</option><option>上半期（4月〜9月）</option><option>第2四半期（7月〜9月）</option><option>直近3か月（8月〜10月）</option></select></div>
+    <div><label for="dept">担当課</label><select id="dept"><option selected>すべての担当課</option><option>市民課</option><option>こども家庭課</option><option>住宅政策課</option><option>道路管理課</option><option>都市計画課</option><option>環境衛生課</option><option>廃棄物対策課</option></select></div>
+    <button type="button" class="g-secondary">リセット</button>
+    <p>基準日 2026年10月12日<br><span>2026年4月1日〜2026年10月31日</span></p>
+  </form>
+  <div class="g-house">
+    <section class="g-room g-room--total" aria-labelledby="r1">
+      <div class="g-front"><h2 id="r1">受付件数</h2><p class="g-num"><b>71</b>件</p><p class="g-note">対象期間に受け付けた申請の総数</p><a href="#" class="g-go">受付した申請の一覧へ</a></div>
+      <div class="g-back">
+        <h3>月別の受付件数</h3>
+        <ul class="g-months"><li><span>4月</span><span class="g-parts__bar" style="--r:0.400" aria-hidden="true"></span><b>6件</b></li><li><span>5月</span><span class="g-parts__bar" style="--r:0.533" aria-hidden="true"></span><b>8件</b></li><li><span>6月</span><span class="g-parts__bar" style="--r:0.600" aria-hidden="true"></span><b>9件</b></li><li><span>7月</span><span class="g-parts__bar" style="--r:0.733" aria-hidden="true"></span><b>11件</b></li><li><span>8月</span><span class="g-parts__bar" style="--r:0.933" aria-hidden="true"></span><b>14件</b></li><li><span>9月</span><span class="g-parts__bar" style="--r:1.000" aria-hidden="true"></span><b>15件</b></li><li><span>10月</span><span class="g-parts__bar" style="--r:0.533" aria-hidden="true"></span><b>8件</b></li></ul>
+        <p class="g-sum">7か月の合計 ＝ <b>71件</b>（10月は基準日まで）</p>
+        <h3>申請種別の内訳</h3>
+        <ul class="g-parts g-parts--types"><li><a href="#">住民票の写し等交付申請</a><span class="g-parts__bar" style="--r:1.000" aria-hidden="true"></span><b>13件</b><small>18.3%</small></li><li><a href="#">道路占用許可申請</a><span class="g-parts__bar" style="--r:0.923" aria-hidden="true"></span><b>12件</b><small>16.9%</small></li><li><a href="#">児童手当認定請求</a><span class="g-parts__bar" style="--r:0.692" aria-hidden="true"></span><b>9件</b><small>12.7%</small></li><li><a href="#">犬の登録申請</a><span class="g-parts__bar" style="--r:0.615" aria-hidden="true"></span><b>8件</b><small>11.3%</small></li><li><a href="#">住宅リフォーム補助金交付申請</a><span class="g-parts__bar" style="--r:0.615" aria-hidden="true"></span><b>8件</b><small>11.3%</small></li><li><a href="#">粗大ごみ収集申込</a><span class="g-parts__bar" style="--r:0.615" aria-hidden="true"></span><b>8件</b><small>11.3%</small></li><li><a href="#">保育所等入所申込</a><span class="g-parts__bar" style="--r:0.538" aria-hidden="true"></span><b>7件</b><small>9.9%</small></li><li><a href="#">屋外広告物許可申請</a><span class="g-parts__bar" style="--r:0.462" aria-hidden="true"></span><b>6件</b><small>8.5%</small></li></ul>
+      </div>
+    </section>
+    <section class="g-room" aria-labelledby="r2">
+      <div class="g-front"><h2 id="r2">処理待ち件数</h2><p class="g-num"><b>19</b>件</p><p class="g-note">受付済・審査中・補正依頼の合計</p><a href="#" class="g-go">処理待ちの一覧へ</a></div>
+      <div class="g-back"><h3>処理待ちの内訳</h3><ul class="g-parts"><li><a href="#">受付済</a><span class="g-parts__bar" style="--r:0.211" aria-hidden="true"></span><b>4件</b><small>5.6%</small></li><li><a href="#">審査中</a><span class="g-parts__bar" style="--r:0.421" aria-hidden="true"></span><b>8件</b><small>11.3%</small></li><li><a href="#">補正依頼</a><span class="g-parts__bar" style="--r:0.368" aria-hidden="true"></span><b>7件</b><small>9.9%</small></li></ul>
+    <p class="g-sum">4 ＋ 8 ＋ 7 ＝ <b>19件</b></p></div>
+    </section>
+    <section class="g-room" aria-labelledby="r3">
+      <div class="g-front"><h2 id="r3">処理完了件数</h2><p class="g-num"><b>52</b>件</p><p class="g-note">承認済・却下の合計</p><a href="#" class="g-go">処理完了の一覧へ</a></div>
+      <div class="g-back"><h3>処理完了の内訳</h3><ul class="g-parts"><li><a href="#">承認済</a><span class="g-parts__bar" style="--r:0.769" aria-hidden="true"></span><b>40件</b><small>56.3%</small></li><li><a href="#">却下</a><span class="g-parts__bar" style="--r:0.231" aria-hidden="true"></span><b>12件</b><small>16.9%</small></li></ul>
+    <p class="g-sum">40 ＋ 12 ＝ <b>52件</b></p>
+        <div class="g-rate"><h3>処理完了率</h3><p class="g-num g-num--sub"><b>73.2%</b></p><p class="g-note">受付 71件のうち処理完了 52件（処理完了 ÷ 受付件数）</p><span class="g-rate__bar" style="--r:0.732" aria-hidden="true"></span></div>
+      </div>
+    </section>
+  </div>
+  <p class="g-foot-note">割合は受付件数に占める割合です。小数第2位を四捨五入しています。</p>
+</main></body></html>

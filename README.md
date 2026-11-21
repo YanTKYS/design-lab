@@ -49,6 +49,7 @@ npm test     # 別のターミナルでユニットテストを実行
 - [使い方](docs/usage.md)：操作方法、共有 URL、入力情報の扱い、ダッシュボードの集計仕様
 - [開発資料](docs/development.md)：構成、状態管理、デザイン・画面の追加、テスト、GitHub Pages 公開
 - [独自デザインの再探索（案C・案D）](docs/design-exploration/README.md)：「糸の交点」の次の独自デザインの2案（素地と釉／経路と停留所）の静的モックと設計資料。比較サイトには未登録
+- [独自デザインの追加探索（案E・F・G）](docs/design-exploration-2/README.md)：沖縄に着想した3案（仕次ぎ／透かし／座と裏座）の代表画面と、案C・D を含む5案の比較。比較サイトには未登録
 - [Agent Skills](skills/README.md)：「糸の交点」をほかのアプリへ適用するための Skill（Claude Code・Codex への導入方法、[適用見本の検証記録](examples/okinawa-thread-memo/VERIFICATION.md)）
 - [変更履歴](CHANGELOG.md)
 

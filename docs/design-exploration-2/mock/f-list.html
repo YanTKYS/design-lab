@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>申請一覧｜案F 透かし（静的モック）</title><link rel="stylesheet" href="f.css"></head>
+<body class="f"><header class="f-top"><p class="f-brand"><b>さくら野市</b><span>申請管理システム</span></p><nav class="f-nav" aria-label="メインメニュー"><ul><li><a href="#" aria-current="page">申請一覧</a></li><li><a href="#">新規申請</a></li><li><a href="#">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav><p class="f-user">審査担当 A</p></header>
+<main class="f-main">
+  <h1>申請一覧</h1>
+  <form class="f-search" role="search" onsubmit="return false"><label for="kw">キーワード</label><div><input id="kw" type="search" aria-describedby="kw-hint"><button type="submit" class="f-primary">検索</button></div><p id="kw-hint">受付番号・申請者名・ふりがな・申請種別・担当課で探せます。</p></form>
+  <fieldset class="f-chips"><legend>処理状態</legend><button type="button" aria-pressed="false">すべて<small>71件</small></button><button type="button" aria-pressed="false">受付済<small>4件</small></button><button type="button" aria-pressed="true"><span aria-hidden="true">✓ </span>審査中<small>8件</small></button><button type="button" aria-pressed="false">補正依頼<small>7件</small></button><button type="button" aria-pressed="false">承認済<small>40件</small></button><button type="button" aria-pressed="false">却下<small>12件</small></button></fieldset>
+  <div class="f-count" role="status">
+    <p><b>71件中 8件</b>を表示　<span>該当しない63件は、元の位置に「壁」として残しています</span></p>
+    <button type="button" class="f-text">条件をクリア</button>
+    <button type="button" class="f-secondary">壁をすべて開く</button>
+  </div>
+  <p class="f-legend" aria-hidden="true">壁の1マス＝1件：<span><i data-s="received"></i>受付済</span><span><i data-s="reviewing"></i>審査中</span><span><i data-s="returned"></i>補正依頼</span><span><i data-s="approved"></i>承認済</span><span><i data-s="rejected"></i>却下</span></p>
+  <table class="f-table">
+    <caption class="f-vh">申請一覧（受付日の新しい順。該当しない記録はまとめて件数で表示）</caption>
+    <thead><tr><th scope="col">受付番号</th><th scope="col">申請者</th><th scope="col">申請種別</th><th scope="col">受付日 ↓</th><th scope="col">処理状態</th><th scope="col"><span class="f-vh">操作</span></th></tr></thead>
+    <tbody><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="received"></i></span><span class="f-wall__text">該当しない<b>1件</b><span class="f-wall__range">10月9日　受付済1</span></span><button type="button" class="f-text">この1件も表示</button></div></td></tr><tr class="f-open is-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="true">2026-01041</button></td>
+      <td data-label="申請者">株式会社さくら野建設</td>
+      <td data-label="申請種別">道路占用許可申請</td>
+      <td data-label="受付日">2026/10/08</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-detail"><td colspan="6"><section aria-labelledby="f-dt"><div class="f-detail__head"><h3 id="f-dt">申請詳細　2026-01041</h3><button type="button" class="f-secondary">詳細を閉じる</button></div><dl><div><dt>申請者</dt><dd>株式会社さくら野建設</dd></div><div><dt>ふりがな</dt><dd>かぶしきがいしゃさくらのけんせつ</dd></div><div><dt>申請種別</dt><dd>道路占用許可申請</dd></div><div><dt>担当課</dt><dd>道路管理課</dd></div><div><dt>受付日</dt><dd>2026年10月8日</dd></div><div><dt>受付方法</dt><dd>窓口</dd></div><div><dt>処理期限</dt><dd>2026年10月29日</dd></div><div><dt>備考</dt><dd>工事期間：11月中旬〜12月末</dd></div></dl></section></td></tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="received"></i><i data-s="returned"></i></span><span class="f-wall__text">該当しない<b>2件</b><span class="f-wall__range">10月8日〜10月7日　受付済1・補正依頼1</span></span><button type="button" class="f-text">この2件も表示</button></div></td></tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-01033</button></td>
+      <td data-label="申請者">遠藤 大輔</td>
+      <td data-label="申請種別">住宅リフォーム補助金交付申請</td>
+      <td data-label="受付日">2026/10/06</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="returned"></i></span><span class="f-wall__text">該当しない<b>4件</b><span class="f-wall__range">10月5日〜9月30日　承認済3・補正依頼1</span></span><button type="button" class="f-text">この4件も表示</button></div></td></tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-01018</button></td>
+      <td data-label="申請者">工藤 直樹</td>
+      <td data-label="申請種別">児童手当認定請求</td>
+      <td data-label="受付日">2026/09/29</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-01016</button></td>
+      <td data-label="申請者">小林 彩</td>
+      <td data-label="申請種別">保育所等入所申込</td>
+      <td data-label="受付日">2026/09/27</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="rejected"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="received"></i><i data-s="rejected"></i><i data-s="approved"></i></span><span class="f-wall__text">該当しない<b>6件</b><span class="f-wall__range">9月25日〜9月15日　却下2・承認済3・受付済1</span></span><button type="button" class="f-text">この6件も表示</button></div></td></tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-00987</button></td>
+      <td data-label="申請者">野口 拓海</td>
+      <td data-label="申請種別">屋外広告物許可申請</td>
+      <td data-label="受付日">2026/09/12</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="approved"></i><i data-s="returned"></i><i data-s="approved"></i><i data-s="rejected"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i></span><span class="f-wall__text">該当しない<b>7件</b><span class="f-wall__range">9月10日〜8月29日　承認済5・補正依頼1・却下1</span></span><button type="button" class="f-text">この7件も表示</button></div></td></tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-00953</button></td>
+      <td data-label="申請者">杉山 大和</td>
+      <td data-label="申請種別">犬の登録申請</td>
+      <td data-label="受付日">2026/08/26</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="approved"></i></span><span class="f-wall__text">該当しない<b>1件</b><span class="f-wall__range">8月24日　承認済1</span></span><button type="button" class="f-text">この1件も表示</button></div></td></tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-00945</button></td>
+      <td data-label="申請者">坂本 航</td>
+      <td data-label="申請種別">住宅リフォーム補助金交付申請</td>
+      <td data-label="受付日">2026/08/23</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="returned"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="returned"></i><i data-s="received"></i><i data-s="approved"></i></span><span class="f-wall__text">該当しない<b>6件</b><span class="f-wall__range">8月21日〜8月9日　補正依頼2・承認済3・受付済1</span></span><button type="button" class="f-text">この6件も表示</button></div></td></tr><tr class="f-open">
+      <td data-label="受付番号"><button type="button" class="f-idbtn" aria-expanded="false">2026-00917</button></td>
+      <td data-label="申請者">岡田 紬</td>
+      <td data-label="申請種別">児童手当認定請求</td>
+      <td data-label="受付日">2026/08/06</td>
+      <td data-label="処理状態"><span class="f-status" data-s="reviewing">審査中</span></td>
+      <td></td>
+    </tr><tr class="f-wall"><td colspan="6"><div class="f-wall__in"><span class="f-blocks" aria-hidden="true"><i data-s="rejected"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="rejected"></i><i data-s="approved"></i><i data-s="rejected"></i><i data-s="returned"></i><i data-s="returned"></i><i data-s="rejected"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="rejected"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="rejected"></i><i data-s="rejected"></i><i data-s="rejected"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="approved"></i><i data-s="rejected"></i></span><span class="f-wall__text">該当しない<b>36件</b><span class="f-wall__range">8月5日〜4月2日　却下9・承認済25・補正依頼2</span></span><button type="button" class="f-text">この36件も表示</button></div></td></tr></tbody>
+  </table>
+</main></body></html>

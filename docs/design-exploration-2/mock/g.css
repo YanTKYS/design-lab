@@ -1,0 +1,76 @@
+/* 案G「表座と裏座」（仮称）：指標（表の座）の真下に、その内訳（裏座）を同じ列で置く。座の境は柱、表と裏の境は敷居。 */
+@import url(base.css);
+
+:root {
+  --g-front: #fdfcf8; --g-back: #f0ece2; --g-ink: #1e1d1b; --g-ink2: #57534c; --g-rule: #d9d3c6;
+  --g-wood: #6b4a30; --g-bar: #8a7a63; --g-act: #1f5a49; --g-focus: #1e1d1b;
+}
+body { background: var(--g-front); color: var(--g-ink); }
+:focus-visible { outline: 3px solid var(--g-focus); outline-offset: 2px; box-shadow: 0 0 0 6px #f4d35e; }
+
+.g-top { display: flex; align-items: center; gap: 24px; padding: 12px 52px; border-bottom: 4px solid var(--g-wood); }
+.g-brand b { font-size: 20px; margin-right: 12px; }
+.g-brand span { font-size: 14px; color: var(--g-ink2); }
+.g-nav { margin-left: auto; }
+.g-nav ul { display: flex; gap: 4px; }
+.g-nav a { display: block; padding: 6px 12px; color: var(--g-act); font-weight: 700; }
+.g-nav a[aria-current] { color: #fff; background: var(--g-wood); text-decoration: none; }
+.g-user { font-size: 14px; color: var(--g-ink2); }
+
+.g-main { max-width: 1280px; margin: 0 auto; padding: 24px 52px 40px; }
+h1 { font-size: 30px; }
+.g-secondary { min-height: 44px; padding: 6px 16px; background: #fff; color: var(--g-act); border: 2px solid var(--g-act); font-weight: 700; }
+
+/* 縁側：すべての座が面する、条件の帯 */
+.g-engawa { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 20px; margin-top: 18px; padding: 14px 18px; background: #f6f1e7; border-bottom: 4px solid var(--g-wood); }
+.g-engawa label { display: block; font-weight: 700; font-size: 15px; }
+.g-engawa select { min-width: 15em; min-height: 44px; padding: 6px 10px; border: 1px solid #8f8576; background: #fff; }
+.g-engawa p { margin-left: auto; text-align: right; font-weight: 700; }
+.g-engawa p span { font-size: 14px; font-weight: 400; color: var(--g-ink2); }
+
+/* 座：列ごとに「表（指標）→敷居→裏座（内訳）」。座の間に柱 */
+.g-house { display: grid; grid-template-columns: 1.35fr 1fr 1fr; border: 4px solid var(--g-wood); border-top: 0; }
+.g-room { display: flex; flex-direction: column; }
+.g-room + .g-room { border-left: 4px solid var(--g-wood); }
+.g-front { padding: 18px 20px 16px; background: var(--g-front); border-bottom: 6px double var(--g-wood); min-height: 13.5em; }
+.g-front h2 { font-size: 17px; }
+.g-num b { font-size: 52px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.g-num { font-weight: 700; }
+.g-num--sub b { font-size: 36px; }
+.g-note { font-size: 14px; color: var(--g-ink2); }
+.g-go { display: inline-block; margin-top: 8px; color: var(--g-act); font-weight: 700; }
+.g-go::after { content: ' →'; }
+.g-back { flex: 1; padding: 14px 20px 18px; background: var(--g-back); }
+.g-back h3 { font-size: 15px; margin-top: 4px; }
+.g-back h3 ~ h3 { margin-top: 18px; }
+.g-parts, .g-months { margin-top: 6px; }
+.g-parts li, .g-months li { display: grid; grid-template-columns: minmax(0, 1fr) 4em 4.2em; align-items: baseline; gap: 2px 8px; padding: 5px 0; border-bottom: 1px solid var(--g-rule); }
+.g-parts a { color: var(--g-act); font-weight: 700; }
+.g-parts b, .g-months b { text-align: right; font-variant-numeric: tabular-nums; }
+.g-parts small { text-align: right; color: var(--g-ink2); font-variant-numeric: tabular-nums; }
+.g-parts__bar { grid-column: 1 / -1; grid-row: 2; height: 6px; width: calc(var(--r) * 100%); background: var(--g-bar); }
+.g-months li { grid-template-columns: 3em minmax(0, 1fr) 3.5em; }
+.g-months .g-parts__bar { grid-column: 2; grid-row: 1; align-self: center; height: 10px; }
+/* 内訳の合計が、真上の指標と一致することを同じ列で示す */
+.g-sum { margin-top: 6px; padding-top: 4px; border-top: 2px solid var(--g-ink); text-align: right; font-size: 14px; }
+.g-sum b { font-size: 16px; }
+.g-rate { margin-top: 22px; padding-top: 12px; border-top: 4px double var(--g-wood); }
+.g-rate__bar { display: block; height: 10px; margin-top: 6px; background: linear-gradient(90deg, var(--g-bar) calc(var(--r) * 100%), #fff calc(var(--r) * 100%)); outline: 1px solid var(--g-bar); }
+.g-foot-note { margin-top: 10px; font-size: 13px; color: var(--g-ink2); }
+
+/* 狭い幅：座を縦に積む。どの座も「表→裏」の順を保つ */
+@media (max-width: 599px) {
+  .g-top { flex-wrap: wrap; padding: 10px 16px; gap: 6px 12px; }
+  .g-nav { margin-left: 0; width: 100%; order: 1; }
+  .g-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g-nav a { text-align: center; }
+  .g-main { padding: 20px 16px 32px; }
+  .g-engawa p { margin-left: 0; text-align: left; }
+  .g-engawa div, .g-engawa select { width: 100%; }
+  .g-house { grid-template-columns: minmax(0, 1fr); border: 0; }
+  .g-room, .g-room + .g-room { border: 4px solid var(--g-wood); }
+  .g-room + .g-room { margin-top: 18px; }
+  .g-front { min-height: 0; padding: 14px 16px; }
+  .g-num b { font-size: 44px; }
+  .g-back { padding: 12px 16px 16px; }
+}
