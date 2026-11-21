@@ -1,0 +1,9 @@
+/* 3案共通の土台（リセットと見えない見出し）。見た目の規則は各案の CSS に置く。 */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', '游ゴシック', 'Noto Sans JP', Meiryo, sans-serif; font-size: 16px; line-height: 1.65; overflow-wrap: anywhere; }
+h1, h2, h3, p, ul, ol, dl, dd, fieldset { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+fieldset { border: 0; padding: 0; min-width: 0; }
+button, input, select { font: inherit; color: inherit; }
+table { border-collapse: collapse; width: 100%; }
+[class$="-vh"] { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -1,0 +1,91 @@
+/* 案E「仕次ぎ」（仮称）：経過した時間で段を分け、古い段を上に置く。段は古いほど深い色。 */
+@import url(base.css);
+
+:root {
+  --e-paper: #f8f7f3; --e-ink: #1d2024; --e-ink2: #535a63; --e-rule: #cfd3d8;
+  --e-b1: #e6ebef; --e-b2: #cbd5dd; --e-b3: #a3b2bf; --e-b4: #56687a; --e-b5: #243240; /* 新しい段 → 古い段 */
+  --e-act: #0b56a4; --e-over: #b3261e; --e-focus: #1d2024;
+}
+body { background: var(--e-paper); color: var(--e-ink); }
+:focus-visible { outline: 3px solid var(--e-focus); outline-offset: 2px; box-shadow: 0 0 0 5px #fff; }
+
+.e-top { display: flex; align-items: center; gap: 24px; padding: 12px 52px; background: var(--e-b5); color: #fff; }
+.e-brand b { font-size: 20px; margin-right: 12px; }
+.e-brand span { font-size: 14px; }
+.e-nav { margin-left: auto; }
+.e-nav ul { display: flex; gap: 4px; }
+.e-nav a { display: block; padding: 6px 12px; color: #fff; font-weight: 700; }
+.e-nav a[aria-current] { background: #fff; color: var(--e-b5); text-decoration: none; }
+.e-user { font-size: 14px; color: #d5dde4; }
+
+.e-main { max-width: 1280px; margin: 0 auto; padding: 24px 52px 40px; }
+h1 { font-size: 30px; }
+.e-search { margin-top: 16px; max-width: 760px; }
+.e-search label, .e-chips legend { font-weight: 700; }
+.e-search div { display: flex; gap: 8px; margin-top: 4px; }
+.e-search input { flex: 1; min-height: 44px; padding: 8px 12px; border: 2px solid var(--e-b4); background: #fff; }
+.e-search p { font-size: 14px; color: var(--e-ink2); }
+.e-primary { min-height: 44px; padding: 8px 20px; background: var(--e-act); color: #fff; border: 0; font-weight: 700; }
+.e-secondary { min-height: 38px; padding: 4px 14px; background: #fff; color: var(--e-act); border: 2px solid var(--e-act); font-weight: 700; }
+.e-text { margin-left: 16px; padding: 0; background: none; border: 0; color: var(--e-act); font-weight: 700; text-decoration: underline; }
+.e-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.e-chips legend { float: left; margin-right: 8px; }
+.e-chips button { min-height: 38px; padding: 4px 12px; background: #fff; border: 1px solid var(--e-b3); color: var(--e-act); font-weight: 700; }
+.e-chips button small { margin-left: 6px; font-weight: 400; color: var(--e-ink2); font-size: 14px; }
+.e-chips button[aria-pressed="true"] { background: var(--e-act); color: #fff; border-color: var(--e-act); }
+.e-chips button[aria-pressed="true"] small { color: #fff; }
+
+/* 経過日数の目盛：古い段（左）から新しい段（右）へ。段は一覧の見出しへのリンク */
+.e-ruler { margin-top: 22px; padding: 14px 18px 12px; background: #fff; border: 1px solid var(--e-rule); }
+.e-ruler h2 { font-size: 16px; }
+.e-ruler ol { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.e-ruler a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2px 8px; padding: 8px 10px 10px; color: inherit; text-decoration: none; border-top: 8px solid var(--band); }
+.e-ruler__label { font-weight: 700; text-decoration: underline; color: var(--e-act); }
+.e-ruler__n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.e-ruler__bar { grid-column: 1 / -1; height: 10px; width: calc(var(--r) * 100%); background: var(--band); outline: 1px solid rgba(0,0,0,.15); }
+.e-ruler__note { margin-top: 6px; font-size: 14px; color: var(--e-ink2); }
+.e-ruler__note b { color: var(--e-over); }
+.e-band-b1 { --band: var(--e-b1); --band-ink: var(--e-ink); }
+.e-band-b2 { --band: var(--e-b2); --band-ink: var(--e-ink); }
+.e-band-b3 { --band: var(--e-b3); --band-ink: var(--e-ink); }
+.e-band-b4 { --band: var(--e-b4); --band-ink: #fff; }
+.e-band-b5 { --band: var(--e-b5); --band-ink: #fff; }
+
+.e-count { margin: 20px 0 8px; }
+.e-count b { font-size: 21px; }
+
+/* 一覧：段ごとの見出し行。左端の「経過」の列が段の色の帯を持つ */
+.e-table th, .e-table td { padding: 10px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--e-rule); }
+.e-table thead th { font-size: 14px; color: var(--e-ink2); border-bottom: 2px solid var(--e-ink); }
+.e-band__head th { padding: 6px 12px; background: var(--band); color: var(--band-ink); font-size: 15px; border-bottom: 0; }
+.e-band__head span { margin-left: 12px; font-weight: 400; }
+.e-age { width: 6.5em; border-left: 8px solid var(--band); white-space: nowrap; }
+.e-age b { font-size: 24px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.e-idbtn { padding: 0; background: none; border: 0; color: var(--e-act); font-weight: 700; text-decoration: underline; font-variant-numeric: tabular-nums; }
+.e-due { display: block; font-size: 14px; color: var(--e-ink2); }
+.e-over { color: var(--e-over); font-weight: 700; }
+.e-over::before { content: '！'; }
+.e-table tr.is-open td { background: #fff; }
+.e-detail > td { padding: 0 10px 16px 0; background: #fff; border-left: 8px solid var(--band); }
+.e-detail section { margin-left: 6.5em; padding: 12px 16px; border: 1px solid var(--e-rule); }
+.e-detail__head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.e-detail h3 { font-size: 17px; }
+.e-detail dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin-top: 6px; }
+.e-detail dl div { display: grid; grid-template-columns: 6em minmax(0, 1fr); padding: 5px 0; border-bottom: 1px solid #e6e8eb; }
+.e-detail dt { color: var(--e-ink2); font-size: 14px; }
+
+@media (max-width: 599px) {
+  .e-top { flex-wrap: wrap; padding: 10px 16px; gap: 6px 12px; }
+  .e-nav { margin-left: 0; width: 100%; order: 1; }
+  .e-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .e-nav a { text-align: center; }
+  .e-main { padding: 20px 16px 32px; }
+  .e-ruler ol { grid-template-columns: minmax(0, 1fr); }
+  .e-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .e-table, .e-table tbody, .e-table tr, .e-table td, .e-table th { display: block; }
+  .e-table tr:not(.e-band__head):not(.e-detail) { display: grid; grid-template-columns: 5em minmax(0, 1fr); border-left: 8px solid var(--band); }
+  .e-table td { border: 0; padding: 2px 8px; }
+  .e-age { grid-row: span 5; border-left: 0; }
+  .e-detail section { margin-left: 0; }
+  .e-detail dl { grid-template-columns: minmax(0, 1fr); }
+}
