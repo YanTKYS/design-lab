@@ -1,0 +1,106 @@
+/* J「二色刷り」（仮称）新規申請フォームの試作。生成りの紙に青と蛍光ピンクの2色。
+   ピンク（版ずれ・網点・ずれた影）は飾りと主操作の目印だけに使い、エラーや状態の意味には使わない。 */
+
+:root {
+  --jr-paper: #f3eee2;
+  --jr-blue: #2948a0;     /* 青の版：文字・罫・操作 */
+  --jr-ink: #23397f;      /* 本文の青（紙の上で 9:1 程度） */
+  --jr-muted: #4c5a8c;
+  --jr-pink: #ff579b;     /* ピンクの版：飾り */
+  --jr-pink-soft: #fac4db;
+  --jr-field: #fffdf8;
+  --jr-font: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--jr-paper); color: var(--jr-ink); font: 15px/1.6 var(--jr-font); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.jr-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--jr-ink); outline-offset: 3px; box-shadow: 0 0 0 7px #fff3c0; }
+
+.jr-experiment { padding: 8px 44px; background: #e9e2d2; font-size: 13px; }
+.jr-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.jr-experiment a { color: var(--jr-ink); }
+
+.jr-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 0 44px; min-height: 54px; border-bottom: 2px solid var(--jr-blue); }
+.jr-top__org { font-size: 20px; font-weight: 900; }
+.jr-top__system { font-size: 13px; }
+.jr-nav { margin-left: auto; }
+.jr-nav ul { display: flex; gap: 6px; }
+.jr-nav a, .jr-nav__off { display: block; padding: 3px 12px; border-radius: 999px; color: var(--jr-ink); font-size: 14px; text-decoration: none; }
+.jr-nav a[aria-current] { background: var(--jr-blue); color: var(--jr-paper); font-weight: 900; box-shadow: 3px 2px 0 var(--jr-pink); }
+.jr-nav__off { color: #7581a8; }
+.jr-top__user { margin-left: 28px; font-size: 14px; }
+
+.jr-main { max-width: 1280px; margin: 0 auto; padding: 16px 44px 48px; }
+.jr-tools { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 6px; padding: 5px 12px; border: 1px dashed #8898c3; font-size: 13px; }
+
+/* 表題の段：版ずれの見出し、網点の半円、手順の札 */
+.jr-head { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 128px; padding: 16px 0 18px; border-bottom: 3px solid var(--jr-blue); overflow: hidden; }
+.jr-title { position: relative; z-index: 1; font-size: 64px; font-weight: 900; line-height: 1.1; letter-spacing: .03em; color: var(--jr-blue); white-space: nowrap; }
+.jr-title::before { content: attr(data-text); position: absolute; left: 4px; top: 4px; z-index: -1; color: var(--jr-pink); mix-blend-mode: multiply; }
+.jr-dots { position: absolute; left: 406px; bottom: -100px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, var(--jr-pink) 0 2.6px, transparent 3px) 0 0 / 8px 8px; }
+.jr-steps { position: relative; z-index: 1; display: flex; gap: 8px; }
+.jr-steps li { display: flex; align-items: baseline; gap: 6px; padding: 7px 16px; border: 2px solid var(--jr-blue); border-radius: 999px; font-weight: 900; background: var(--jr-paper); }
+.jr-steps small { font-size: 11px; }
+.jr-steps li.is-current { background: var(--jr-blue); color: var(--jr-paper); box-shadow: 4px 4px 0 var(--jr-pink); }
+
+/* エラーの一覧：版を増やさず、青の反転札と太い枠で示す */
+.jr-errors { margin-top: 20px; padding: 14px 18px; background: var(--jr-field); border: 4px double var(--jr-blue); }
+.jr-errors h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 900; }
+.jr-errors p { font-size: 13px; color: var(--jr-muted); }
+.jr-errors ul { margin-top: 6px; display: grid; gap: 2px; }
+.jr-error__tag { flex: none; padding: 0 8px; background: var(--jr-ink); color: var(--jr-paper); font-size: 12px; font-weight: 900; line-height: 1.8; }
+.jr-error { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; font-size: 14px; font-weight: 900; }
+.jr-field.is-invalid .jr-input { border: 3px double var(--jr-ink); }
+.jr-link { padding: 0; background: none; border: 0; color: var(--jr-ink); font-weight: 900; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* 章：左に章名と網点の下線、右に2列の入力欄。章の境は青の点線 */
+.jr-section { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 0 14px; padding: 18px 0 16px; border-bottom: 2px dotted #8898c3; }
+.jr-chapter { font-size: 24px; font-weight: 900; color: var(--jr-blue); line-height: 1.4; }
+.jr-chapter::after { content: ''; display: block; width: 66px; height: 8px; margin-top: 8px; background: radial-gradient(circle, var(--jr-pink) 0 1.8px, transparent 2.2px) 0 0 / 6px 6px; }
+.jr-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 22px; }
+.jr-field.is-wide { grid-column: 1 / -1; }
+.jr-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 16px; font-weight: 900; }
+.jr-req { padding: 0 6px; background: var(--jr-pink-soft); color: var(--jr-ink); font-size: 11px; font-weight: 900; line-height: 1.7; border-radius: 2px; }
+.jr-req.is-opt { background: transparent; border: 1px solid var(--jr-ink); font-weight: 400; }
+.jr-input { display: block; width: 100%; min-height: 40px; padding: 6px 10px; background: var(--jr-field); color: var(--jr-ink); border: 1px solid var(--jr-blue); border-radius: 4px; font-size: 16px; }
+.jr-input::placeholder { color: #8a93b8; }
+.jr-select { appearance: none; padding-right: 32px; background: var(--jr-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232948a0' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; }
+.jr-textarea { min-height: 5.5em; resize: vertical; }
+.jr-hint { margin-top: 4px; font-size: 12.5px; color: var(--jr-muted); }
+.jr-value { font-size: 16px; white-space: pre-wrap; padding: 4px 0; border-bottom: 2px dotted #b4bedc; }
+.jr-value.is-empty { color: var(--jr-muted); }
+.jr-fix { margin-left: auto; font-size: 13px; }
+.jr-lead { margin-top: 16px; color: var(--jr-muted); }
+.jr-done { font-size: 26px; font-weight: 900; }
+
+/* 確認事項：網点の地は薄く、箱は青の枠だけ（ピンクのずれた影は主ボタンだけに残す） */
+.jr-section--consent { margin-top: 4px; padding: 14px 14px; background: radial-gradient(circle, rgba(255, 87, 155, .35) 0 1.2px, transparent 1.6px) 0 0 / 7px 7px; border-bottom: 0; }
+.jr-consent { padding: 12px 16px; background: var(--jr-field); border: 2px solid var(--jr-blue); }
+.jr-consent.is-invalid { border: 4px double var(--jr-ink); }
+.jr-check { display: flex; align-items: flex-start; gap: 10px; }
+.jr-checkbox { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--jr-blue); }
+
+.jr-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; }
+.jr-back { color: var(--jr-ink); }
+.jr-btn { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; padding: 8px 28px; margin-left: auto; background: var(--jr-blue); color: var(--jr-paper); border: 0; border-radius: 999px; font-size: 16px; font-weight: 900; text-decoration: none; box-shadow: 4px 4px 0 var(--jr-pink); cursor: pointer; }
+.jr-btn--ghost { margin-left: 0; background: transparent; color: var(--jr-ink); border: 2px solid var(--jr-blue); box-shadow: none; }
+
+@media (max-width: 759px) {
+  .jr-experiment, .jr-top { padding-left: 16px; padding-right: 16px; }
+  .jr-nav { order: 1; width: 100%; margin: 4px 0 8px; }
+  .jr-nav ul { justify-content: space-between; gap: 0; }
+  .jr-nav a, .jr-nav__off { font-size: 13px; padding: 3px 8px; }
+  .jr-top__user { margin-left: auto; }
+  .jr-main { padding: 12px 16px 32px; }
+  .jr-head { flex-direction: column; align-items: flex-start; min-height: 0; }
+  .jr-title { font-size: 42px; }
+  .jr-dots { left: auto; right: -60px; bottom: -110px; }
+  .jr-steps li { padding: 4px 10px; font-size: 14px; }
+  .jr-section { grid-template-columns: 1fr; gap: 10px; }
+  .jr-fields { grid-template-columns: 1fr; }
+  .jr-btn { width: 100%; justify-content: space-between; }
+  .jr-back { order: 1; }
+}
