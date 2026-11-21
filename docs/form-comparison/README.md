@@ -18,3 +18,17 @@
 - **L「標示盤」**　状態別件数を示していたドット数字を手順番号に使い、現在の「01 入力」と確認ボタンを琥珀色で結んだ。欄が一列なので、入力値からすぐ下の補足へ目を運びやすい。短い電話番号や日付にも一行を使うぶん、同意と主操作までの縦の距離は長い。[申請一覧](../design-exploration-4/images/l-list-1280.png)
 
 4案とも継続して比較する。
+
+## 操作できる試作
+
+4案とも、新規申請フォームだけを独立した試作にした。項目・検証・手順の遷移は比較サイトと共通の `form.js` を使い、入力内容は送信・保存しない。
+
+| 案 | 試作 | 入力画面（1280px） |
+| --- | --- | --- |
+| H′ 折本 | [公開ページ](https://yantkys.github.io/design-lab/experiments/h-prime-form/)・[ソース](../../site/experiments/h-prime-form/) | [画面写真](images/prototype-h-prime-1280.png) |
+| J 二色刷り | [公開ページ](https://yantkys.github.io/design-lab/experiments/j-risograph-form/)・[ソース](../../site/experiments/j-risograph-form/) | [画面写真](images/prototype-j-risograph-1280.png) |
+| K 汀線 | [公開ページ](https://yantkys.github.io/design-lab/experiments/k-shoreline-form/)・[ソース](../../site/experiments/k-shoreline-form/) | [画面写真](images/prototype-k-shoreline-1280.png) |
+| L 標示盤 | [公開ページ](https://yantkys.github.io/design-lab/experiments/l-signage-form/)・[ソース](../../site/experiments/l-signage-form/) | [画面写真](../l-form-study/images/prototype-edit-1280.png) |
+
+375px の H′・J・K を並べた画面写真：[prototype-hjk-375.png](images/prototype-hjk-375.png)。
+
