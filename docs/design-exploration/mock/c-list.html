@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>申請一覧｜案C 素地と釉（静的モック）</title>
+<link rel="stylesheet" href="c.css">
+</head>
+<body class="c" data-screen="list">
+
+<header class="c-top">
+  <div class="c-top__in">
+    <p class="c-brand"><span class="c-brand__mark" aria-hidden="true"></span><span class="c-brand__org">さくら野市</span><span class="c-brand__sys">申請管理システム</span></p>
+    <nav class="c-nav" aria-label="メインメニュー"><ul><li><a href="#" aria-current="page">申請一覧</a></li><li><a href="#">新規申請</a></li><li><a href="#">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav>
+    <p class="c-user">審査担当 A</p>
+  </div>
+</header>
+<main class="c-main">
+  <div class="c-title"><h1>申請一覧</h1></div>
+  <form class="c-search" role="search" onsubmit="return false">
+    <label for="kw" class="c-label">キーワード</label>
+    <p class="c-hint" id="kw-hint">受付番号・申請者名・ふりがな・申請種別・担当課で探せます。</p>
+    <div class="c-search__row"><input id="kw" class="c-input" type="search" aria-describedby="kw-hint" value=""><button type="submit" class="c-btn c-btn--primary">検索</button></div>
+  </form>
+  <fieldset class="c-chips">
+    <legend class="c-label">処理状態</legend>
+    <div class="c-chips__row"><button type="button" class="c-chip" aria-pressed="false">すべて<span class="c-chip__n">71件</span></button><button type="button" class="c-chip" aria-pressed="false">受付済<span class="c-chip__n">4件</span></button><button type="button" class="c-chip" aria-pressed="true"><span aria-hidden="true">✓ </span>審査中<span class="c-chip__n">8件</span></button><button type="button" class="c-chip" aria-pressed="false">補正依頼<span class="c-chip__n">7件</span></button><button type="button" class="c-chip" aria-pressed="false">承認済<span class="c-chip__n">40件</span></button><button type="button" class="c-chip" aria-pressed="false">却下<span class="c-chip__n">12件</span></button></div>
+  </fieldset>
+  <div class="c-count" role="status">
+    <p><strong>71件中 8件</strong>を表示</p>
+    <p class="c-count__cond">絞り込み中：処理状態「審査中」</p>
+    <button type="button" class="c-btn c-btn--text">条件をクリア</button>
+  </div>
+  <div class="c-shelf">
+    <table class="c-table">
+      <caption class="c-vh">申請一覧（71件中 8件、受付日の新しい順）</caption>
+      <thead><tr><th scope="col" aria-sort="none"><button type="button" class="c-sort">受付番号<span class="c-sort__dir" aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button type="button" class="c-sort">申請者<span class="c-sort__dir" aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="none"><button type="button" class="c-sort">申請種別<span class="c-sort__dir" aria-hidden="true">↕</span></button></th><th scope="col" aria-sort="descending"><button type="button" class="c-sort">受付日<span class="c-sort__dir" aria-hidden="true">↓</span></button></th><th scope="col" aria-sort="none"><button type="button" class="c-sort">処理状態<span class="c-sort__dir" aria-hidden="true">↕</span></button></th></tr></thead>
+      <tbody><tr class="is-open">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="true">2026-01041</button><span class="c-open-note">詳細を表示中</span></td>
+      <td data-label="申請者">株式会社さくら野建設</td>
+      <td data-label="申請種別">道路占用許可申請</td>
+      <td data-label="受付日">2026/10/08</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="c-inline-detail"><td colspan="5">
+<section class="c-tray c-tray--inline" aria-labelledby="tray-inline">
+  <div class="c-tray__head">
+    <h2 id="tray-inline">申請詳細<span class="c-tray__id">2026-01041</span></h2>
+    <button type="button" class="c-btn c-btn--secondary c-btn--small">詳細を閉じる</button>
+  </div>
+  <dl class="c-dl"><div><dt>受付番号</dt><dd>2026-01041</dd></div><div><dt>申請者</dt><dd>株式会社さくら野建設</dd></div><div><dt>ふりがな</dt><dd>かぶしきがいしゃさくらのけんせつ</dd></div><div><dt>申請種別</dt><dd>道路占用許可申請</dd></div><div><dt>担当課</dt><dd>道路管理課</dd></div><div><dt>受付日</dt><dd>2026年10月8日</dd></div><div><dt>受付方法</dt><dd>窓口</dd></div><div><dt>処理期限</dt><dd>2026年10月29日</dd></div><div><dt>処理状態</dt><dd><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></dd></div><div><dt>備考</dt><dd>工事期間：11月中旬〜12月末</dd></div></dl>
+</section></td></tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-01033</button></td>
+      <td data-label="申請者">遠藤 大輔</td>
+      <td data-label="申請種別">住宅リフォーム補助金交付申請</td>
+      <td data-label="受付日">2026/10/06</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-01018</button></td>
+      <td data-label="申請者">工藤 直樹</td>
+      <td data-label="申請種別">児童手当認定請求</td>
+      <td data-label="受付日">2026/09/29</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-01016</button></td>
+      <td data-label="申請者">小林 彩</td>
+      <td data-label="申請種別">保育所等入所申込</td>
+      <td data-label="受付日">2026/09/27</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-00987</button></td>
+      <td data-label="申請者">野口 拓海</td>
+      <td data-label="申請種別">屋外広告物許可申請</td>
+      <td data-label="受付日">2026/09/12</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-00953</button></td>
+      <td data-label="申請者">杉山 大和</td>
+      <td data-label="申請種別">犬の登録申請</td>
+      <td data-label="受付日">2026/08/26</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-00945</button></td>
+      <td data-label="申請者">坂本 航</td>
+      <td data-label="申請種別">住宅リフォーム補助金交付申請</td>
+      <td data-label="受付日">2026/08/23</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr><tr class="">
+      <td data-label="受付番号"><button type="button" class="c-idlink" aria-expanded="false">2026-00917</button></td>
+      <td data-label="申請者">岡田 紬</td>
+      <td data-label="申請種別">児童手当認定請求</td>
+      <td data-label="受付日">2026/08/06</td>
+      <td data-label="処理状態"><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></td>
+    </tr></tbody>
+    </table>
+    
+<section class="c-tray c-tray--side" aria-labelledby="tray-side">
+  <div class="c-tray__head">
+    <h2 id="tray-side">申請詳細<span class="c-tray__id">2026-01041</span></h2>
+    <button type="button" class="c-btn c-btn--secondary c-btn--small">詳細を閉じる</button>
+  </div>
+  <dl class="c-dl"><div><dt>受付番号</dt><dd>2026-01041</dd></div><div><dt>申請者</dt><dd>株式会社さくら野建設</dd></div><div><dt>ふりがな</dt><dd>かぶしきがいしゃさくらのけんせつ</dd></div><div><dt>申請種別</dt><dd>道路占用許可申請</dd></div><div><dt>担当課</dt><dd>道路管理課</dd></div><div><dt>受付日</dt><dd>2026年10月8日</dd></div><div><dt>受付方法</dt><dd>窓口</dd></div><div><dt>処理期限</dt><dd>2026年10月29日</dd></div><div><dt>処理状態</dt><dd><span class="c-stamp" data-status-mark="reviewing"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg>審査中</span></dd></div><div><dt>備考</dt><dd>工事期間：11月中旬〜12月末</dd></div></dl>
+</section>
+  </div>
+</main>
+<footer class="c-foot"><p>さくら野市（架空の自治体）　静的モック：案C「素地と釉」（仮称）</p></footer>
+</body>
+</html>
