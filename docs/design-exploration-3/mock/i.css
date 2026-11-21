@@ -1,0 +1,74 @@
+/* 案I「色面」：群青の大きな色面に件数を大きく置き、白い作業面と朱の一点で引き締める。 */
+:root {
+  --field: #1f348f; --field2: #2a43b0; --white: #ffffff; --sand: #f3efe6; --ink: #12162b; --grey: #545a6e;
+  --rule: #dfe1e8; --shu: #cc4519; --sun: #ffd447;
+  --gothic: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--white); color: var(--ink); font: 15px/1.7 var(--gothic); font-feature-settings: 'palt'; }
+h1, h2, p, ul, dl, dd { margin: 0; }
+ul { padding: 0; list-style: none; }
+button, input { font: inherit; color: inherit; }
+.i-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; box-shadow: 0 0 0 5px var(--ink); }
+
+.i-page { display: grid; grid-template-columns: 320px minmax(0, 1fr); min-height: 100vh; }
+
+/* 色面 */
+.i-field { position: relative; overflow: hidden; padding: 30px 32px 40px; background: var(--field); color: #fff; }
+.i-field::after { content: ''; position: absolute; right: -120px; bottom: -120px; width: 300px; height: 300px; border-radius: 50%; background: var(--field2); }
+.i-field > * { position: relative; z-index: 1; }
+.i-brand b { display: block; font-size: 18px; letter-spacing: .1em; }
+.i-brand span { font-size: 13px; opacity: .85; letter-spacing: .08em; }
+.i-field h1 { margin-top: 44px; font-size: 40px; font-weight: 900; letter-spacing: .06em; line-height: 1.2; }
+.i-big { display: flex; align-items: flex-end; gap: 10px; margin-top: 8px; }
+.i-big b { font-size: 148px; font-weight: 900; line-height: .85; letter-spacing: -.04em; }
+.i-big span { display: flex; flex-direction: column; font-size: 26px; font-weight: 900; line-height: 1.2; padding-bottom: 6px; }
+.i-big small { font-size: 14px; font-weight: 400; opacity: .9; }
+.i-search { margin-top: 34px; }
+.i-search label, .i-label { display: block; font-size: 12px; letter-spacing: .2em; opacity: .9; }
+.i-search div { display: flex; margin-top: 6px; }
+.i-search input { flex: 1; min-width: 0; min-height: 44px; padding: 6px 12px; background: #fff; color: var(--ink); border: 0; }
+.i-search button { min-height: 44px; padding: 6px 18px; background: var(--shu); color: #fff; border: 0; font-weight: 900; letter-spacing: .1em; }
+.i-status { margin-top: 26px; }
+.i-status .i-label { margin-bottom: 6px; }
+.i-status button { display: flex; justify-content: space-between; align-items: baseline; width: 100%; min-height: 44px; padding: 8px 14px 8px 18px; background: none; border: 0; border-top: 1px solid rgba(255, 255, 255, .28); color: #fff; font-size: 16px; font-weight: 700; text-align: left; cursor: pointer; }
+.i-status button b { font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.i-status button[aria-pressed="true"] { background: #fff; color: var(--field); box-shadow: inset 6px 0 0 var(--shu); }
+.i-status button i { display: inline-block; width: 0; height: 0; margin-right: 10px; border-left: 9px solid var(--shu); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+
+/* 作業面 */
+.i-work { padding: 0 36px 48px; }
+.i-head { display: flex; align-items: center; gap: 28px; height: 72px; border-bottom: 1px solid var(--rule); }
+.i-nav ul { display: flex; gap: 28px; }
+.i-nav a { color: var(--ink); font-weight: 700; text-decoration: none; padding: 22px 0 20px; border-bottom: 4px solid transparent; }
+.i-nav a[aria-current] { border-bottom-color: var(--shu); }
+.i-head p { margin-left: auto; color: var(--grey); font-size: 14px; }
+.i-cond { display: flex; align-items: center; gap: 18px; margin: 26px 0 12px; }
+.i-cond p { font-size: 15px; }
+.i-cond b { display: inline-block; padding: 0 10px; margin: 0 4px; background: var(--sun); color: var(--ink); }
+.i-link { padding: 0; background: none; border: 0; color: var(--field); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+
+.i-table { width: 100%; border-collapse: collapse; }
+.i-table th { padding: 10px 10px; text-align: left; font-size: 12px; letter-spacing: .14em; color: var(--grey); border-bottom: 3px solid var(--ink); }
+.i-table th button { padding: 0; background: none; border: 0; font-weight: 700; letter-spacing: inherit; cursor: pointer; }
+.i-table th span { margin-left: 4px; color: var(--shu); }
+.i-table td { padding: 16px 10px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.i-id, .i-date { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; }
+.i-id { color: var(--field); }
+.i-name { font-size: 16px; font-weight: 700; white-space: nowrap; }
+.i-st { display: inline-block; padding: 0 8px; border: 2px solid var(--ink); font-size: 13px; font-weight: 900; letter-spacing: .08em; white-space: nowrap; }
+.i-act { text-align: right; }
+.i-act button { min-height: 36px; padding: 4px 12px; background: #fff; border: 2px solid var(--field); color: var(--field); font-weight: 900; cursor: pointer; }
+.i-table tr.is-open td { background: var(--sand); border-bottom: 0; }
+.i-table tr.is-open td:first-child { box-shadow: inset 8px 0 0 var(--field); padding-left: 22px; }
+.i-table tr.is-open .i-act button { background: var(--field); color: #fff; }
+.i-detail-row td { padding: 0 12px 24px 22px; background: var(--sand); box-shadow: inset 8px 0 0 var(--field); border-bottom: 3px solid var(--ink); }
+.i-detail { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0 32px; padding-top: 8px; border-top: 1px solid #d9d3c4; }
+.i-detail__id { padding-top: 12px; }
+.i-detail h2 { font-size: 13px; letter-spacing: .2em; color: var(--grey); }
+.i-detail__id p { margin: 2px 0 10px; font-size: 26px; font-weight: 900; color: var(--field); font-variant-numeric: tabular-nums; }
+.i-dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; padding-top: 6px; }
+.i-dl div { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); padding: 8px 0; border-bottom: 1px solid #ddd6c6; }
+.i-dl dt { font-size: 12px; letter-spacing: .14em; color: var(--grey); padding-top: 2px; }
+.i-dl dd { font-weight: 700; }
