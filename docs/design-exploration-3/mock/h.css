@@ -1,0 +1,77 @@
+/* 案H「縦組みの台帳」：紙の地、墨、朱を一点。明朝の見出しと数字、細い罫、縦組みの表題。 */
+:root {
+  --paper: #f4f0e6; --paper2: #ebe5d7; --sumi: #1b1a17; --grey: #5c574d; --hair: #cbc2ae; --hair2: #ddd6c6;
+  --shu: #b5321f; --mincho: 'BIZ UDPMincho', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif;
+  --gothic: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--sumi); font: 15px/1.75 var(--gothic); font-feature-settings: 'palt'; }
+h1, h2, p, ul, dl, dd { margin: 0; }
+ul { padding: 0; list-style: none; }
+button, input { font: inherit; color: inherit; }
+.h-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+:focus-visible { outline: 2px solid var(--sumi); outline-offset: 3px; box-shadow: 0 0 0 6px rgba(181, 50, 31, .25); }
+
+/* 柱（ランニングヘッド） */
+.h-head { display: flex; align-items: baseline; gap: 28px; padding: 16px 56px 12px 56px; border-bottom: 1px solid var(--sumi); }
+.h-head__sys { font-family: var(--mincho); font-size: 15px; letter-spacing: .08em; }
+.h-head__sys b { font-size: 19px; font-weight: 600; margin-right: 14px; letter-spacing: .14em; }
+.h-nav { margin-left: auto; }
+.h-nav ul { display: flex; gap: 26px; }
+.h-nav a { color: var(--sumi); text-decoration: none; font-size: 14px; letter-spacing: .08em; padding-bottom: 3px; }
+.h-nav a[aria-current] { font-weight: 700; border-bottom: 2px solid var(--shu); }
+.h-nav a[aria-current]::before { content: ''; display: inline-block; width: 6px; height: 6px; margin: 0 8px 2px 0; background: var(--shu); border-radius: 50%; }
+.h-head__user { font-size: 13px; color: var(--grey); }
+
+/* 背（縦組みの表題） */
+.h-page { display: grid; grid-template-columns: 132px minmax(0, 1fr); min-height: calc(100vh - 56px); }
+.h-spine { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 40px 0; background: var(--paper2); border-right: 1px solid var(--hair); box-shadow: inset -4px 0 0 var(--paper), inset -5px 0 0 var(--hair); }
+.h-spine__seal { width: 14px; height: 14px; background: var(--shu); }
+.h-spine__title { writing-mode: vertical-rl; font-family: var(--mincho); font-size: 46px; font-weight: 600; letter-spacing: .32em; line-height: 1; }
+.h-spine__sub { writing-mode: vertical-rl; font-family: var(--mincho); font-size: 13px; letter-spacing: .3em; color: var(--grey); }
+
+.h-main { padding: 34px 56px 56px 48px; }
+.h-search { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: 18px; max-width: 860px; }
+.h-search label, .h-label { font-size: 13px; letter-spacing: .12em; color: var(--grey); }
+.h-search input { min-height: 42px; padding: 6px 2px; background: transparent; border: 0; border-bottom: 1.5px solid var(--sumi); font-size: 16px; }
+.h-search input::placeholder { color: #8c8577; }
+.h-search button { min-height: 42px; padding: 6px 26px; background: var(--sumi); color: var(--paper); border: 0; font-weight: 700; letter-spacing: .2em; }
+
+.h-status { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 0; margin-top: 22px; }
+.h-status .h-label { margin-right: 18px; }
+.h-status button { padding: 4px 16px; background: none; border: 0; border-left: 1px solid var(--hair); font-size: 15px; letter-spacing: .06em; cursor: pointer; }
+.h-status button:first-of-type { border-left: 0; padding-left: 0; }
+.h-n { margin-left: 8px; font-family: var(--mincho); font-size: 13px; color: var(--grey); font-variant-numeric: tabular-nums; }
+.h-status button[aria-pressed="true"] { color: var(--shu); font-weight: 700; }
+.h-status button[aria-pressed="true"]::before { content: ''; display: inline-block; width: 8px; height: 8px; margin: 0 8px 2px 0; border-radius: 50%; background: var(--shu); }
+.h-status button[aria-pressed="true"] .h-n { color: var(--shu); }
+
+.h-count { display: flex; align-items: flex-end; gap: 22px; margin: 34px 0 10px; }
+.h-count__n { font-family: var(--mincho); line-height: .9; }
+.h-count__n b { font-size: 88px; font-weight: 500; letter-spacing: -.02em; }
+.h-count__n span { font-size: 20px; margin-left: 6px; }
+.h-count__of { font-family: var(--mincho); font-size: 15px; line-height: 1.6; color: var(--grey); padding-bottom: 6px; }
+.h-link { padding: 0; background: none; border: 0; color: var(--sumi); text-decoration: underline; text-decoration-color: var(--shu); text-decoration-thickness: 1.5px; text-underline-offset: 4px; cursor: pointer; font-size: 14px; letter-spacing: .06em; }
+.h-count .h-link { margin: 0 0 8px auto; }
+
+/* 台帳：二重の天罫、細い罫、数字は明朝 */
+.h-table { width: 100%; border-collapse: collapse; border-top: 3px double var(--sumi); }
+.h-table th { padding: 10px 12px 8px; text-align: left; font-weight: 400; font-size: 12px; letter-spacing: .16em; color: var(--grey); border-bottom: 1px solid var(--sumi); }
+.h-table th button { padding: 0; background: none; border: 0; letter-spacing: inherit; cursor: pointer; }
+.h-table th span { margin-left: 4px; color: var(--shu); }
+.h-table td { padding: 16px 12px; border-bottom: 1px solid var(--hair2); vertical-align: baseline; }
+.h-id, .h-date { font-family: var(--mincho); font-size: 16px; letter-spacing: .04em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.h-name { font-size: 16px; font-weight: 700; }
+.h-st { white-space: nowrap; }
+.h-st span { margin-right: 6px; }
+.h-act { text-align: right; }
+.h-table tr.is-open td { border-bottom: 0; }
+.h-table tr.is-open .h-id { box-shadow: inset 3px 0 0 var(--shu); padding-left: 16px; color: var(--shu); }
+.h-detail-row td { padding: 0 12px 22px 16px; border-bottom: 1px solid var(--sumi); box-shadow: inset 3px 0 0 var(--shu); }
+.h-note { display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; gap: 0 36px; padding: 6px 0 0 0; }
+.h-note h2 { font-family: var(--mincho); font-size: 18px; font-weight: 600; letter-spacing: .14em; }
+.h-note h2 span { display: block; margin-top: 2px; font-size: 14px; font-weight: 400; color: var(--grey); letter-spacing: .06em; }
+.h-dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; }
+.h-dl div { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); padding: 6px 0; border-top: 1px solid var(--hair2); }
+.h-dl dt { font-size: 12px; letter-spacing: .14em; color: var(--grey); padding-top: 2px; }
+.h-note > .h-link { align-self: start; }
