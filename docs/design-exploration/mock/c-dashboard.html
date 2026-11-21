@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ダッシュボード｜案C 素地と釉（静的モック）</title>
+<link rel="stylesheet" href="c.css">
+</head>
+<body class="c" data-screen="dashboard">
+
+<header class="c-top">
+  <div class="c-top__in">
+    <p class="c-brand"><span class="c-brand__mark" aria-hidden="true"></span><span class="c-brand__org">さくら野市</span><span class="c-brand__sys">申請管理システム</span></p>
+    <nav class="c-nav" aria-label="メインメニュー"><ul><li><a href="#">申請一覧</a></li><li><a href="#">新規申請</a></li><li><a href="#" aria-current="page">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav>
+    <p class="c-user">審査担当 A</p>
+  </div>
+</header>
+<main class="c-main">
+  <div class="c-title"><h1>ダッシュボード</h1></div>
+  <form class="c-cond" onsubmit="return false" aria-label="集計の条件">
+    <div class="c-cond__item"><label class="c-label" for="period">対象期間</label><select id="period" class="c-input c-select"><option selected>令和8年度（4月〜）</option><option>上半期（4月〜9月）</option><option>第2四半期（7月〜9月）</option><option>直近3か月（8月〜10月）</option></select></div>
+    <div class="c-cond__item"><label class="c-label" for="dept">担当課</label><select id="dept" class="c-input c-select"><option selected>すべての担当課</option><option>市民課</option><option>こども家庭課</option><option>住宅政策課</option><option>道路管理課</option><option>都市計画課</option><option>環境衛生課</option><option>廃棄物対策課</option></select></div>
+    <button type="button" class="c-btn c-btn--secondary">リセット</button>
+    <p class="c-cond__ref">基準日　2026年10月12日<br><span>2026年4月1日〜2026年10月31日</span></p>
+  </form>
+  <section class="c-block" aria-labelledby="sum">
+    <h2 class="c-block__title" id="sum">受付と処理の概況</h2>
+    <dl class="c-figures"><div class="c-figure c-figure--total"><dt>受付件数</dt><dd class="c-figure__num">71<small>件</small></dd><dd class="c-figure__note">対象期間に受け付けた申請の総数</dd><dd><a href="#" class="c-link">受付の一覧を見る</a></dd></div><div class="c-figure c-figure--pending"><dt>処理待ち件数</dt><dd class="c-figure__num">19<small>件</small></dd><dd class="c-figure__note">受付済・審査中・補正依頼の合計</dd><dd><a href="#" class="c-link">処理待ちの一覧を見る</a></dd></div><div class="c-figure c-figure--done"><dt>処理完了件数</dt><dd class="c-figure__num">52<small>件</small></dd><dd class="c-figure__note">承認済・却下の合計</dd><dd><a href="#" class="c-link">処理完了の一覧を見る</a></dd></div><div class="c-figure c-figure--rate"><dt>処理完了率</dt><dd class="c-figure__num">73.2%</dd><dd class="c-figure__note">受付 71件のうち処理完了 52件</dd><dd class="c-figure__nolink">（一覧はありません）</dd></div></dl>
+  </section>
+  <div class="c-two">
+    <section class="c-block" aria-labelledby="months">
+      <h2 class="c-block__title" id="months">月別の受付件数<span class="c-block__unit">単位：件</span></h2>
+      <div class="c-cols" style="--peak:15"><div class="c-col"><span class="c-col__n">6</span><span class="c-col__bar" style="--v:6" aria-hidden="true"></span><span class="c-col__label">4月</span></div><div class="c-col"><span class="c-col__n">8</span><span class="c-col__bar" style="--v:8" aria-hidden="true"></span><span class="c-col__label">5月</span></div><div class="c-col"><span class="c-col__n">9</span><span class="c-col__bar" style="--v:9" aria-hidden="true"></span><span class="c-col__label">6月</span></div><div class="c-col"><span class="c-col__n">11</span><span class="c-col__bar" style="--v:11" aria-hidden="true"></span><span class="c-col__label">7月</span></div><div class="c-col"><span class="c-col__n">14</span><span class="c-col__bar" style="--v:14" aria-hidden="true"></span><span class="c-col__label">8月</span></div><div class="c-col"><span class="c-col__n">15</span><span class="c-col__bar" style="--v:15" aria-hidden="true"></span><span class="c-col__label">9月</span></div><div class="c-col"><span class="c-col__n">8</span><span class="c-col__bar" style="--v:8" aria-hidden="true"></span><span class="c-col__label">10月</span></div></div>
+      <p class="c-hint">10月は基準日までの受付分です。棒は読むためのもので、押せません。</p>
+    </section>
+    <section class="c-block" aria-labelledby="statuses">
+      <h2 class="c-block__title" id="statuses">処理状態の内訳<span class="c-block__unit">受付全体に占める割合</span></h2>
+      <ul class="c-rows"><li class="c-row"><span class="c-row__mark" aria-hidden="true"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/></svg></span><a href="#" class="c-link c-row__name">受付済</a><span class="c-row__n">4件</span><span class="c-row__share">5.6%</span><span class="c-row__bar" style="--r:0.056" aria-hidden="true"></span></li><li class="c-row"><span class="c-row__mark" aria-hidden="true"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5" fill="none" stroke-width="2"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11z" stroke="none"/></svg></span><a href="#" class="c-link c-row__name">審査中</a><span class="c-row__n">8件</span><span class="c-row__share">11.3%</span><span class="c-row__bar" style="--r:0.113" aria-hidden="true"></span></li><li class="c-row"><span class="c-row__mark" aria-hidden="true"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8 2.2 14 13H2z" fill="none" stroke-width="2" stroke-linejoin="round"/></svg></span><a href="#" class="c-link c-row__name">補正依頼</a><span class="c-row__n">7件</span><span class="c-row__share">9.9%</span><span class="c-row__bar" style="--r:0.099" aria-hidden="true"></span></li><li class="c-row"><span class="c-row__mark" aria-hidden="true"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" stroke="none"/></svg></span><a href="#" class="c-link c-row__name">承認済</a><span class="c-row__n">40件</span><span class="c-row__share">56.3%</span><span class="c-row__bar" style="--r:0.563" aria-hidden="true"></span></li><li class="c-row"><span class="c-row__mark" aria-hidden="true"><svg class="c-mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M3 3l10 10M13 3 3 13" fill="none" stroke-width="2.4"/></svg></span><a href="#" class="c-link c-row__name">却下</a><span class="c-row__n">12件</span><span class="c-row__share">16.9%</span><span class="c-row__bar" style="--r:0.169" aria-hidden="true"></span></li></ul>
+    </section>
+  </div>
+  <section class="c-block" aria-labelledby="types">
+    <h2 class="c-block__title" id="types">申請種別の内訳<span class="c-block__unit">受付件数の多い順</span></h2>
+    <ul class="c-rows c-rows--types"><li class="c-row"><a href="#" class="c-link c-row__name">住民票の写し等交付申請</a><span class="c-row__n">13件</span><span class="c-row__share">18.3%</span><span class="c-row__bar" style="--r:1.000" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">道路占用許可申請</a><span class="c-row__n">12件</span><span class="c-row__share">16.9%</span><span class="c-row__bar" style="--r:0.923" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">児童手当認定請求</a><span class="c-row__n">9件</span><span class="c-row__share">12.7%</span><span class="c-row__bar" style="--r:0.692" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">犬の登録申請</a><span class="c-row__n">8件</span><span class="c-row__share">11.3%</span><span class="c-row__bar" style="--r:0.615" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">住宅リフォーム補助金交付申請</a><span class="c-row__n">8件</span><span class="c-row__share">11.3%</span><span class="c-row__bar" style="--r:0.615" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">粗大ごみ収集申込</a><span class="c-row__n">8件</span><span class="c-row__share">11.3%</span><span class="c-row__bar" style="--r:0.615" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">保育所等入所申込</a><span class="c-row__n">7件</span><span class="c-row__share">9.9%</span><span class="c-row__bar" style="--r:0.538" aria-hidden="true"></span></li><li class="c-row"><a href="#" class="c-link c-row__name">屋外広告物許可申請</a><span class="c-row__n">6件</span><span class="c-row__share">8.5%</span><span class="c-row__bar" style="--r:0.462" aria-hidden="true"></span></li></ul>
+  </section>
+</main>
+<footer class="c-foot"><p>さくら野市（架空の自治体）　静的モック：案C「素地と釉」（仮称）</p></footer>
+</body>
+</html>

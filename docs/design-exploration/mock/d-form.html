@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新規申請｜案D 経路と停留所（静的モック）</title>
+<link rel="stylesheet" href="d.css">
+</head>
+<body class="d" data-screen="form">
+
+<header class="d-top">
+  <div class="d-top__in">
+    <p class="d-brand"><span class="d-brand__org">さくら野市</span><span class="d-brand__sys">申請管理システム</span></p>
+    <nav class="d-nav" aria-label="メインメニュー"><ul><li><a href="#">申請一覧</a></li><li><a href="#" aria-current="page"><span class="d-vh">現在地：</span>新規申請</a></li><li><a href="#">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav>
+    <p class="d-user">審査担当 A</p>
+  </div>
+</header>
+<main class="d-main">
+  <h1 class="d-h1">新規申請</h1>
+  <div class="d-formwrap">
+    <nav class="d-legs" aria-label="入力の経路">
+    <ol>
+      <li class="d-legs__step is-here"><span class="d-legs__mark" aria-hidden="true"></span><span class="d-here">現在地</span><span class="d-legs__name">1　入力</span>
+        <ol class="d-legs__sub"><li class="d-legs__sec is-error"><a href="#sec-applicant"><span class="d-legs__dot" aria-hidden="true"></span><span class="d-legs__secname">申請者情報</span><span class="d-legs__state"><span aria-hidden="true">！</span>エラー 1件</span></a></li><li class="d-legs__sec is-done"><a href="#sec-procedure"><span class="d-legs__dot" aria-hidden="true"></span><span class="d-legs__secname">手続きの内容</span><span class="d-legs__state"><span aria-hidden="true">✓</span>入力済</span></a></li><li class="d-legs__sec is-error"><a href="#sec-consent"><span class="d-legs__dot" aria-hidden="true"></span><span class="d-legs__secname">確認事項</span><span class="d-legs__state"><span aria-hidden="true">！</span>エラー 1件</span></a></li></ol>
+      </li>
+      <li class="d-legs__step is-ahead"><span class="d-legs__mark" aria-hidden="true"></span><span class="d-legs__name">2　確認</span></li><li class="d-legs__step is-ahead"><span class="d-legs__mark" aria-hidden="true"></span><span class="d-legs__name">3　完了</span></li>
+    </ol>
+  </nav>
+    <div class="d-formcol">
+      <div class="d-errors" tabindex="-1" role="alert" aria-labelledby="err-title">
+        <h2 id="err-title"><span aria-hidden="true">！</span>エラー　2件の入力を直してください</h2>
+        <ul><li><a href="#f-kana">ふりがな：ふりがなは、ひらがなで入力してください</a></li><li><a href="#f-agree">確認事項への同意：確認事項に同意してください</a></li></ul>
+      </div>
+      <form class="d-form" novalidate onsubmit="return false">
+        <section class="d-sec is-error" id="sec-applicant" aria-labelledby="sec-applicant-t"><h2 class="d-sec__title" id="sec-applicant-t"><span class="d-sec__stop" aria-hidden="true"></span>申請者情報<span class="d-sec__state">エラー 1件</span></h2><div class="d-field">
+    <label class="d-field__label" for="f-name">申請者氏名<span class="d-badge">必須</span></label>
+    <p class="d-hint" id="f-name-hint">住民票に記載されている氏名を入力してください。</p>
+    
+    <input id="f-name" class="d-input d-input--text" type="text" value="桜井 はるか" aria-describedby="f-name-hint">
+  </div><div class="d-field is-error">
+    <label class="d-field__label" for="f-kana">ふりがな<span class="d-badge">必須</span></label>
+    <p class="d-hint" id="f-kana-hint">ひらがなで入力してください。</p>
+    <p class="d-field__error" id="f-kana-error"><span class="d-err-mark" aria-hidden="true">！</span><span class="d-vh">エラー：</span>ふりがなは、ひらがなで入力してください</p>
+    <input id="f-kana" class="d-input d-input--text" type="text" value="サクライ ハルカ" aria-describedby="f-kana-hint f-kana-error" aria-invalid="true">
+  </div><div class="d-field">
+    <label class="d-field__label" for="f-email">メールアドレス<span class="d-badge">必須</span></label>
+    <p class="d-hint" id="f-email-hint">受付完了のお知らせを送ります。半角で入力してください。</p>
+    
+    <input id="f-email" class="d-input d-input--email" type="email" value="haruka.sakurai@example.com" aria-describedby="f-email-hint">
+  </div><div class="d-field">
+    <label class="d-field__label" for="f-phone">電話番号<span class="d-badge d-badge--opt">任意</span></label>
+    <p class="d-hint" id="f-phone-hint">日中に連絡がとれる番号。ハイフンはあってもなくても構いません。</p>
+    
+    <input id="f-phone" class="d-input d-input--tel" type="tel" value="" placeholder="例：090-1234-5678" aria-describedby="f-phone-hint">
+  </div></section><section class="d-sec is-done" id="sec-procedure" aria-labelledby="sec-procedure-t"><h2 class="d-sec__title" id="sec-procedure-t"><span class="d-sec__stop" aria-hidden="true"></span>手続きの内容<span class="d-sec__state">入力済</span></h2><div class="d-field">
+    <label class="d-field__label" for="f-type">申請種別<span class="d-badge">必須</span></label>
+    <p class="d-hint" id="f-type-hint">手続きの種類を選んでください。</p>
+    
+    <select id="f-type" class="d-input" aria-describedby="f-type-hint"><option value="">選択してください</option><option>住民票の写し等交付申請</option><option>道路占用許可申請</option><option>児童手当認定請求</option><option selected>保育所等入所申込</option><option>住宅リフォーム補助金交付申請</option><option>犬の登録申請</option><option>粗大ごみ収集申込</option><option>屋外広告物許可申請</option></select>
+  </div><div class="d-field">
+    <label class="d-field__label" for="f-date">希望日<span class="d-badge">必須</span></label>
+    <p class="d-hint" id="f-date-hint">手続きを希望する日を選んでください。</p>
+    
+    <input id="f-date" class="d-input d-input--date" type="date" value="2026-11-02" aria-describedby="f-date-hint">
+  </div><div class="d-field">
+    <label class="d-field__label" for="f-body">申請内容<span class="d-badge">必須</span></label>
+    <p class="d-hint" id="f-body-hint">希望や事情を具体的に入力してください。改行できます。</p>
+    
+    <textarea id="f-body" class="d-input d-textarea" rows="5" aria-describedby="f-body-hint">令和9年4月からの入所を希望します。
+第1希望：さくら野第一保育園
+第2希望：さくら野第二保育園</textarea>
+  </div></section><section class="d-sec is-error" id="sec-consent" aria-labelledby="sec-consent-t"><h2 class="d-sec__title" id="sec-consent-t"><span class="d-sec__stop" aria-hidden="true"></span>確認事項<span class="d-sec__state">エラー 1件</span></h2><div class="d-field is-error">
+    <p class="d-field__label">確認事項への同意<span class="d-badge">必須</span></p>
+    
+    <p class="d-field__error" id="f-agree-error"><span class="d-err-mark" aria-hidden="true">！</span><span class="d-vh">エラー：</span>確認事項に同意してください</p>
+    <label class="d-check"><input type="checkbox" id="f-agree" aria-describedby="f-agree-error" aria-invalid="true"><span class="d-check__box" aria-hidden="true"></span><span>記載内容に誤りがないことを確認し、申請の審査に必要な範囲で個人情報が利用されることに同意します。</span></label>
+  </div></section>
+        <div class="d-actions">
+          <p class="d-actions__next">次は「2　確認」です。入力内容を一覧で確かめてから申請します。</p>
+          <button type="submit" class="d-btn d-btn--primary d-btn--large">確認へ<span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+<footer class="d-foot"><p>さくら野市（架空の自治体）　静的モック：案D「経路と停留所」（仮称）</p></footer>
+</body>
+</html>

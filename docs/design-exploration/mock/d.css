@@ -1,0 +1,305 @@
+/* 案D「経路と停留所」（仮称）静的モック。
+   規則：処理状態は路線（順序と分岐）として描き、停留所＝状態、区間＝入力のまとまりとして扱う。
+   現在地は反転（黒地に白字）、行き先（次の操作）は矢印、規制（エラー）は赤の反転で示す。色だけに頼らず、形と文字を併記する。 */
+
+:root {
+  --d-ground: #ffffff;
+  --d-panel: #f2f3f5;
+  --d-ink: #16191d;        /* 文字・停留所・主操作 */
+  --d-ink-2: #4a5059;      /* 補足 */
+  --d-rule: #c4c9d0;       /* 細い罫 */
+  --d-line: #e0560f;       /* 路線の色（線だけに使い、文字には使わない） */
+  --d-error: #c0231b;      /* 規制：エラー */
+  --d-focus: #ffd400;      /* フォーカスの外側の輪 */
+  --d-font: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', '游ゴシック', 'Noto Sans JP', Meiryo, sans-serif;
+  --d-pad: 52px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--d-ground); color: var(--d-ink); font-family: var(--d-font); font-size: 16px; line-height: 1.65; overflow-wrap: anywhere; }
+h1, h2, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.d-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* フォーカス：黒の輪＋外側に黄色。現在地（黒の反転）とも選択とも別の形 */
+:focus-visible, .is-focus { outline: 3px solid var(--d-ink); outline-offset: 0; box-shadow: 0 0 0 7px var(--d-focus); }
+
+/* ---------- 上部 ---------- */
+
+.d-top { border-bottom: 3px solid var(--d-ink); }
+.d-top__in { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0 28px; padding: 0 var(--d-pad); }
+.d-brand { display: flex; align-items: baseline; gap: 12px; padding: 14px 0; }
+.d-brand__org { font-size: 21px; font-weight: 700; }
+.d-brand__sys { font-size: 15px; font-weight: 700; }
+.d-nav { margin-left: auto; display: flex; }
+.d-nav ul { display: flex; }
+.d-nav a { display: flex; align-items: center; height: 100%; padding: 10px 16px; color: var(--d-ink); font-weight: 700; text-decoration: none; }
+.d-nav a[aria-current] { background: var(--d-ink); color: #fff; }
+.d-user { align-self: center; font-size: 14px; color: var(--d-ink-2); }
+
+/* ---------- 共通 ---------- */
+
+.d-main { padding: 24px var(--d-pad) 40px; max-width: 1280px; margin: 0 auto; }
+.d-h1 { font-size: 30px; line-height: 1.35; font-weight: 700; }
+.d-h2 { font-size: 19px; font-weight: 700; }
+.d-label { display: block; font-weight: 700; }
+.d-hint { font-size: 14px; color: var(--d-ink-2); }
+.d-input { display: block; width: 100%; min-height: 48px; padding: 10px 12px; background: #fff; border: 2px solid var(--d-ink); border-radius: 0; }
+select.d-input { appearance: none; padding-right: 40px; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%2316191d' stroke-width='2.5'/%3E%3C/svg%3E") no-repeat right 14px center; }
+.d-textarea { min-height: 8em; resize: vertical; }
+.d-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 20px; border-radius: 0; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.d-btn--primary { background: var(--d-ink); color: #fff; border: 2px solid var(--d-ink); }
+.d-btn--secondary { background: #fff; color: var(--d-ink); border: 2px solid var(--d-ink); }
+.d-btn--secondary[aria-pressed="true"] { background: var(--d-ink); color: #fff; }
+.d-btn--text { min-height: 0; padding: 4px 2px; background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; }
+.d-btn--small { min-height: 40px; padding: 4px 12px; font-size: 14px; }
+.d-btn--large { min-height: 56px; padding: 10px 32px; font-size: 19px; }
+.d-btn__n { font-weight: 400; font-variant-numeric: tabular-nums; }
+.d-link, .d-go { color: var(--d-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.d-go span { margin-left: 4px; text-decoration: none; display: inline-block; }
+.d-here { display: inline-block; padding: 0 6px; background: var(--d-ink); color: #fff; font-size: 12px; font-weight: 700; line-height: 1.7; }
+.d-panel { margin-top: 22px; padding: 18px 22px 20px; background: var(--d-panel); }
+.d-panel__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+.d-panel__head .d-btn { margin-left: auto; }
+.d-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- 路線図（案内サイン） ---------- */
+
+.d-route { position: relative; height: 196px; margin-top: 8px; }
+.d-route--big { height: 270px; }
+.d-route__lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.d-route__lines path { fill: none; stroke: var(--d-line); stroke-width: 8; vector-effect: non-scaling-stroke; stroke-linecap: square; }
+.d-route__lines .d-route__spur { stroke-dasharray: 10 6; stroke-width: 6; stroke-linecap: butt; }
+.d-route__loop { position: absolute; left: calc(var(--x) + 18px); top: calc((var(--y0) + var(--y1)) / 2); transform: translateY(-50%); font-size: 18px; font-weight: 700; }
+.d-route__stops { position: absolute; inset: 0; }
+.d-stop { position: absolute; left: var(--x); top: var(--y1); width: 0; height: 0; }
+.d-stop[data-row="0"] { top: var(--y0); }
+.d-stop[data-row="2"] { top: var(--y2); }
+.d-stop__hit { position: absolute; left: 0; top: 0; width: max-content; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 6px 4px; transform: translate(-50%, -16px); background: none; border: 0; color: var(--d-ink); text-decoration: none; cursor: pointer; }
+/* 補正依頼（支線）は文字を印の上に、終点（承認済・却下）は印の右に置く */
+.d-stop[data-row="0"] .d-stop__hit { flex-direction: column-reverse; transform: translate(-50%, calc(-100% + 16px)); padding: 4px 6px 0; }
+.d-stop--approved .d-stop__hit, .d-stop--rejected .d-stop__hit { flex-direction: row; align-items: flex-start; transform: translate(-16px, -16px); gap: 10px; }
+.d-stop__text { display: flex; flex-direction: column; align-items: center; line-height: 1.3; }
+.d-stop--approved .d-stop__text, .d-stop--rejected .d-stop__text { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 0 8px; max-width: 14em; }
+.d-stop__name { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.d-stop__n { white-space: nowrap; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.d-stop__n small { font-size: 13px; margin-left: 2px; }
+.d-stop__share { font-size: 13px; color: var(--d-ink-2); font-variant-numeric: tabular-nums; }
+.d-route--big .d-stop__n { font-size: 30px; }
+
+/* 停留所の印：形で状態を区別（色は使わない） */
+.d-stop__mark { flex: none; width: 32px; height: 32px; background: #fff; border: 5px solid var(--d-ink); border-radius: 50%; }
+.d-stop--reviewing .d-stop__mark { background: radial-gradient(circle, var(--d-ink) 0 5px, #fff 6px); }
+.d-stop--returned .d-stop__mark { width: 26px; height: 26px; margin: 3px; border-radius: 0; transform: rotate(45deg); }
+.d-stop--approved .d-stop__mark { box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 7px var(--d-ink); }
+.d-stop--rejected .d-stop__mark { border-radius: 0; }
+.d-stop.is-here .d-stop__mark { background: var(--d-ink); box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--d-ink); }
+.d-stop.is-here .d-stop__name { text-decoration-thickness: 3px; }
+.d-stop .d-here { margin-bottom: 2px; }
+
+/* ---------- 申請一覧 ---------- */
+
+.d-search { margin-top: 18px; max-width: 760px; }
+.d-search__row { display: flex; gap: 8px; margin: 4px 0 2px; }
+.d-count { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin: 22px 0 8px; }
+.d-count__main strong { font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.d-count__main { font-weight: 700; }
+.d-count__of { font-weight: 400; color: var(--d-ink-2); margin-left: 6px; }
+.d-tag { display: inline-block; padding: 2px 10px; border: 2px solid var(--d-ink); font-weight: 700; }
+
+.d-table { width: 100%; border-collapse: collapse; }
+.d-table th { padding: 8px 10px; text-align: left; border-bottom: 3px solid var(--d-ink); font-size: 14px; }
+.d-sort { padding: 0; background: none; border: 0; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.d-sort span { margin-left: 4px; }
+.d-table td { padding: 12px 10px; border-bottom: 1px solid var(--d-rule); vertical-align: middle; }
+.d-table tr.is-open > td { border-bottom: 0; background: #fff8d6; }
+.d-cell-act { text-align: right; }
+
+/* 行の処理状態：経路上の位置（受付→審査→完了の3点）を小さな線で示し、状態名を必ず併記する */
+.d-mini { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-weight: 700; }
+.d-mini__line { position: relative; display: inline-flex; gap: 10px; padding: 0 1px; }
+.d-mini__line::before { content: ''; position: absolute; left: 4px; right: 4px; top: 50%; height: 3px; margin-top: -1.5px; background: var(--d-line); }
+.d-mini__line i { position: relative; width: 10px; height: 10px; border: 2px solid var(--d-ink); border-radius: 50%; background: #fff; }
+.d-mini[data-pos="0"] i:nth-child(1), .d-mini[data-pos="1"] i:nth-child(2), .d-mini[data-pos="2"] i:nth-child(3) { background: var(--d-ink); transform: scale(1.3); }
+
+.d-detail-row > td { padding: 0 10px 18px; background: #fff8d6; border-bottom: 3px solid var(--d-ink); }
+.d-detail { background: #fff; border: 2px solid var(--d-ink); padding: 14px 18px 18px; }
+.d-detail__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.d-detail__head h2 { font-size: 19px; }
+.d-detail__id { margin-left: 12px; font-variant-numeric: tabular-nums; }
+.d-detail__body { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; margin-top: 12px; }
+.d-trip { position: relative; padding-left: 30px; }
+.d-trip::before { content: ''; position: absolute; left: 9px; top: 10px; bottom: 10px; width: 5px; background: var(--d-line); }
+.d-trip__stop { position: relative; padding: 4px 0 12px; }
+.d-trip__stop::before { content: ''; position: absolute; left: -30px; top: 6px; width: 22px; height: 22px; border: 4px solid var(--d-ink); border-radius: 50%; background: #fff; }
+.d-trip__stop.is-here::before { background: var(--d-ink); }
+.d-trip__stop.is-next::before { border-style: dashed; }
+.d-trip__k { display: block; font-size: 14px; font-weight: 700; color: var(--d-ink-2); }
+.d-trip__v { display: block; font-weight: 700; }
+.d-dl > div { display: grid; grid-template-columns: 6em minmax(0, 1fr); gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--d-rule); }
+.d-dl dt { font-size: 14px; font-weight: 700; color: var(--d-ink-2); }
+
+/* ---------- 新規申請 ---------- */
+
+.d-formwrap { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 44px; margin-top: 20px; align-items: start; }
+.d-formcol { max-width: 720px; }
+.d-legs { position: sticky; top: 16px; padding: 18px 16px; background: var(--d-panel); }
+.d-legs > ol { position: relative; }
+.d-legs > ol::before { content: ''; position: absolute; left: 13px; top: 14px; bottom: 14px; width: 6px; background: var(--d-line); }
+.d-legs__step { position: relative; padding: 0 0 18px 44px; }
+.d-legs__mark { position: absolute; left: 0; top: 0; width: 32px; height: 32px; border: 5px solid var(--d-ink); border-radius: 50%; background: #fff; }
+.d-legs__step.is-here > .d-legs__mark { background: var(--d-ink); }
+.d-legs__step.is-ahead { color: var(--d-ink-2); }
+.d-legs__step.is-ahead > .d-legs__mark { border-color: #8a9099; border-style: dashed; }
+.d-legs__name { display: block; font-size: 18px; font-weight: 700; line-height: 32px; }
+.d-legs__step .d-here { position: absolute; left: 44px; top: -20px; }
+.d-legs__sub { margin-top: 6px; }
+.d-legs__sec a { position: relative; display: block; padding: 6px 0; color: var(--d-ink); text-decoration: none; }
+.d-legs__dot { position: absolute; left: -38px; top: 11px; width: 20px; height: 20px; border: 4px solid var(--d-ink); border-radius: 50%; background: #fff; }
+.d-legs__secname { display: block; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.d-legs__state { display: block; font-size: 14px; font-weight: 700; }
+.d-legs__sec.is-error .d-legs__state { color: var(--d-error); }
+.d-legs__sec.is-error .d-legs__dot { border-color: var(--d-error); border-radius: 0; transform: rotate(45deg); }
+
+.d-errors { border: 3px solid var(--d-error); margin-bottom: 10px; }
+.d-errors h2 { padding: 8px 14px; background: var(--d-error); color: #fff; font-size: 18px; }
+.d-errors h2 span { display: inline-grid; place-items: center; width: 1.4em; height: 1.4em; margin-right: 8px; background: #fff; color: var(--d-error); border-radius: 50%; font-size: 15px; }
+.d-errors ul { padding: 10px 14px 12px 34px; list-style: disc; }
+.d-errors a { color: var(--d-ink); font-weight: 700; text-underline-offset: 3px; }
+
+.d-sec { margin-top: 26px; }
+.d-sec__title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding-bottom: 8px; border-bottom: 3px solid var(--d-ink); font-size: 22px; }
+.d-sec__stop { flex: none; width: 22px; height: 22px; border: 5px solid var(--d-ink); border-radius: 50%; background: #fff; }
+.d-sec.is-error .d-sec__stop { width: 18px; height: 18px; margin: 2px; border-color: var(--d-error); border-radius: 0; transform: rotate(45deg); }
+.d-sec__state { margin-left: auto; font-size: 15px; }
+.d-sec.is-error .d-sec__state { color: var(--d-error); }
+.d-sec.is-error .d-sec__state::before { content: '！'; }
+.d-sec.is-done .d-sec__state::before { content: '✓ '; }
+.d-field { margin-top: 20px; }
+.d-field__label { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; }
+.d-badge { display: inline-block; padding: 0 7px; background: var(--d-ink); color: #fff; border: 2px solid var(--d-ink); font-size: 13px; line-height: 1.5; }
+.d-badge--opt { background: #fff; color: var(--d-ink); }
+.d-field .d-hint { margin-bottom: 6px; }
+.d-field.is-error { padding-left: 16px; border-left: 6px solid var(--d-error); }
+.d-field__error { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: var(--d-error); font-weight: 700; }
+.d-err-mark { display: inline-grid; place-items: center; flex: none; width: 1.5em; height: 1.5em; background: var(--d-error); color: #fff; border-radius: 50%; font-size: 13px; }
+.d-field.is-error .d-input { border: 3px solid var(--d-error); }
+.d-input--email, .d-input--tel { max-width: 30em; }
+.d-input--date { max-width: 14em; }
+.d-check { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; align-items: start; cursor: pointer; }
+.d-check input { position: absolute; opacity: 0; width: 28px; height: 28px; }
+.d-check__box { width: 28px; height: 28px; border: 3px solid var(--d-ink); background: #fff; }
+.d-field.is-error .d-check__box { border-color: var(--d-error); }
+.d-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px 20px; margin-top: 32px; padding-top: 20px; border-top: 3px solid var(--d-ink); }
+.d-actions__next { margin-right: auto; font-size: 15px; }
+
+/* ---------- ダッシュボード ---------- */
+
+.d-cond { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 20px; margin-top: 18px; }
+.d-cond__item { width: 17em; }
+.d-cond__item .d-input { margin-top: 4px; }
+.d-cond__ref { margin-left: auto; text-align: right; font-weight: 700; }
+.d-cond__ref span { display: block; font-size: 14px; font-weight: 400; color: var(--d-ink-2); }
+
+.d-panel--flow { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 8px 24px; }
+.d-panel--flow .d-panel__head { grid-column: 1 / -1; }
+.d-origin { align-self: center; padding: 12px 16px; background: #fff; border: 3px solid var(--d-ink); }
+.d-origin__k { font-weight: 700; }
+.d-origin__v strong, .d-span__v strong { font-size: 44px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.d-origin__v, .d-span__v { font-weight: 700; }
+.d-origin .d-hint { margin-bottom: 6px; }
+.d-spans { grid-column: 2; display: grid; grid-template-columns: 57fr 43fr; gap: 0; }
+.d-span { position: relative; padding: 14px 16px 0 0; border-top: 4px solid var(--d-ink); }
+/* 区間の括り：停留所のまとまりを上の括弧線で示す（処理待ち＝分岐の手前、処理完了＝分岐の先） */
+.d-span::before, .d-span::after { content: ''; position: absolute; top: -14px; width: 4px; height: 14px; background: var(--d-ink); }
+.d-span::before { left: 0; }
+.d-span::after { right: 0; }
+.d-span--pending { margin-right: 14px; }
+.d-span--done { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; padding-right: 0; }
+.d-span__rate { padding-left: 16px; border-left: 2px solid var(--d-rule); }
+.d-span__k { font-weight: 700; }
+.d-span__v strong { font-size: 36px; }
+
+.d-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+.d-unit-table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+.d-unit-table th { width: 4em; padding: 6px 12px 6px 0; text-align: left; font-weight: 700; white-space: nowrap; }
+.d-unit-table--types th { width: auto; white-space: normal; }
+.d-unit-table td { padding: 6px 0; }
+.d-unit-table tr + tr > * { border-top: 1px solid var(--d-rule); }
+.d-units { display: inline-flex; flex-wrap: wrap; gap: 3px; max-width: calc(var(--max) * 15px); vertical-align: middle; }
+.d-units i { width: 12px; height: 12px; background: #3a4450; }
+.d-unit-n { margin-left: 10px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.d-unit-n small { margin-left: 8px; font-weight: 400; color: var(--d-ink-2); font-size: 13px; }
+
+.d-foot { padding: 0 var(--d-pad) 28px; }
+.d-foot p { padding-top: 14px; border-top: 1px solid var(--d-rule); font-size: 13px; color: var(--d-ink-2); }
+
+/* ---------- 中間の幅 ---------- */
+
+@media (max-width: 959px) {
+  :root { --d-pad: 24px; }
+  .d-formwrap { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .d-legs { position: static; }
+  .d-two { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .d-panel--flow { grid-template-columns: minmax(0, 1fr); }
+  .d-spans { grid-column: 1; }
+  .d-detail__body { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+}
+
+/* ---------- 狭い幅 ---------- */
+
+@media (max-width: 599px) {
+  :root { --d-pad: 16px; }
+  .d-top__in { gap: 0; }
+  .d-brand { width: 100%; padding: 10px 0 6px; flex-wrap: wrap; gap: 0 10px; }
+  .d-nav { order: 1; margin-left: 0; width: 100%; }
+  .d-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .d-nav a { justify-content: center; padding: 8px 2px; font-size: 14px; text-align: center; }
+  .d-user { width: 100%; padding-bottom: 6px; font-size: 13px; }
+  .d-h1 { font-size: 26px; }
+  .d-panel { padding: 14px 12px 16px; margin-left: calc(var(--d-pad) * -1); margin-right: calc(var(--d-pad) * -1); }
+  .d-panel__head .d-btn { margin-left: 0; }
+  .d-route { height: 220px; }
+  .d-route--big { height: 290px; }
+  .d-stop--approved .d-stop__text, .d-stop--rejected .d-stop__text { flex-direction: column; align-items: flex-start; max-width: none; }
+  .d-stop--approved .d-stop__hit, .d-stop--rejected .d-stop__hit { padding-right: 0; }
+  .d-stop__name { font-size: 14px; }
+  .d-stop__n { font-size: 17px; }
+  .d-route--big .d-stop__n { font-size: 22px; }
+  .d-stop__mark { width: 26px; height: 26px; border-width: 4px; }
+  .d-stop__hit { transform: translate(-50%, -13px); padding: 0 2px 4px; }
+  .d-stop[data-row="0"] .d-stop__hit { transform: translate(-50%, calc(-100% + 13px)); }
+  .d-stop--approved .d-stop__hit, .d-stop--rejected .d-stop__hit { transform: translate(-13px, -13px); gap: 6px; }
+  .d-stop--returned .d-stop__mark { width: 20px; height: 20px; }
+  .d-route__loop { left: calc(var(--x) + 14px); }
+
+  /* 表は1件ずつの塊に。処理状態の位置表示は残す */
+  .d-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .d-table, .d-table tbody { display: block; }
+  .d-table tr:not(.d-detail-row) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 0; border-bottom: 1px solid var(--d-rule); }
+  .d-table tr.is-open { padding: 12px 10px; margin: 0 -10px; border-bottom: 0; background: #fff8d6; }
+  .d-table td { display: block; padding: 0; border: 0; background: none !important; }
+  .d-table td[data-label="受付番号"] { font-weight: 700; }
+  .d-table td[data-label="処理状態"] { grid-column: 1 / -1; grid-row: 2; }
+  .d-table td[data-label="申請者"], .d-table td[data-label="申請種別"], .d-table td[data-label="受付日"] { grid-column: 1 / -1; }
+  .d-table td[data-label="申請者"] { font-weight: 700; font-size: 17px; }
+  .d-table td[data-label="受付日"]::before { content: '受付日　'; color: var(--d-ink-2); font-size: 14px; }
+  .d-cell-act { grid-column: 2; grid-row: 1; }
+  .d-detail-row, .d-detail-row > td { display: block; }
+  .d-detail-row > td { padding: 0 10px 14px; margin: 0 -10px; }
+  .d-dl > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+
+  .d-legs { padding: 14px 12px; }
+  .d-actions { justify-content: stretch; }
+  .d-btn--large { width: 100%; }
+  .d-cond__item { width: 100%; }
+  .d-cond__ref { margin-left: 0; text-align: left; }
+  .d-spans { grid-template-columns: minmax(0, 1fr); gap: 26px; margin-top: 8px; }
+  .d-span--pending { margin-right: 0; }
+  .d-origin__v strong { font-size: 38px; }
+  .d-span__v strong { font-size: 30px; }
+  .d-unit-table--types tr { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .d-unit-table--types th { padding-bottom: 0; }
+  .d-unit-table--types tr + tr > td { border-top: 0; }
+}

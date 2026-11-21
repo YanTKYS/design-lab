@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>申請一覧｜案D 経路と停留所（静的モック）</title>
+<link rel="stylesheet" href="d.css">
+</head>
+<body class="d" data-screen="list">
+
+<header class="d-top">
+  <div class="d-top__in">
+    <p class="d-brand"><span class="d-brand__org">さくら野市</span><span class="d-brand__sys">申請管理システム</span></p>
+    <nav class="d-nav" aria-label="メインメニュー"><ul><li><a href="#" aria-current="page"><span class="d-vh">現在地：</span>申請一覧</a></li><li><a href="#">新規申請</a></li><li><a href="#">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav>
+    <p class="d-user">審査担当 A</p>
+  </div>
+</header>
+<main class="d-main">
+  <h1 class="d-h1">申請一覧</h1>
+  <form class="d-search" role="search" onsubmit="return false">
+    <label for="kw" class="d-label">キーワード</label>
+    <div class="d-search__row"><input id="kw" class="d-input" type="search" aria-describedby="kw-hint" value=""><button type="submit" class="d-btn d-btn--primary">検索</button></div>
+    <p class="d-hint" id="kw-hint">受付番号・申請者名・ふりがな・申請種別・担当課で探せます。</p>
+  </form>
+  <section class="d-panel" aria-labelledby="route-title">
+    <div class="d-panel__head">
+      <h2 class="d-h2" id="route-title">処理状態の路線図</h2>
+      <p class="d-hint">停留所を選ぶと、その状態の申請だけを表示します。件数はキーワードに一致した数です。</p>
+      <button type="button" class="d-btn d-btn--secondary d-btn--small" aria-pressed="false">すべての状態<span class="d-btn__n">71件</span></button>
+    </div>
+    <div class="d-route" style="--y0:28%;--y1:60%;--y2:86%">
+    <svg class="d-route__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path d="M10 60 H74" />
+      <path d="M57 60 V86 H74" />
+      <path class="d-route__spur" d="M40 60 V28" />
+    </svg>
+    <span class="d-route__loop" style="--x:40%;--y1:28%;--y2:60%" aria-hidden="true">⇅</span>
+    <ol class="d-route__stops" aria-label="処理状態（停留所）"><li class="d-stop d-stop--received" style="--x:10%;--y:60%" data-row="1">
+      <button type="button" aria-pressed="false" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">受付済</span><span class="d-stop__n">4<small>件</small></span></span>
+      </button>
+    </li><li class="d-stop d-stop--reviewing is-here" style="--x:40%;--y:60%" data-row="1">
+      <button type="button" aria-pressed="true" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-here">現在地</span><span class="d-stop__name">審査中</span><span class="d-stop__n">8<small>件</small></span></span>
+      </button>
+    </li><li class="d-stop d-stop--returned" style="--x:40%;--y:28%" data-row="0">
+      <button type="button" aria-pressed="false" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">補正依頼</span><span class="d-stop__n">7<small>件</small></span></span>
+      </button>
+    </li><li class="d-stop d-stop--approved" style="--x:74%;--y:60%" data-row="1">
+      <button type="button" aria-pressed="false" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">承認済</span><span class="d-stop__n">40<small>件</small></span></span>
+      </button>
+    </li><li class="d-stop d-stop--rejected" style="--x:74%;--y:86%" data-row="2">
+      <button type="button" aria-pressed="false" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">却下</span><span class="d-stop__n">12<small>件</small></span></span>
+      </button>
+    </li></ol>
+  </div>
+  </section>
+  <div class="d-count" role="status">
+    <p class="d-count__main"><strong>8</strong>件<span class="d-count__of">（71件中）</span></p>
+    <p class="d-count__cond"><span class="d-tag">処理状態：審査中</span></p>
+    <button type="button" class="d-btn d-btn--text">すべての状態に戻す</button>
+  </div>
+  <table class="d-table">
+    <caption class="d-vh">申請一覧（71件中 8件、受付日の新しい順）</caption>
+    <thead><tr><th scope="col" aria-sort="none"><button type="button" class="d-sort">受付番号<span aria-hidden="true"></span></button></th><th scope="col" aria-sort="none"><button type="button" class="d-sort">申請者<span aria-hidden="true"></span></button></th><th scope="col" aria-sort="none"><button type="button" class="d-sort">申請種別<span aria-hidden="true"></span></button></th><th scope="col" aria-sort="descending"><button type="button" class="d-sort">受付日<span aria-hidden="true">▼</span></button></th><th scope="col" aria-sort="none"><button type="button" class="d-sort">処理状態<span aria-hidden="true"></span></button></th><th scope="col"><span class="d-vh">操作</span></th></tr></thead>
+    <tbody><tr class="is-open">
+      <td data-label="受付番号" class="d-num">2026-01041</td>
+      <td data-label="申請者">株式会社さくら野建設</td>
+      <td data-label="申請種別">道路占用許可申請</td>
+      <td data-label="受付日" class="d-num">2026/10/08</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="true">詳細を閉じる<span class="d-vh">（2026-01041）</span></button></td>
+    </tr><tr class="d-detail-row"><td colspan="6">
+<section class="d-detail" aria-labelledby="d-detail-title">
+  <div class="d-detail__head"><h2 id="d-detail-title">申請詳細<span class="d-detail__id">2026-01041</span></h2><button type="button" class="d-btn d-btn--secondary d-btn--small">詳細を閉じる</button></div>
+  <div class="d-detail__body">
+    <ol class="d-trip" aria-label="この申請の経路">
+      <li class="d-trip__stop is-past"><span class="d-trip__k">受付</span><span class="d-trip__v">2026年10月8日（窓口）</span></li>
+      <li class="d-trip__stop is-here"><span class="d-trip__k"><span class="d-here">現在地</span></span><span class="d-trip__v">審査中　道路管理課</span></li>
+      <li class="d-trip__stop is-next"><span class="d-trip__k">処理期限</span><span class="d-trip__v">2026年10月29日</span></li>
+    </ol>
+    <dl class="d-dl"><div><dt>申請者</dt><dd>株式会社さくら野建設</dd></div><div><dt>ふりがな</dt><dd>かぶしきがいしゃさくらのけんせつ</dd></div><div><dt>申請種別</dt><dd>道路占用許可申請</dd></div><div><dt>担当課</dt><dd>道路管理課</dd></div><div><dt>受付方法</dt><dd>窓口</dd></div><div><dt>備考</dt><dd>工事期間：11月中旬〜12月末</dd></div></dl>
+  </div>
+</section></td></tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-01033</td>
+      <td data-label="申請者">遠藤 大輔</td>
+      <td data-label="申請種別">住宅リフォーム補助金交付申請</td>
+      <td data-label="受付日" class="d-num">2026/10/06</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-01033）</span></button></td>
+    </tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-01018</td>
+      <td data-label="申請者">工藤 直樹</td>
+      <td data-label="申請種別">児童手当認定請求</td>
+      <td data-label="受付日" class="d-num">2026/09/29</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-01018）</span></button></td>
+    </tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-01016</td>
+      <td data-label="申請者">小林 彩</td>
+      <td data-label="申請種別">保育所等入所申込</td>
+      <td data-label="受付日" class="d-num">2026/09/27</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-01016）</span></button></td>
+    </tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-00987</td>
+      <td data-label="申請者">野口 拓海</td>
+      <td data-label="申請種別">屋外広告物許可申請</td>
+      <td data-label="受付日" class="d-num">2026/09/12</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-00987）</span></button></td>
+    </tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-00953</td>
+      <td data-label="申請者">杉山 大和</td>
+      <td data-label="申請種別">犬の登録申請</td>
+      <td data-label="受付日" class="d-num">2026/08/26</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-00953）</span></button></td>
+    </tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-00945</td>
+      <td data-label="申請者">坂本 航</td>
+      <td data-label="申請種別">住宅リフォーム補助金交付申請</td>
+      <td data-label="受付日" class="d-num">2026/08/23</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-00945）</span></button></td>
+    </tr><tr class="">
+      <td data-label="受付番号" class="d-num">2026-00917</td>
+      <td data-label="申請者">岡田 紬</td>
+      <td data-label="申請種別">児童手当認定請求</td>
+      <td data-label="受付日" class="d-num">2026/08/06</td>
+      <td data-label="処理状態"><span class="d-mini" data-pos="1" data-status-mark="reviewing"><span class="d-mini__line" aria-hidden="true"><i></i><i></i><i></i></span><span class="d-mini__label">審査中</span></span></td>
+      <td class="d-cell-act"><button type="button" class="d-btn d-btn--secondary d-btn--small" aria-expanded="false">詳細<span class="d-vh">（2026-00917）</span></button></td>
+    </tr></tbody>
+  </table>
+</main>
+<footer class="d-foot"><p>さくら野市（架空の自治体）　静的モック：案D「経路と停留所」（仮称）</p></footer>
+</body>
+</html>

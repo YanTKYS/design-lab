@@ -1,0 +1,257 @@
+/* 案C「素地と釉」（仮称）静的モック。
+   規則：触れて操作できるもの（リンク・ボタン・入力欄・選択肢）だけに「釉」＝白化粧の面と呉須の色を掛ける。
+   読むだけのもの（記録・数値・見出し・グラフ）は素地（土色・鉄色）のままにし、角も丸めない。 */
+
+:root {
+  --c-ground: #efe6d9;      /* 素地：ページの地（陶土） */
+  --c-band: #4a3328;        /* 荒焼の帯：上部の帯 */
+  --c-ink: #2b1f18;         /* 鉄：本文 */
+  --c-ink-2: #5d493c;       /* 鉄（薄）：補足 */
+  --c-clay: #9a5b3c;        /* 赤土：線彫り・棒 */
+  --c-clay-2: #c7ab90;      /* 赤土（淡）：細い罫 */
+  --c-slip: #fffdf8;        /* 白化粧：触れる面 */
+  --c-cobalt: #1f4f96;      /* 呉須：触れるものの色 */
+  --c-cobalt-deep: #133a72; /* 釉だまり：押す面の下端・選択中 */
+  --c-error: #a3261b;       /* 鉄赤：エラーだけに使う */
+  --c-radius: 4px;          /* 釉を掛けた面だけ角を丸める */
+  --c-font: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', '游ゴシック', 'Noto Sans JP', Meiryo, sans-serif;
+  --c-pad: 52px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--c-ground); }
+body { margin: 0; background: var(--c-ground); color: var(--c-ink); font-family: var(--c-font); font-size: 16px; line-height: 1.7; overflow-wrap: anywhere; }
+h1, h2, p, ul, ol, dl, dd, fieldset { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+fieldset { border: 0; padding: 0; min-width: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.c-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* フォーカス：選択（呉須の塗り）と混同しない、鉄色の二重の輪 */
+:focus-visible, .is-focus {
+  outline: 3px solid var(--c-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--c-slip);
+}
+
+/* ---------- 上部の帯（荒焼） ---------- */
+
+.c-top { background: var(--c-band); color: #f4ece2; }
+.c-top__in { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; padding: 12px var(--c-pad); }
+.c-brand { display: flex; align-items: center; gap: 10px; }
+.c-brand__mark { width: 22px; height: 22px; border-radius: 50%; border: 5px solid #c7ab90; box-shadow: inset 0 0 0 3px var(--c-band), inset 0 0 0 9px #c7ab90; }
+.c-brand__org { font-size: 20px; font-weight: 700; letter-spacing: .04em; }
+.c-brand__sys { font-size: 14px; padding-left: 10px; border-left: 1px solid #a58a75; }
+.c-nav { margin-left: auto; }
+.c-nav ul { display: flex; flex-wrap: wrap; gap: 6px; }
+.c-nav a {
+  display: block; padding: 6px 14px; border-radius: var(--c-radius);
+  background: var(--c-slip); color: var(--c-cobalt); font-weight: 700; text-decoration: none;
+  box-shadow: inset 0 -3px 0 #9fb2d3;
+}
+.c-nav a[aria-current] { background: var(--c-cobalt); color: #fff; box-shadow: inset 0 -4px 0 var(--c-cobalt-deep); }
+.c-user { font-size: 14px; color: #e2d5c6; }
+
+/* ---------- 本文 ---------- */
+
+.c-main { padding: 26px var(--c-pad) 40px; max-width: 1280px; margin: 0 auto; }
+.c-title h1 { font-size: 30px; line-height: 1.4; font-weight: 700; padding-bottom: 12px; position: relative; }
+/* 線彫り：細い二本の刻線。素地の面にだけ引く */
+.c-title h1::after, .c-sec__title::before, .c-block__title::after {
+  content: ''; display: block; height: 4px;
+  background: linear-gradient(var(--c-clay) 0 1px, transparent 1px 3px, var(--c-clay) 3px 4px);
+}
+.c-title h1::after { position: absolute; left: 0; right: 0; bottom: 0; }
+.c-label { display: block; font-weight: 700; font-size: 15px; }
+.c-hint { font-size: 14px; color: var(--c-ink-2); }
+
+/* 釉の面：入力欄 */
+.c-input {
+  display: block; width: 100%; min-height: 46px; padding: 9px 12px;
+  background: var(--c-slip); color: var(--c-ink);
+  border: 1px solid #8f7a69; border-bottom: 3px solid var(--c-cobalt); border-radius: var(--c-radius);
+}
+.c-select { appearance: none; padding-right: 40px; background: var(--c-slip) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%231f4f96' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center; }
+.c-textarea { min-height: 7.5em; resize: vertical; }
+
+/* 釉の面：ボタン（下端に釉だまり） */
+.c-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 46px; padding: 8px 20px; border-radius: var(--c-radius); font-weight: 700; cursor: pointer; white-space: nowrap; }
+.c-btn--primary { background: var(--c-cobalt); color: #fff; border: 0; box-shadow: inset 0 -4px 0 var(--c-cobalt-deep); }
+.c-btn--secondary { background: var(--c-slip); color: var(--c-cobalt); border: 1px solid var(--c-cobalt); box-shadow: inset 0 -3px 0 var(--c-cobalt); }
+.c-btn--text { min-height: 0; padding: 4px 2px; background: none; border: 0; color: var(--c-cobalt); text-decoration: underline; text-underline-offset: 3px; }
+.c-btn--small { min-height: 36px; padding: 4px 12px; font-size: 14px; }
+.c-btn--large { min-height: 54px; padding: 10px 36px; font-size: 18px; }
+.c-link { color: var(--c-cobalt); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- 申請一覧 ---------- */
+
+.c-search { margin-top: 22px; max-width: 720px; }
+.c-search__row { display: flex; gap: 10px; margin-top: 6px; }
+.c-chips { margin-top: 18px; }
+.c-chips__row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.c-chip {
+  display: inline-flex; align-items: baseline; gap: 8px; min-height: 40px; padding: 6px 14px;
+  background: var(--c-slip); color: var(--c-cobalt); border: 1px solid #8ea4c8; border-radius: var(--c-radius);
+  box-shadow: inset 0 -3px 0 #b8c7df; font-weight: 700; cursor: pointer;
+}
+.c-chip__n { font-weight: 400; font-variant-numeric: tabular-nums; }
+.c-chip[aria-pressed="true"] { background: var(--c-cobalt); color: #fff; border-color: var(--c-cobalt); box-shadow: inset 0 -4px 0 var(--c-cobalt-deep); }
+
+.c-count { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; margin: 22px 0 10px; }
+.c-count strong { font-size: 22px; }
+.c-count__cond { color: var(--c-ink-2); }
+
+.c-shelf { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; align-items: start; }
+.c-table { width: 100%; border-collapse: collapse; }
+.c-table th { text-align: left; padding: 0 10px 6px; border-bottom: 3px double var(--c-clay); font-size: 14px; }
+.c-table td { padding: 11px 10px; border-bottom: 1px solid var(--c-clay-2); vertical-align: top; }
+.c-table td:first-child, .c-table td[data-label="受付日"] { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.c-sort { padding: 2px 0; background: none; border: 0; color: var(--c-cobalt); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.c-sort__dir { margin-left: 4px; }
+th[aria-sort="none"] .c-sort__dir { color: #7d8fb0; }
+.c-idlink { padding: 0; background: none; border: 0; color: var(--c-cobalt); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-variant-numeric: tabular-nums; }
+/* 手に取った記録：行の左端に呉須の帯（触れた結果）、地を少し明るく */
+.c-table tr.is-open > td { background: rgba(255, 253, 248, .55); }
+.c-table tr.is-open > td:first-child { box-shadow: inset 5px 0 0 var(--c-cobalt); padding-left: 16px; }
+.c-open-note { display: block; font-size: 12px; color: var(--c-ink-2); }
+.c-stamp { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.c-mark { flex: none; fill: var(--c-clay); stroke: var(--c-clay); vertical-align: -2px; }
+
+/* 詳細：上焼の盆（白化粧の面）。閉じる操作だけ呉須 */
+.c-tray { background: var(--c-slip); border: 1px solid var(--c-clay-2); border-radius: var(--c-radius); padding: 16px 18px 18px; }
+.c-tray--side { position: sticky; top: 16px; }
+.c-inline-detail { display: none; }
+.c-tray__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 10px; border-bottom: 3px double var(--c-clay); }
+.c-tray__head h2 { font-size: 18px; }
+.c-tray__id { display: block; font-size: 14px; font-weight: 400; color: var(--c-ink-2); font-variant-numeric: tabular-nums; }
+.c-dl > div { display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 12px; padding: 7px 0; border-bottom: 1px solid #e6d9c8; }
+.c-dl dt { color: var(--c-ink-2); font-size: 14px; }
+
+/* ---------- 新規申請 ---------- */
+
+.c-main--form > :not(.c-title) { max-width: 720px; }
+.c-steps { display: flex; gap: 28px; margin: 20px 0 22px; color: var(--c-ink-2); }
+.c-steps li { display: flex; align-items: center; gap: 8px; padding-bottom: 4px; }
+.c-steps li + li::before { content: '―'; margin-right: 20px; color: var(--c-clay-2); }
+.c-steps li[aria-current] { color: var(--c-ink); font-weight: 700; box-shadow: inset 0 -3px 0 var(--c-clay); }
+.c-steps__n { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border: 1px solid currentColor; font-size: 14px; }
+
+.c-errors { padding: 16px 20px; margin-bottom: 8px; background: #fff7f3; border: 3px solid var(--c-error); }
+.c-errors h2 { font-size: 18px; color: var(--c-error); }
+.c-errors ul { margin-top: 6px; padding-left: 1.2em; list-style: disc; }
+.c-errors a { color: var(--c-cobalt); font-weight: 700; text-underline-offset: 3px; }
+
+.c-sec { margin-top: 30px; }
+.c-sec__title { font-size: 21px; font-weight: 700; }
+.c-sec__title::before { margin-bottom: 12px; }
+.c-field { margin-top: 20px; }
+.c-field__label { display: block; font-weight: 700; }
+.c-req { margin-left: 10px; padding: 0 6px; border: 1px solid var(--c-clay); color: #7a4329; font-size: 12px; font-weight: 700; vertical-align: 2px; }
+.c-field__hint { font-size: 14px; color: var(--c-ink-2); margin-bottom: 6px; }
+.c-field.is-error { padding-left: 16px; border-left: 4px solid var(--c-error); }
+.c-field__error { margin-bottom: 6px; color: var(--c-error); font-weight: 700; }
+.c-field__error::before { content: 'エラー：'; }
+.c-field.is-error .c-input { border: 2px solid var(--c-error); border-bottom-width: 3px; }
+.c-input--email, .c-input--tel { max-width: 30em; }
+.c-input--date { max-width: 14em; }
+.c-check { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; cursor: pointer; }
+.c-check input { position: absolute; opacity: 0; width: 26px; height: 26px; }
+.c-check__box { width: 26px; height: 26px; margin-top: 1px; background: var(--c-slip); border: 2px solid var(--c-cobalt); border-radius: var(--c-radius); box-shadow: inset 0 -3px 0 #b8c7df; }
+.c-field.is-error .c-check__box { border-color: var(--c-error); }
+.c-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 34px; padding-top: 22px; border-top: 3px double var(--c-clay); }
+
+/* ---------- ダッシュボード ---------- */
+
+.c-cond { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 20px; margin-top: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--c-clay-2); }
+.c-cond__item { width: 17em; }
+.c-cond__item .c-input { margin-top: 4px; }
+.c-cond__ref { margin-left: auto; text-align: right; font-size: 14px; color: var(--c-ink-2); }
+
+.c-block { margin-top: 30px; }
+.c-block__title { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; font-size: 20px; font-weight: 700; }
+.c-block__title::after { flex-basis: 100%; margin-top: 8px; }
+.c-block__unit { font-size: 13px; font-weight: 400; color: var(--c-ink-2); }
+
+/* 4指標：箱に入れず、縦の線彫りで区切る。数値は素地（押せない）、一覧への入口だけ呉須 */
+.c-figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 18px; }
+.c-figure { padding: 4px 24px 6px; }
+.c-figure:first-child { padding-left: 0; }
+.c-figure + .c-figure { border-left: 4px double var(--c-clay); }
+.c-figure dt { font-weight: 700; }
+.c-figure__num { font-size: 46px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.c-figure__num small { font-size: 18px; margin-left: 4px; }
+.c-figure__note { font-size: 14px; color: var(--c-ink-2); min-height: 3.4em; }
+.c-figure__nolink { font-size: 13px; color: var(--c-ink-2); }
+
+.c-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+.c-cols { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); align-items: end; height: 230px; margin-top: 16px; }
+.c-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.c-col__n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.c-col__bar { width: 30px; height: calc(var(--v) / var(--peak) * 160px); background: var(--c-clay); }
+.c-col__label { align-self: stretch; margin-top: 0; padding-top: 4px; border-top: 2px solid var(--c-clay); text-align: center; font-size: 14px; }
+.c-cols + .c-hint { margin-top: 8px; }
+
+.c-rows { margin-top: 12px; }
+.c-row { display: grid; grid-template-columns: 1.6em minmax(0, 1fr) 4.5em 4.5em; align-items: baseline; gap: 2px 10px; padding: 9px 0 10px; border-bottom: 1px solid var(--c-clay-2); }
+.c-rows--types .c-row { grid-template-columns: minmax(0, 1fr) 4.5em 4.5em; }
+.c-row__mark { align-self: center; line-height: 0; }
+.c-row__n { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.c-row__share { text-align: right; color: var(--c-ink-2); font-variant-numeric: tabular-nums; }
+.c-row__bar { grid-column: 1 / -1; height: 6px; width: calc(var(--r) * 100%); background: var(--c-clay); }
+.c-row__mark + .c-row__name ~ .c-row__bar { grid-column: 2 / -1; }
+
+.c-foot { padding: 0 var(--c-pad) 28px; }
+.c-foot p { padding-top: 14px; border-top: 1px solid var(--c-clay-2); font-size: 13px; color: var(--c-ink-2); }
+
+/* ---------- 中間の幅：詳細は選んだ記録の直下へ ---------- */
+
+@media (max-width: 959px) {
+  :root { --c-pad: 24px; }
+  .c-shelf { grid-template-columns: minmax(0, 1fr); }
+  .c-tray--side { display: none; }
+  .c-inline-detail { display: table-row; }
+  .c-inline-detail > td { padding: 0 0 16px; border-bottom: 1px solid var(--c-clay-2); }
+  .c-two { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .c-figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .c-figure { padding: 12px 16px; }
+  .c-figure:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .c-figure:nth-child(n + 3) { border-top: 4px double var(--c-clay); }
+}
+
+/* ---------- 狭い幅 ---------- */
+
+@media (max-width: 599px) {
+  :root { --c-pad: 16px; }
+  .c-top__in { gap: 8px; }
+  .c-nav { order: 1; margin-left: 0; width: 100%; }
+  .c-nav ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .c-nav a { text-align: center; }
+  .c-user { width: 100%; margin-top: -6px; font-size: 13px; }
+  .c-brand { width: 100%; }
+  .c-title h1 { font-size: 26px; }
+  .c-search__row .c-btn { padding: 8px 16px; }
+
+  /* 表は1件ずつの記録に。項目名は文字で残す */
+  .c-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .c-table, .c-table tbody { display: block; }
+  .c-table tr:not(.c-inline-detail) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 12px 0; border-bottom: 1px solid var(--c-clay-2); }
+  .c-table tr.is-open { padding-left: 12px; box-shadow: inset 5px 0 0 var(--c-cobalt); background: rgba(255, 253, 248, .55); border-bottom: 0; }
+  .c-table tr.is-open > td, .c-table tr.is-open > td:first-child { background: none; box-shadow: none; padding-left: 0; }
+  .c-table td { display: block; padding: 0; border: 0; }
+  .c-table td[data-label="処理状態"] { grid-column: 2; grid-row: 1; }
+  .c-table td[data-label="申請者"], .c-table td[data-label="申請種別"], .c-table td[data-label="受付日"] { grid-column: 1 / -1; }
+  .c-table td[data-label="申請者"] { font-weight: 700; }
+  .c-table td[data-label="受付日"]::before { content: '受付日　'; color: var(--c-ink-2); font-size: 14px; }
+  .c-inline-detail, .c-inline-detail > td { display: block; }
+  .c-inline-detail > td { padding: 0 0 14px; }
+  .c-dl > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+
+  .c-steps { gap: 14px; }
+  .c-steps li + li::before { margin-right: 10px; }
+  .c-btn--large { width: 100%; }
+  .c-cond__item { width: 100%; }
+  .c-cond__ref { margin-left: 0; text-align: left; }
+  .c-figure__num { font-size: 36px; }
+  .c-figure__note { min-height: 0; }
+  .c-col__bar { width: 22px; }
+}

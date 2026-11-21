@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ダッシュボード｜案D 経路と停留所（静的モック）</title>
+<link rel="stylesheet" href="d.css">
+</head>
+<body class="d" data-screen="dashboard">
+
+<header class="d-top">
+  <div class="d-top__in">
+    <p class="d-brand"><span class="d-brand__org">さくら野市</span><span class="d-brand__sys">申請管理システム</span></p>
+    <nav class="d-nav" aria-label="メインメニュー"><ul><li><a href="#">申請一覧</a></li><li><a href="#">新規申請</a></li><li><a href="#" aria-current="page"><span class="d-vh">現在地：</span>ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav>
+    <p class="d-user">審査担当 A</p>
+  </div>
+</header>
+<main class="d-main">
+  <h1 class="d-h1">ダッシュボード</h1>
+  <form class="d-cond" onsubmit="return false" aria-label="集計の条件">
+    <div class="d-cond__item"><label class="d-label" for="period">対象期間</label><select id="period" class="d-input"><option selected>令和8年度（4月〜）</option><option>上半期（4月〜9月）</option><option>第2四半期（7月〜9月）</option><option>直近3か月（8月〜10月）</option></select></div>
+    <div class="d-cond__item"><label class="d-label" for="dept">担当課</label><select id="dept" class="d-input"><option selected>すべての担当課</option><option>市民課</option><option>こども家庭課</option><option>住宅政策課</option><option>道路管理課</option><option>都市計画課</option><option>環境衛生課</option><option>廃棄物対策課</option></select></div>
+    <button type="button" class="d-btn d-btn--secondary">リセット</button>
+    <p class="d-cond__ref">基準日 2026年10月12日<span>2026年4月1日〜2026年10月31日</span></p>
+  </form>
+  <section class="d-panel d-panel--flow" aria-labelledby="flow">
+    <div class="d-panel__head">
+      <h2 class="d-h2" id="flow">受付から処理までの路線図</h2>
+      <p class="d-hint">令和8年度（4月〜）／すべての担当課。停留所を選ぶと、その状態の一覧へ移ります。</p>
+    </div>
+    <div class="d-origin">
+      <p class="d-origin__k">受付件数</p>
+      <p class="d-origin__v"><strong>71</strong>件</p>
+      <p class="d-hint">対象期間に受け付けた申請の総数</p>
+      <a href="#" class="d-go">受付した申請の一覧<span aria-hidden="true">→</span></a>
+    </div>
+    <div class="d-route d-route--big" style="--y0:30%;--y1:62%;--y2:86%">
+    <svg class="d-route__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path d="M0 62 H74" />
+      <path d="M57 62 V86 H74" />
+      <path class="d-route__spur" d="M40 62 V30" />
+    </svg>
+    <span class="d-route__loop" style="--x:40%;--y1:30%;--y2:62%" aria-hidden="true">⇅</span>
+    <ol class="d-route__stops" aria-label="処理状態（停留所）"><li class="d-stop d-stop--received" style="--x:10%;--y:62%" data-row="1">
+      <a href="#" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">受付済</span><span class="d-stop__n">4<small>件</small></span><span class="d-stop__share">5.6%</span></span>
+      </a>
+    </li><li class="d-stop d-stop--reviewing" style="--x:40%;--y:62%" data-row="1">
+      <a href="#" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">審査中</span><span class="d-stop__n">8<small>件</small></span><span class="d-stop__share">11.3%</span></span>
+      </a>
+    </li><li class="d-stop d-stop--returned" style="--x:40%;--y:30%" data-row="0">
+      <a href="#" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">補正依頼</span><span class="d-stop__n">7<small>件</small></span><span class="d-stop__share">9.9%</span></span>
+      </a>
+    </li><li class="d-stop d-stop--approved" style="--x:74%;--y:62%" data-row="1">
+      <a href="#" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">承認済</span><span class="d-stop__n">40<small>件</small></span><span class="d-stop__share">56.3%</span></span>
+      </a>
+    </li><li class="d-stop d-stop--rejected" style="--x:74%;--y:86%" data-row="2">
+      <a href="#" class="d-stop__hit">
+        <span class="d-stop__mark" aria-hidden="true"></span>
+        <span class="d-stop__text"><span class="d-stop__name">却下</span><span class="d-stop__n">12<small>件</small></span><span class="d-stop__share">16.9%</span></span>
+      </a>
+    </li></ol>
+  </div>
+    <div class="d-spans">
+      <div class="d-span d-span--pending"><p class="d-span__k">処理待ち件数</p><p class="d-span__v"><strong>19</strong>件</p><p class="d-hint">受付済・審査中・補正依頼の合計</p><a href="#" class="d-go">処理待ちの一覧<span aria-hidden="true">→</span></a></div>
+      <div class="d-span d-span--done">
+        <div><p class="d-span__k">処理完了件数</p><p class="d-span__v"><strong>52</strong>件</p><p class="d-hint">承認済・却下の合計</p><a href="#" class="d-go">処理完了の一覧<span aria-hidden="true">→</span></a></div>
+        <div class="d-span__rate"><p class="d-span__k">処理完了率</p><p class="d-span__v"><strong>73.2%</strong></p><p class="d-hint">受付 71件のうち処理完了 52件</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="d-two">
+    <section class="d-panel" aria-labelledby="months">
+      <div class="d-panel__head"><h2 class="d-h2" id="months">月別の受付件数</h2><p class="d-hint">1マス＝1件。10月は基準日までの受付分です。</p></div>
+      <table class="d-unit-table"><caption class="d-vh">月別の受付件数</caption><tbody><tr><th scope="row">4月</th><td><span class="d-units" style="--n:6;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">6件</span></td></tr><tr><th scope="row">5月</th><td><span class="d-units" style="--n:8;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">8件</span></td></tr><tr><th scope="row">6月</th><td><span class="d-units" style="--n:9;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">9件</span></td></tr><tr><th scope="row">7月</th><td><span class="d-units" style="--n:11;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">11件</span></td></tr><tr><th scope="row">8月</th><td><span class="d-units" style="--n:14;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">14件</span></td></tr><tr><th scope="row">9月</th><td><span class="d-units" style="--n:15;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">15件</span></td></tr><tr><th scope="row">10月</th><td><span class="d-units" style="--n:8;--max:15" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">8件</span></td></tr></tbody></table>
+    </section>
+    <section class="d-panel" aria-labelledby="types">
+      <div class="d-panel__head"><h2 class="d-h2" id="types">申請種別ごとの受付件数</h2><p class="d-hint">1マス＝1件。種別名から一覧へ移ります。</p></div>
+      <table class="d-unit-table d-unit-table--types"><caption class="d-vh">申請種別ごとの受付件数</caption><tbody><tr><th scope="row"><a href="#" class="d-link">住民票の写し等交付申請</a></th><td><span class="d-units" style="--n:13;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">13件<small>18.3%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">道路占用許可申請</a></th><td><span class="d-units" style="--n:12;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">12件<small>16.9%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">児童手当認定請求</a></th><td><span class="d-units" style="--n:9;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">9件<small>12.7%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">犬の登録申請</a></th><td><span class="d-units" style="--n:8;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">8件<small>11.3%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">住宅リフォーム補助金交付申請</a></th><td><span class="d-units" style="--n:8;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">8件<small>11.3%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">粗大ごみ収集申込</a></th><td><span class="d-units" style="--n:8;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">8件<small>11.3%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">保育所等入所申込</a></th><td><span class="d-units" style="--n:7;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">7件<small>9.9%</small></span></td></tr><tr><th scope="row"><a href="#" class="d-link">屋外広告物許可申請</a></th><td><span class="d-units" style="--n:6;--max:13" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="d-unit-n">6件<small>8.5%</small></span></td></tr></tbody></table>
+    </section>
+  </div>
+</main>
+<footer class="d-foot"><p>さくら野市（架空の自治体）　静的モック：案D「経路と停留所」（仮称）</p></footer>
+</body>
+</html>

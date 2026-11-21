@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新規申請｜案C 素地と釉（静的モック）</title>
+<link rel="stylesheet" href="c.css">
+</head>
+<body class="c" data-screen="form">
+
+<header class="c-top">
+  <div class="c-top__in">
+    <p class="c-brand"><span class="c-brand__mark" aria-hidden="true"></span><span class="c-brand__org">さくら野市</span><span class="c-brand__sys">申請管理システム</span></p>
+    <nav class="c-nav" aria-label="メインメニュー"><ul><li><a href="#">申請一覧</a></li><li><a href="#" aria-current="page">新規申請</a></li><li><a href="#">ダッシュボード</a></li><li><a href="#">設定</a></li></ul></nav>
+    <p class="c-user">審査担当 A</p>
+  </div>
+</header>
+<main class="c-main c-main--form">
+  <div class="c-title"><h1>新規申請</h1></div>
+  <ol class="c-steps" aria-label="申請の手順"><li aria-current="step"><span class="c-steps__n">1</span>入力</li><li><span class="c-steps__n">2</span>確認</li><li><span class="c-steps__n">3</span>完了</li></ol>
+  <div class="c-errors" tabindex="-1" role="alert" aria-labelledby="err-title">
+    <h2 id="err-title">エラー：2件の入力を直してください</h2>
+    <ul><li><a href="#f-kana">ふりがな：ふりがなは、ひらがなで入力してください</a></li><li><a href="#f-agree">確認事項への同意：確認事項に同意してください</a></li></ul>
+  </div>
+  <form class="c-form" novalidate onsubmit="return false">
+    <section class="c-sec" aria-labelledby="sec-applicant"><h2 class="c-sec__title" id="sec-applicant">申請者情報</h2><div class="c-field" id="field-name">
+    <label class="c-field__label" for="f-name">申請者氏名<span class="c-req">必須</span></label>
+    <p class="c-field__hint" id="f-name-hint">住民票に記載されている氏名を入力してください。</p>
+    
+    <input id="f-name" class="c-input c-input--text" type="text" value="桜井 はるか" aria-describedby="f-name-hint">
+  </div><div class="c-field is-error" id="field-kana">
+    <label class="c-field__label" for="f-kana">ふりがな<span class="c-req">必須</span></label>
+    <p class="c-field__hint" id="f-kana-hint">ひらがなで入力してください。</p>
+    <p class="c-field__error" id="f-kana-error"><span class="c-vh">エラー：</span>ふりがなは、ひらがなで入力してください</p>
+    <input id="f-kana" class="c-input c-input--text" type="text" value="サクライ ハルカ" aria-describedby="f-kana-hint f-kana-error" aria-invalid="true">
+  </div><div class="c-field" id="field-email">
+    <label class="c-field__label" for="f-email">メールアドレス<span class="c-req">必須</span></label>
+    <p class="c-field__hint" id="f-email-hint">受付完了のお知らせを送ります。半角で入力してください。</p>
+    
+    <input id="f-email" class="c-input c-input--email" type="email" value="haruka.sakurai@example.com" aria-describedby="f-email-hint">
+  </div><div class="c-field" id="field-phone">
+    <label class="c-field__label" for="f-phone">電話番号<span class="c-req">任意</span></label>
+    <p class="c-field__hint" id="f-phone-hint">日中に連絡がとれる番号。ハイフンはあってもなくても構いません。</p>
+    
+    <input id="f-phone" class="c-input c-input--tel" type="tel" value="" placeholder="例：090-1234-5678" aria-describedby="f-phone-hint">
+  </div></section><section class="c-sec" aria-labelledby="sec-procedure"><h2 class="c-sec__title" id="sec-procedure">手続きの内容</h2><div class="c-field" id="field-type">
+    <label class="c-field__label" for="f-type">申請種別<span class="c-req">必須</span></label>
+    <p class="c-field__hint" id="f-type-hint">手続きの種類を選んでください。</p>
+    
+    <select id="f-type" class="c-input c-select" aria-describedby="f-type-hint"><option value="">選択してください</option><option>住民票の写し等交付申請</option><option>道路占用許可申請</option><option>児童手当認定請求</option><option selected>保育所等入所申込</option><option>住宅リフォーム補助金交付申請</option><option>犬の登録申請</option><option>粗大ごみ収集申込</option><option>屋外広告物許可申請</option></select>
+  </div><div class="c-field" id="field-date">
+    <label class="c-field__label" for="f-date">希望日<span class="c-req">必須</span></label>
+    <p class="c-field__hint" id="f-date-hint">手続きを希望する日を選んでください。</p>
+    
+    <input id="f-date" class="c-input c-input--date" type="date" value="2026-11-02" aria-describedby="f-date-hint">
+  </div><div class="c-field" id="field-body">
+    <label class="c-field__label" for="f-body">申請内容<span class="c-req">必須</span></label>
+    <p class="c-field__hint" id="f-body-hint">希望や事情を具体的に入力してください。改行できます。</p>
+    
+    <textarea id="f-body" class="c-input c-textarea" rows="5" aria-describedby="f-body-hint">令和9年4月からの入所を希望します。
+第1希望：さくら野第一保育園
+第2希望：さくら野第二保育園</textarea>
+  </div></section><section class="c-sec" aria-labelledby="sec-consent"><h2 class="c-sec__title" id="sec-consent">確認事項</h2><div class="c-field is-error" id="field-agree">
+    <p class="c-field__label" id="f-agree-label">確認事項への同意<span class="c-req">必須</span></p>
+    
+    <p class="c-field__error" id="f-agree-error"><span class="c-vh">エラー：</span>確認事項に同意してください</p>
+    <label class="c-check"><input type="checkbox" id="f-agree" aria-describedby="f-agree-error" aria-invalid="true"><span class="c-check__box" aria-hidden="true"></span><span>記載内容に誤りがないことを確認し、申請の審査に必要な範囲で個人情報が利用されることに同意します。</span></label>
+  </div></section>
+    <div class="c-actions">
+      <button type="submit" class="c-btn c-btn--primary c-btn--large">確認へ進む</button>
+      <p class="c-hint">次の画面で入力内容を確認できます。この試作では送信・保存しません。</p>
+    </div>
+  </form>
+</main>
+<footer class="c-foot"><p>さくら野市（架空の自治体）　静的モック：案C「素地と釉」（仮称）</p></footer>
+</body>
+</html>
