@@ -8,8 +8,10 @@
 //   並べ替えの項目をセレクトにするときは data-bind="sort-key"。
 //   詳細の見出しは id="poc-detail-title"（tabindex="-1"）、詳細を開閉するボタンは data-action="toggle-detail" data-id="…"。
 //   ui = { layout: 'wide' | 'narrow', page, pageSize }。ページ送りを使う案だけが page を見る。
+//   ページ送り後のフォーカス先（新しい面の先頭）は data-page-top（tabindex="-1"）。
 
 import { DEFAULT_SORT } from '../../assets/js/data.js';
+import { html } from '../../assets/js/html.js';
 import { patch } from '../../assets/js/morph.js';
 import { buildModel, countText, nextSort } from '../../assets/js/query.js';
 
@@ -115,6 +117,12 @@ export function startListPoc({ app, live, view, title, narrowBelow = 760, pageSi
     page: (el) => {
       page = Number(el.dataset.page);
       render();
+      // 送ったあとの先頭が見えるよう、一覧の始まりへ移る（ページ送りのボタンは一覧の下にあるため）
+      const top = $('[data-page-top]');
+      if (top) {
+        top.scrollIntoView({ block: 'start' });
+        moveFocus(top);
+      }
       announce(`${page + 1}ページ目を表示しています`);
     },
   };
@@ -134,6 +142,8 @@ export function startListPoc({ app, live, view, title, narrowBelow = 760, pageSi
   });
   app.addEventListener('change', (event) => {
     if (event.target.dataset.bind === 'sort-key') {
+      // セレクトで同じ項目を選び直しても向きは変えない（向きは「昇順／降順」のボタンで切り替える）
+      if (event.target.value === state.sort.key) return;
       state.sort = nextSort(state.sort, event.target.value);
       pageOfDetail();
       render();
@@ -180,3 +190,14 @@ export const detailItems = (d, fmt) => [
 
 /** 状態の記号（色に頼らない手がかり）。 */
 export const STATUS_MARK = { received: '○', reviewing: '◐', returned: '△', approved: '●', rejected: '×' };
+
+/** 狭い幅で列見出しの代わりに置く並べ替え（項目のセレクトと昇順／降順の切替）。見た目は prefix の class で各案が決める。 */
+export function sortBar(m, prefix) {
+  const cur = m.columns.find((c) => c.sorted);
+  const dir = cur.sorted === 'desc' ? '降順' : '昇順';
+  return html`<div class="${prefix}-sortbar" role="group" aria-label="並べ替え">
+    <label for="${prefix}-sort-key">並べ替え</label>
+    <select id="${prefix}-sort-key" data-bind="sort-key">${m.columns.map((c) => html`<option value="${c.key}" ${c.sorted ? 'selected' : ''}>${c.label}</option>`)}</select>
+    <button type="button" data-action="sort-dir" aria-label="並べ替えの向きを切り替える（現在：${dir}）">${dir} ${cur.sorted === 'desc' ? '↓' : '↑'}</button>
+  </div>`;
+}

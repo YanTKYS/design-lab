@@ -4,7 +4,7 @@
 
 import { html, raw } from '../../assets/js/html.js';
 import { formatDate } from '../../assets/js/query.js';
-import { STATUS_MARK, startListPoc } from '../shared/list-poc.js';
+import { STATUS_MARK, sortBar, startListPoc } from '../shared/list-poc.js';
 
 const slash = (iso) => formatDate(iso, 'slash');
 
@@ -54,7 +54,8 @@ function row(r, open) {
     </tr>${open ? html`<tr class="ll-detail-row"><td colspan="6">${detail(r)}</td></tr>` : ''}`;
 }
 
-function view(m) {
+function view(m, ui) {
+  const narrow = ui.layout === 'narrow';
   const sel = m.statusOptions.find((o) => o.selected);
   return html`
     <div class="ll-head">
@@ -73,9 +74,10 @@ function view(m) {
       <p role="status"><b>${m.status ? sel.label : m.keyword ? '検索結果' : 'すべて'}</b>全${m.total}件中 <span class="ll-count__n">${m.shown}件</span>${m.keyword ? html`<span class="ll-count__kw">「${m.keyword}」</span>` : ''}</p>
       ${m.keyword || m.status ? html`<button type="button" class="ll-link" data-action="clear">条件をクリア</button>` : ''}
     </div>
+    ${m.rows.length && narrow ? sortBar(m, 'll') : ''}
     ${m.rows.length
       ? html`<table class="ll-table"><caption class="ll-vh">申請一覧（${m.shown}件）</caption>
-          <thead><tr>${m.columns.map(sortHead)}<th scope="col">操作</th></tr></thead>
+          ${narrow ? '' : html`<thead><tr>${m.columns.map(sortHead)}<th scope="col">操作</th></tr></thead>`}
           <tbody>${m.rows.map((r) => row(r, m.detail && r.id === m.detail.id))}</tbody></table>`
       : html`<p class="ll-empty">条件に合う申請はありません。キーワードを変えるか、「条件をクリア」を選んでください。</p>`}`;
 }

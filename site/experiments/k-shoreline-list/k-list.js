@@ -4,7 +4,7 @@
 
 import { html } from '../../assets/js/html.js';
 import { formatDate } from '../../assets/js/query.js';
-import { STATUS_MARK, startListPoc } from '../shared/list-poc.js';
+import { STATUS_MARK, sortBar, startListPoc } from '../shared/list-poc.js';
 
 const slash = (iso) => formatDate(iso, 'slash');
 
@@ -68,9 +68,10 @@ function view(m, ui) {
         <div class="kl-results">
           <div class="kl-results__head"><h2>検索結果</h2><p>${m.shown}件${m.keyword ? html`（「${m.keyword}」）` : ''}</p>
             ${m.keyword || m.status ? html`<button type="button" class="kl-link" data-action="clear">条件をクリア</button>` : ''}</div>
+          ${m.rows.length && narrow ? sortBar(m, 'kl') : ''}
           ${m.rows.length
             ? html`<table class="kl-table"><caption class="kl-vh">申請一覧（${m.shown}件）</caption>
-                <thead><tr>${m.columns.map(sortHead)}<th scope="col">操作</th></tr></thead>
+                ${narrow ? '' : html`<thead><tr>${m.columns.map(sortHead)}<th scope="col">操作</th></tr></thead>`}
                 <tbody>${m.rows.map((r) => row(r, m.detail && r.id === m.detail.id, narrow))}</tbody></table>`
             : html`<p class="kl-empty">条件に合う申請はありません。キーワードを変えるか、「条件をクリア」を選んでください。</p>`}
         </div>

@@ -4,7 +4,7 @@
 
 import { html } from '../../assets/js/html.js';
 import { formatDate } from '../../assets/js/query.js';
-import { STATUS_MARK, detailItems, startListPoc } from '../shared/list-poc.js';
+import { STATUS_MARK, detailItems, sortBar, startListPoc } from '../shared/list-poc.js';
 
 const slash = (iso) => formatDate(iso, 'slash');
 
@@ -32,7 +32,8 @@ function row(r, open) {
     </tr>${open ? html`<tr class="jl-detail-row"><td colspan="6">${detail(r)}</td></tr>` : ''}`;
 }
 
-function view(m) {
+function view(m, ui) {
+  const narrow = ui.layout === 'narrow';
   const sel = m.statusOptions.find((o) => o.selected);
   const filtered = m.keyword || m.status;
   return html`
@@ -48,9 +49,10 @@ function view(m) {
         ? html`<span class="jl-cond__tag">絞り込み中</span>${m.status ? html`処理状態「${sel.label}」` : ''}${m.keyword ? html`${m.status ? '・' : ''}キーワード「${m.keyword}」` : ''}　<button type="button" class="jl-link" data-action="clear">条件をクリア</button>`
         : 'すべての申請を表示しています'}</p>
     </div>
+    ${m.rows.length && narrow ? sortBar(m, 'jl') : ''}
     ${m.rows.length
       ? html`<table class="jl-table"><caption class="jl-vh">申請一覧（${m.shown}件）</caption>
-          <thead><tr>${m.columns.map(sortHead)}<th scope="col"><span class="jl-vh">操作</span></th></tr></thead>
+          ${narrow ? '' : html`<thead><tr>${m.columns.map(sortHead)}<th scope="col"><span class="jl-vh">操作</span></th></tr></thead>`}
           <tbody>${m.rows.map((r) => row(r, m.detail && r.id === m.detail.id))}</tbody></table>`
       : html`<p class="jl-empty">条件に合う申請はありません。キーワードを変えるか、「条件をクリア」を選んでください。</p>`}`;
 }

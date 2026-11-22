@@ -99,7 +99,10 @@ th[aria-sort="none"] .jl-sort span { color: #8a93b8; }
   .jl-hero__sun { display: none; }
   .jl-hero__dots { opacity: .7; }
   .jl-tools { grid-template-columns: 1fr; }
-  .jl-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .jl-sortbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 0; border-top: 2px solid var(--jl-blue); border-bottom: 2px solid var(--jl-blue); }
+  .jl-sortbar label { font-size: 13px; font-weight: 900; }
+  .jl-sortbar select { flex: 1; min-width: 0; min-height: 38px; padding: 4px 12px; background: var(--jl-field); color: var(--jl-ink); border: 2px solid var(--jl-blue); border-radius: 999px; font-weight: 700; }
+  .jl-sortbar button { min-height: 38px; padding: 4px 14px; background: var(--jl-blue); color: var(--jl-paper); border: 0; border-radius: 999px; font-weight: 900; box-shadow: 3px 3px 0 var(--jl-pink); }
   .jl-table, .jl-table tbody, .jl-table tr, .jl-table td { display: block; }
   .jl-table tr:not(.jl-detail-row) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 10px; border-bottom: 2px dotted rgba(41, 72, 160, .5); }
   .jl-table td { padding: 0; border: 0; }

@@ -128,7 +128,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .ll-cell { min-height: 54px; padding: 6px 10px; }
   .ll-cell__label { font-size: 14px; }
   .ll-cell .ll-dots { width: 40px; height: 26px; }
-  .ll-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ll-sortbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; background: var(--ls-bar); border-top: 1px solid #454b43; }
+  .ll-sortbar label { font-size: 13px; }
+  .ll-sortbar select { flex: 1; min-width: 0; min-height: 38px; padding: 4px 10px; background: #2b2f2a; color: var(--ls-text); border: 1px solid var(--ls-field-line); }
+  .ll-sortbar button { min-height: 38px; padding: 4px 14px; background: transparent; color: var(--ls-amber); border: 1px solid var(--ls-amber); font-weight: 700; }
   .ll-table, .ll-table tbody, .ll-table tr, .ll-table td { display: block; }
   .ll-table tr:not(.ll-detail-row) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px; border-bottom: 1px solid #3a4038; }
   .ll-table td { padding: 0; border: 0; }

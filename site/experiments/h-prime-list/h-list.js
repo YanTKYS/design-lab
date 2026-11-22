@@ -89,11 +89,11 @@ function view(m, ui) {
         <label for="hp-sort-key">並べ替え</label>
         <select id="hp-sort-key" data-bind="sort-key">${m.columns.map((c) => html`<option value="${c.key}" ${c.sorted ? 'selected' : ''}>${c.label}</option>`)}</select>
         <button type="button" class="hp-sort__dir" data-action="sort-dir" aria-label="並べ替えの向きを切り替える（現在：${sortCol.sorted === 'desc' ? '降順' : '昇順'}）">${sortCol.sorted === 'desc' ? '降順 ↓' : '昇順 ↑'}</button>
-        <span class="hp-sort__note">右から左へ</span>
+        <span class="hp-sort__note">${narrow ? '上から下へ' : html`<span class="hp-note--one">右から左へ</span><span class="hp-note--two">右から左・上の段から</span>`}</span>
       </div>
     </div>
     ${m.rows.length
-      ? html`<ol class="hp-panels" aria-label="申請（右から左へ ${ui.page * PAGE + 1}件目から）">${shown.map((r) => {
+      ? html`<ol class="hp-panels" id="hp-panels" data-page-top tabindex="-1" aria-label="申請（${narrow ? '上から下へ' : '右から左へ'}、${ui.page * PAGE + 1}件目から）">${shown.map((r) => {
           const isOpen = m.detail && r.id === m.detail.id;
           // 狭い幅では、詳細を選んだ帯の直後に置く
           return html`${panel(r, isOpen)}${isOpen && narrow ? html`<li class="hp-detail-li">${detail(m.detail)}</li>` : ''}`;
