@@ -79,3 +79,42 @@ test('汀線 375px：表題の等高線は、表題・件数・集計条件・�
     expect(hits, q || 'list').toEqual([]);
   }
 });
+
+test('汀線 1024×768：下の方の行（40件目）で詳細を開いても、選んだ行と詳細が同時に見える', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto('?design=k-shoreline');
+  const p = pane(page);
+  const open = p.locator('[data-action="open-detail"]').nth(39);
+  const id = await open.getAttribute('data-id');
+  await open.scrollIntoViewIfNeeded();
+  await open.click();
+  await expect(p.locator('[data-focus="detail"]')).toBeFocused();
+  await expect(p.locator(`tr.is-open [data-id="${id}"]`)).toBeInViewport(); // ペインの表示範囲（スクロール領域で切り取った範囲）に入っている
+  await expect(p.locator('.kl-detail [data-focus="detail"]')).toBeInViewport();
+});
+
+test('汀線 1280×650：表示の高さが低くても「詳細を閉じる」はいつも押せ、詳細の末尾は詳細の中で読める', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 650 });
+  await page.goto('?design=k-shoreline');
+  const p = pane(page);
+  const open = p.locator('[data-action="open-detail"]').nth(5);
+  const id = await open.getAttribute('data-id');
+  await open.click();
+  const close = p.locator('.kl-detail [data-action="close-detail"]');
+  await expect(close).toBeInViewport({ ratio: 1 });
+  for (let i = 0; i < 3; i += 1) await p.locator('.pane__scroll').evaluate((el) => (el.scrollTop += 600));
+  await expect(close).toBeInViewport({ ratio: 1 }); // 一覧を送っても、詳細の見出しと「閉じる」は画面の上に留まる
+  const last = p.locator('.kl-detail dl > div').last();
+  await last.scrollIntoViewIfNeeded(); // 詳細の中のスクロールで末尾まで届く
+  await expect(last).toBeInViewport({ ratio: 1 });
+  await expect(close).toBeInViewport({ ratio: 1 });
+  await close.click();
+  await expect(p.locator(`[data-action="open-detail"][data-id="${id}"]`)).toBeFocused();
+});
+
+test('汀線：月別の各月は「4月 6件」のように一度だけ読み上げる（点の上の数字は読み上げない）', async ({ page }) => {
+  await page.goto('?design=k-shoreline&screen=dashboard');
+  const snapshot = await pane(page).locator('.kd-chart__points').ariaSnapshot();
+  expect(snapshot).toContain('- listitem: 4月 6件');
+  expect(snapshot).not.toMatch(/listitem: \d+ \d+月/);
+});

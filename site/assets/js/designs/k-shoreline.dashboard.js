@@ -76,7 +76,7 @@ function months(d, ctx) {
         <path class="kd-chart__line" d="${raw(line)}" />
       </svg>
       <ol class="kd-chart__points" aria-label="月別の受付件数（${d.period.rangeText}）">
-        ${pts.map((p) => html`<li style="left:${p.x.toFixed(2)}%;--y:${p.y.toFixed(2)}%"><span class="kd-chart__stem" aria-hidden="true"></span><span class="kd-chart__dot" aria-hidden="true"></span><b data-month="${p.m.key}">${p.m.count}</b><span class="kd-chart__month">${p.m.label}</span><span class="visually-hidden">${p.m.count}件</span></li>`)}
+        ${pts.map((p) => html`<li style="left:${p.x.toFixed(2)}%;--y:${p.y.toFixed(2)}%"><span class="kd-chart__stem" aria-hidden="true"></span><span class="kd-chart__dot" aria-hidden="true"></span><b data-month="${p.m.key}" aria-hidden="true">${p.m.count}</b><span class="kd-chart__month">${p.m.label}</span><span class="visually-hidden">${p.m.count}件</span></li>`)}
       </ol>
     </div>
     <p class="kd-note">点が各月の件数です。線と面は推移の目安で、月の途中の値を示すものではありません。</p>

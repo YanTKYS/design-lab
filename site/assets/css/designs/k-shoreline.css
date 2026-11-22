@@ -100,6 +100,7 @@
 .ds-k-shoreline .kl-st { white-space: nowrap; }
 .ds-k-shoreline .kl-st span { margin-right: 6px; }
 .ds-k-shoreline .kl-act { white-space: nowrap; }
+.ds-k-shoreline :is(.kl-col-act, .kl-act) { width: 6.5em; } /* 「詳細 ›」と「閉じる ×」で列の幅が変わり、行が折り返し直さないように */
 .ds-k-shoreline .kl-table tr.is-open td { background: var(--k-rail); }
 .ds-k-shoreline .kl-table tr.is-open td:first-child { box-shadow: inset 4px 0 0 var(--k-green); }
 .ds-k-shoreline .kl-table tr.is-open .kl-act .kl-link { color: var(--k-ink); }
@@ -110,9 +111,10 @@
 .ds-k-shoreline .kl-shore path { fill: none; stroke: #a9cdb9; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .ds-k-shoreline .kl-shore .kl-shore__sea { fill: var(--k-sea); stroke: none; }
 .ds-k-shoreline .kl-detail__in { padding: 18px 20px 20px 8px; background: var(--k-sea); border-top: 4px solid var(--k-green); }
-.ds-k-shoreline .kl-detail__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.ds-k-shoreline .kl-detail__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 8px; }
+.ds-k-shoreline .kl-detail__close { font-size: 14px; }
 .ds-k-shoreline .kl-detail h3 { font-family: var(--k-mincho); font-size: 22px; }
-.ds-k-shoreline .kl-badge { padding: 0 8px; border: 1px solid var(--k-green); font-size: 13px; }
+.ds-k-shoreline .kl-badge { width: fit-content; margin-top: 8px; padding: 0 8px; border: 1px solid var(--k-green); font-size: 13px; }
 .ds-k-shoreline .kl-detail__note { margin-top: 6px; font-size: 13px; color: var(--k-muted); }
 .ds-k-shoreline .kl-detail__id { margin-top: 12px; font-family: var(--k-mono); font-size: 20px; letter-spacing: 0.04em; }
 .ds-k-shoreline .kl-detail__name { margin-top: 4px; font-family: var(--k-mincho); font-size: 21px; font-weight: 700; }
@@ -121,14 +123,22 @@
 .ds-k-shoreline .kl-detail dl div { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--k-sep); font-size: 14px; }
 .ds-k-shoreline .kl-detail dt { color: var(--k-muted); }
 .ds-k-shoreline .kl-work > .kl-detail { margin-bottom: 14px; } /* 一覧に無い申請の詳細（表の上） */
+.ds-k-shoreline .kl-detail-slot { display: none; }
 
 /* 広いペイン：選んだ行の直後の詳細の行を、表の右の列へ移す（DOM・Tab の順は行の直後のまま）。
    列は結果の高さいっぱいに伸ばし、詳細の面はその中で画面の上に留まる（試作と同じ sticky） */
 @container frame (min-width: 1000px) {
-  .ds-k-shoreline .kl-work.has-detail { padding-right: 300px; }
-  .ds-k-shoreline .kl-detail-row { position: absolute; top: 44px; right: 0; bottom: 0; display: block; width: 300px; }
+  /* 右の列は詳細を開く前から確保する（開いた瞬間に表が狭まって行が折り返し直し、選んだ行が見えなくなるのを防ぐ） */
+  .ds-k-shoreline .kl-work.has-rows { padding-right: 300px; }
+  .ds-k-shoreline :is(.kl-detail-row, .kl-detail-slot) { position: absolute; top: 44px; right: 0; bottom: 0; display: block; width: 300px; }
   .ds-k-shoreline .kl-detail-row td { display: block; height: 100%; padding: 0; border: 0; background: none; }
-  .ds-k-shoreline .kl-detail-row .kl-detail { position: sticky; top: 12px; }
+  /* 詳細は画面の上に留める。表示できる高さを超える分は詳細の中でスクロールし、見出しの横の「詳細を閉じる」はいつも見える */
+  .ds-k-shoreline .kl-detail-row .kl-detail { position: sticky; top: 12px; display: flex; max-height: max(260px, calc(100dvh - 300px)); }
+  .ds-k-shoreline .kl-detail-row .kl-shore { flex: none; height: auto; }
+  .ds-k-shoreline .kl-detail-row .kl-detail__in { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; min-height: 0; }
+  .ds-k-shoreline .kl-detail-row .kl-detail__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .ds-k-shoreline .kl-detail-slot__text { position: sticky; top: 12px; display: grid; grid-template-columns: 26px minmax(0, 1fr); min-height: 120px; color: var(--k-muted); font-size: 14px; }
+  .ds-k-shoreline .kl-detail-slot__text span { padding: 18px 16px; background: var(--k-sea); border-top: 4px solid var(--k-sep); }
 }
 
 /* ---------- 新規申請フォーム ---------- */

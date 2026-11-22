@@ -70,7 +70,10 @@ function detail(d, ctx, { detached = false } = {}) {
   return html`<section class="kl-detail" aria-labelledby="${ctx.uid}-kl-detail">
     ${SHORE}
     <div class="kl-detail__in">
-      <div class="kl-detail__head"><h3 id="${ctx.uid}-kl-detail" tabindex="-1" data-focus="detail">申請詳細</h3><span class="kl-badge">${statusText(d.status)}</span></div>
+      <div class="kl-detail__head"><h3 id="${ctx.uid}-kl-detail" tabindex="-1" data-focus="detail">申請詳細</h3>
+        <button type="button" class="kl-link kl-detail__close" data-action="close-detail">詳細を閉じる<span class="visually-hidden">（${d.id}）</span><span aria-hidden="true"> ×</span></button></div>
+      <div class="kl-detail__body">
+      <p class="kl-badge">${statusText(d.status)}</p>
       ${detached ? html`<p class="kl-detail__note">現在の検索条件では一覧に表示されていない申請です。</p>` : ''}
       <p class="kl-detail__id">${d.id}</p>
       <p class="kl-detail__name">${d.applicant}</p>
@@ -83,7 +86,7 @@ function detail(d, ctx, { detached = false } = {}) {
         <div><dt>処理期限</dt><dd>${date(d.dueAt)}</dd></div>
         <div><dt>備考</dt><dd>${d.note || 'なし'}</dd></div>
       </dl>
-      <button type="button" class="kl-link" data-action="close-detail">詳細を閉じる<span class="visually-hidden">（${d.id}）</span></button>
+      </div>
     </div>
   </section>`;
 }
@@ -117,7 +120,7 @@ function listPage(model, ctx) {
           <button type="button" class="kl-link" data-action="clear-scope">引き継ぎを解除</button>
         </div>`
       : ''}
-    <div class="kl-work ${inRows ? 'has-detail' : ''}">
+    <div class="kl-work ${model.rows.length ? 'has-rows' : ''} ${inRows ? 'has-detail' : ''}">
       <div class="kl-results__head"><h3>検索結果</h3><p>${countText(model)}${model.keyword ? html`（「${model.keyword}」）` : ''}</p>
         ${model.filtered ? html`<button type="button" class="kl-link" data-action="clear">条件をクリア</button>` : ''}</div>
       ${model.detail && !inRows ? detail(model.detail, ctx, { detached: true }) : ''}
@@ -126,6 +129,7 @@ function listPage(model, ctx) {
             <thead><tr>${model.columns.map(sortHead)}<th scope="col" class="kl-col-act"><span class="visually-hidden">操作</span></th></tr></thead>
             <tbody>${model.rows.map((r) => row(r, model, ctx))}</tbody></table>`
         : html`<p class="kl-empty">条件に一致する申請はありません。${emptyHint(model)}</p>`}
+      ${model.rows.length && !inRows ? html`<div class="kl-detail-slot"><p class="kl-detail-slot__text">${SHORE}<span>申請の「詳細」を選ぶと、ここに表示します。</span></p></div>` : ''}
     </div>`;
 }
 
