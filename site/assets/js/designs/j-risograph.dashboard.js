@@ -34,12 +34,13 @@ function conditions(d, ctx) {
 function kpis(d, ctx) {
   return html`<dl class="jd-kpis" aria-label="受付と処理の概況">
     ${d.kpis.map(
+      // 0件の指標は内訳の0件の行と同じく件数だけを示し、空の一覧へのリンクは置かない
       (k, i) => html`<div class="jd-kpi">
         ${i === 0 ? html`<span class="jd-kpis__dots" aria-hidden="true"></span>` : ''}
         <dt>${k.label}</dt>
         <dd class="jd-kpi__value"><b ${kpiMark(k.key)}>${k.value}</b>${k.unit}</dd>
         <dd class="jd-kpi__note">${k.note}</dd>
-        ${k.link ? html`<dd class="jd-kpi__link">${listLink(ctx, k.link, '一覧を見る →', { cls: 'jl-link', hint: `${k.label} ${k.value}件` })}</dd>` : ''}
+        ${k.link && Number(k.value) > 0 ? html`<dd class="jd-kpi__link">${listLink(ctx, k.link, '一覧を見る →', { cls: 'jl-link', hint: `${k.label} ${k.value}件` })}</dd>` : ''}
       </div>`,
     )}
   </dl>`;

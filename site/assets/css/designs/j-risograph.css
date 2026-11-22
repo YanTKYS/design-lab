@@ -45,17 +45,15 @@
 .ds-j-risograph .jr-btn--ghost { background: transparent; color: var(--jr-ink); border: 2px solid var(--jr-blue); box-shadow: none; }
 
 /* 表題：版ずれの見出し（青の上にピンクのずれ）、網点のにじみ */
-.ds-j-risograph .jl-hero { position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 26px; min-height: 150px; padding: 24px 0 18px; border-bottom: 3px solid var(--jr-blue); overflow: hidden; }
+/* 網点は表題の上の余白の帯（--jr-band）だけに刷る。見出し・件数・操作は帯の下に置き、網点と重ならない */
+.ds-j-risograph .jl-hero { --jr-band: 64px; position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 26px; min-height: 150px; padding: var(--jr-band) 0 18px; border-bottom: 3px solid var(--jr-blue); overflow: hidden; }
 .ds-j-risograph .jl-title { position: relative; z-index: 1; font-size: 60px; font-weight: 900; letter-spacing: 0.03em; line-height: 1.05; color: var(--jr-blue); }
-.ds-j-risograph .jl-title::before { content: attr(data-text); position: absolute; left: 4px; top: 3px; width: 100%; z-index: -1; color: var(--jr-pink); mix-blend-mode: multiply; } /* 見出しと同じ幅にして、同じ位置で折り返す */
+.ds-j-risograph .jl-title::before { content: attr(data-text) / ''; position: absolute; left: 4px; top: 3px; width: 100%; z-index: -1; color: var(--jr-pink); mix-blend-mode: multiply; } /* ピンクの版は飾り：代替テキストを空にして見出しの名前に入れない。見出しと同じ幅で、同じ位置で折り返す */
 .ds-j-risograph .jl-hero__count { position: relative; z-index: 1; font-size: 22px; font-weight: 900; }
 .ds-j-risograph .jl-hero__count b { font-size: 50px; line-height: 1; margin-right: 4px; color: var(--jr-blue); font-variant-numeric: tabular-nums; }
 .ds-j-risograph .jl-hero__count span { font-size: 15px; font-weight: 400; }
 .ds-j-risograph .jl-new { position: relative; z-index: 1; margin-left: auto; min-height: 42px; padding: 6px 22px; font-size: 15px; }
-.ds-j-risograph .jl-hero__dots { position: absolute; right: -40px; top: -70px; width: 460px; height: 280px; background: radial-gradient(circle, var(--jr-pink) 0 3.2px, transparent 3.6px) 0 0 / 10px 10px; -webkit-mask-image: radial-gradient(closest-side, #000 20%, transparent 100%); mask-image: radial-gradient(closest-side, #000 20%, transparent 100%); mix-blend-mode: multiply; opacity: 0.85; pointer-events: none; }
-.ds-j-risograph .jl-hero--list .jl-hero__dots { right: 120px; }
-.ds-j-risograph .jl-hero--form .jl-hero__dots { right: auto; left: 360px; top: auto; bottom: -150px; width: 220px; height: 220px; border-radius: 50%; -webkit-mask-image: none; mask-image: none; background-size: 8px 8px; }
-.ds-j-risograph .jl-hero--dashboard .jl-hero__dots { width: 300px; height: 200px; top: -60px; }
+.ds-j-risograph .jl-hero__dots { position: absolute; right: -30px; top: calc(var(--jr-band) * -0.8); width: 460px; height: calc(var(--jr-band) * 1.8 - 20px); /* 下端は帯の下端より 20px 上（大きな文字の字面は行の上へはみ出すため） */ background: radial-gradient(circle, var(--jr-pink) 0 3.2px, transparent 3.6px) 0 0 / 10px 10px; -webkit-mask-image: radial-gradient(closest-side, #000 25%, transparent 100%); mask-image: radial-gradient(closest-side, #000 25%, transparent 100%); mix-blend-mode: multiply; opacity: 0.85; pointer-events: none; }
 
 .ds-j-risograph .jl-notice { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-top: 14px; padding: 10px 16px; background: var(--jr-field); border: 2px solid var(--jr-blue); border-radius: 10px; }
 
@@ -223,7 +221,6 @@
   .ds-j-risograph .jd-kpi:nth-child(n + 3) { border-top: 2px dotted #8898c3; }
   .ds-j-risograph .jd-kpi__value b { font-size: 44px; }
   .ds-j-risograph .jd-grid { grid-template-columns: 1fr; gap: 22px; }
-  .ds-j-risograph .jl-hero--form .jl-hero__dots { left: auto; right: -60px; }
 }
 
 /* ---------- 狭い幅：表は行ごとに縦へ積み、列見出しは並べ替えの札の列にする ---------- */
@@ -233,11 +230,10 @@
   .ds-j-risograph .jl-nav ul { justify-content: space-between; gap: 0; }
   .ds-j-risograph .jl-nav a { font-size: 13px; padding: 3px 8px; }
   .ds-j-risograph .jl-top__user { margin-left: auto; }
-  .ds-j-risograph .jl-hero { gap: 6px 16px; min-height: 120px; padding-top: 16px; }
+  .ds-j-risograph .jl-hero { --jr-band: 48px; gap: 6px 16px; min-height: 120px; }
   .ds-j-risograph .jl-title { font-size: 38px; }
   .ds-j-risograph .jl-hero__count b { font-size: 38px; }
-  .ds-j-risograph .jl-hero__dots { width: 280px; height: 200px; right: -90px; opacity: 0.6; }
-  .ds-j-risograph .jl-hero--list .jl-hero__dots { right: -170px; top: -100px; } /* 件数の文字に掛けない */
+  .ds-j-risograph .jl-hero__dots { width: 260px; right: -40px; }
   .ds-j-risograph .jl-new { margin-left: 0; width: 100%; justify-content: center; }
   .ds-j-risograph .jr-steps { margin-left: 0; }
   .ds-j-risograph .jr-steps li { padding: 4px 10px; font-size: 14px; }

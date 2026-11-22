@@ -94,6 +94,13 @@ function row(r, open, ctx, model) {
     </tr>${open ? html`<tr class="jl-detail-row"><td colspan="6">${detail(model.detail, ctx)}</td></tr>` : ''}`;
 }
 
+/** 空の一覧の案内。その時点で画面にある解除の操作だけを挙げる。 */
+function emptyHint(model) {
+  const ops = [model.filtered && '「条件をクリア」', model.scope.active && '「引き継ぎを解除」'].filter(Boolean);
+  if (!ops.length) return '';
+  return model.filtered ? `キーワードを変えるか、${ops.join('か')}を選んでください。` : `${ops[0]}を選ぶと、すべての申請を表示します。`;
+}
+
 function listPage(model, ctx) {
   const detached = model.detail && !model.rows.some((r) => r.id === model.detail.id);
   return html`${tools(model, ctx)}
@@ -109,7 +116,7 @@ function listPage(model, ctx) {
       ? html`<table class="jl-table"><caption class="visually-hidden">申請一覧（${countText(model)}）。列見出しのボタンで並べ替えできます。</caption>
           <thead><tr>${model.columns.map(sortHead)}<th scope="col" class="jl-col-act"><span class="visually-hidden">操作</span></th></tr></thead>
           <tbody>${model.rows.map((r) => row(r, model.detail?.id === r.id, ctx, model))}</tbody></table>`
-      : html`<p class="jl-empty">条件に一致する申請はありません。キーワードを変えるか、「条件をクリア」を選んでください。</p>`}`;
+      : html`<p class="jl-empty">条件に一致する申請はありません。${emptyHint(model)}</p>`}`;
 }
 
 /* ---------- 登録 ---------- */
