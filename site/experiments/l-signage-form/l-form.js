@@ -78,7 +78,7 @@ function head(model) {
   return html`<div class="ls-row ls-head">
     <div class="ls-now">${dots(cur.number)}<span class="ls-now__label">${cur.label}</span><span class="ls-now__tag">現在</span>
       <span class="ls-vh">（手順 ${cur.number} / ${model.steps.length}）</span></div>
-    <div class="ls-titlebar"><h1 class="ls-title" id="ls-title" tabindex="-1">新規申請</h1><a class="ls-back" href="../../">← 申請一覧に戻る</a></div>
+    <div class="ls-titlebar"><h1 class="ls-title" id="ls-title" tabindex="-1">新規申請</h1><a class="ls-back" href="../l-signage-list/">← 申請一覧に戻る</a></div>
   </div>`;
 }
 
@@ -159,7 +159,7 @@ function doneView(model) {
       model,
       html`<button type="button" class="ls-btn ls-btn--ghost" data-action="form-restart">新しい申請を入力する</button>
         <span class="ls-connector" aria-hidden="true"></span>
-        <a class="ls-btn ls-btn--primary" href="../../">申請一覧へ<span class="ls-btn__arrow" aria-hidden="true">→</span></a>`,
+        <a class="ls-btn ls-btn--primary" href="../l-signage-list/">申請一覧へ<span class="ls-btn__arrow" aria-hidden="true">→</span></a>`,
     )}
   </div>`;
 }

@@ -83,7 +83,7 @@ function view(model) {
     return html`${tools()}${head(model)}
       <form class="jr-form" novalidate aria-label="新規申請フォーム">
         ${errors(model)}${sections(model, field)}
-        <div class="jr-actions"><a class="jr-back" href="../../">← 申請一覧に戻る</a><button type="submit" class="jr-btn">確認へ<span aria-hidden="true">→</span></button></div>
+        <div class="jr-actions"><a class="jr-back" href="../j-risograph-list/">← 申請一覧に戻る</a><button type="submit" class="jr-btn">確認へ<span aria-hidden="true">→</span></button></div>
       </form>`;
   }
   if (model.step === 'confirm') {
@@ -96,7 +96,7 @@ function view(model) {
     <section class="jr-section" aria-labelledby="poc-sheet-title"><h2 class="jr-chapter">受付の結果</h2>
       <div><p class="jr-done" id="poc-sheet-title" tabindex="-1">申請を受け付けました（試作）</p>
         <p class="jr-hint">これは比較用の試作です。入力内容は送信・保存されず、受付番号も発行されません。</p></div></section>
-    <div class="jr-actions"><button type="button" class="jr-btn jr-btn--ghost" data-action="form-restart">新しい申請を入力する</button><a class="jr-btn" href="../../">申請一覧へ<span aria-hidden="true">→</span></a></div>`;
+    <div class="jr-actions"><button type="button" class="jr-btn jr-btn--ghost" data-action="form-restart">新しい申請を入力する</button><a class="jr-btn" href="../j-risograph-list/">申請一覧へ<span aria-hidden="true">→</span></a></div>`;
 }
 
 startFormPoc({ app: document.getElementById('poc-app'), live: document.getElementById('poc-live'), view, title: '新規申請（二色刷り 試作）— Design Lab' });
