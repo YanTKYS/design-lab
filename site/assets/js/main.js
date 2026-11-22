@@ -157,6 +157,10 @@ function render() {
     pane.designId = design.id;
     pane.section.dataset.design = design.id;
     pane.section.setAttribute('aria-label', paneLabel(design, pane.index));
+    // 「設計上の特徴」の開閉は、再描画の直前に DOM から読む。details の toggle イベントは開閉の後に非同期で届くため、
+    // 開いた直後（toggle が届く前）に画面切替などで再描画すると、古い状態で閉じてしまうことがあった。
+    const traits = pane.head.querySelector('.pane__traits');
+    if (traits) pane.traitsOpen = traits.open;
     patch(pane.head, renderPaneHead(design, pane).toString());
 
     const ctx = {
@@ -356,10 +360,6 @@ function commitKeyword(value) {
 
 function bindPaneEvents(pane) {
   const { section, index } = pane;
-
-  section.addEventListener('toggle', (event) => {
-    if (event.target.matches('.pane__traits')) pane.traitsOpen = event.target.open;
-  }, true);
 
   // IME の変換中（isComposing）は状態を更新せず、確定（compositionend）で反映する。
   // 変換中に再描画して入力を壊さないため、入力中の欄は morph でも触らない。

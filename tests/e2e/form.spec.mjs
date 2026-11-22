@@ -306,12 +306,28 @@ test.describe('エラー・確認画面からの移動', () => {
   test('フォーム画面では「設計上の特徴」がフォーム用の観点に切り替わる', async ({ page }) => {
     await page.goto('?design=carbon');
     await pane(page).locator('summary').click();
-    await expect(pane(page).locator('.pane__trait-list')).toContainText('情報密度と余白');
-    await page.locator('#lab-screen').selectOption('form');
     const list = pane(page).locator('.pane__trait-list');
+    await expect(list).toBeVisible(); // 開いて読める状態から切り替える（内容が DOM にあるだけでは「開いた」ことにならない）
+    await expect(list).toContainText('情報密度と余白');
+    await page.locator('#lab-screen').selectOption('form');
     await expect(list).toBeVisible();
     for (const label of ['レイアウトと余白', 'ラベル・補足・必須表記', '入力エラー', '確認・操作']) await expect(list).toContainText(label);
     await expect(list).not.toContainText('情報密度と余白');
+  });
+
+  test('「設計上の特徴」を開いた直後に画面を切り替えても、開いたまま保つ', async ({ page }) => {
+    // details の toggle イベントは開閉の後に非同期で届く。開く操作と画面切替を同じタスクで行い、
+    // toggle が届く前に再描画しても閉じないことを確かめる（以前は CI で時々ここが閉じていた）。
+    await page.goto('?design=carbon');
+    await page.evaluate(() => {
+      document.querySelector('.pane__traits summary').click();
+      const screen = document.querySelector('#lab-screen');
+      screen.value = 'form';
+      screen.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    const list = pane(page).locator('.pane__trait-list');
+    await expect(list).toBeVisible();
+    await expect(list).toContainText('ラベル・補足・必須表記');
   });
 });
 
