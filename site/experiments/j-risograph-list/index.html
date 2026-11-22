@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>申請一覧（二色刷り 試作）— Design Lab</title>
+    <meta name="description" content="Design Lab の実験中の独立した試作。J「二色刷り」（仮称）の申請一覧を、比較サイトと同じ架空の71件で操作できる。" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="j-list.css" />
+    <script type="module" src="j-list.js"></script>
+  </head>
+  <body>
+    <div class="jl-experiment" role="note" aria-label="試作について">
+      <p><strong>実験中の独立した試作「二色刷り」（仮称・J案）の申請一覧。</strong>検証用の架空データ（71件）で、正式な比較デザインではありません。検索条件や選択はページを閉じると消え、申請の更新や送信はしません。</p>
+      <p class="jl-experiment__links"><a href="../../">比較サイトへ戻る</a><a href="https://github.com/YanTKYS/design-lab/blob/main/docs/design-exploration-3/README.md">一覧の原案（GitHub）</a></p>
+    </div>
+    <header class="jl-top">
+      <span class="jl-top__org">さくら野市</span>
+      <span class="jl-top__system">申請管理システム</span>
+      <nav class="jl-nav" aria-label="メインメニュー">
+        <ul>
+          <li><a href="./" aria-current="page">申請一覧</a></li>
+          <li><a href="../j-risograph-form/">新規申請</a></li>
+          <li><a href="../../?screen=dashboard">ダッシュボード</a></li>
+          <li><span class="jl-nav__off" title="この試作にはありません">設定</span></li>
+        </ul>
+      </nav>
+      <span class="jl-top__user">審査担当 A</span>
+    </header>
+    <main class="jl-main" id="poc-app">
+      <noscript><p>この試作の表示には JavaScript が必要です。</p></noscript>
+    </main>
+    <div class="jl-vh" id="poc-live" aria-live="polite"></div>
+  </body>
+</html>

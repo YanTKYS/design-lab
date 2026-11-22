@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>申請一覧（汀線 試作）— Design Lab</title>
+    <meta name="description" content="Design Lab の実験中の独立した試作。H′「汀線」（仮称）の申請一覧を、比較サイトと同じ架空の71件で操作できる。" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="k-list.css" />
+    <script type="module" src="k-list.js"></script>
+  </head>
+  <body>
+    <div class="kl-experiment" role="note" aria-label="試作について">
+      <p><strong>実験中の独立した試作「汀線」（仮称・K案）の申請一覧。</strong>検証用の架空データ（71件）で、正式な比較デザインではありません。検索条件や選択はページを閉じると消え、申請の更新や送信はしません。</p>
+      <p class="kl-experiment__links"><a href="../../">比較サイトへ戻る</a><a href="https://github.com/YanTKYS/design-lab/blob/main/docs/design-exploration-4/README.md">一覧の原案（GitHub）</a></p>
+    </div>
+    <header class="kl-top">
+      <svg class="kl-top__mark" width="24" height="22" viewBox="0 0 24 22" aria-hidden="true" focusable="false"><path d="M1 21V9C6 3 14 1 23 1v7C15 8 8 10 5 21z" fill="currentColor" /></svg>
+      <span class="kl-top__org">さくら野市</span>
+      <span class="kl-top__system">申請管理システム</span>
+      <nav class="kl-nav" aria-label="メインメニュー">
+        <ul>
+          <li><a href="./" aria-current="page">申請一覧</a></li>
+          <li><a href="../k-shoreline-form/">新規申請</a></li>
+          <li><a href="../../?screen=dashboard">ダッシュボード</a></li>
+          <li><span class="kl-nav__off" title="この試作にはありません">設定</span></li>
+        </ul>
+      </nav>
+      <span class="kl-top__user">審査担当 A</span>
+    </header>
+    <main class="kl-main" id="poc-app">
+      <noscript><p>この試作の表示には JavaScript が必要です。</p></noscript>
+    </main>
+    <div class="kl-vh" id="poc-live" aria-live="polite"></div>
+  </body>
+</html>
