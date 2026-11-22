@@ -178,7 +178,8 @@
 /* エラー：文字「エラー」と理由、欄の太い枠、章名の横の件数。色だけに頼らない */
 .ds-l-signage .ls-cell.is-invalid { box-shadow: inset 4px 0 0 var(--ls-error); }
 .ds-l-signage .ls-cell.is-invalid .ls-input { border: 2px solid var(--ls-error); }
-.ds-l-signage .ls-cell.is-invalid .ls-checkbox { outline: 2px solid var(--ls-error); outline-offset: 2px; }
+.ds-l-signage .ls-cell.is-invalid .ls-checkbox { box-shadow: 0 0 0 2px var(--ls-cell), 0 0 0 4px var(--ls-error); } /* エラーは赤い輪（外枠ではなく影）にし、フォーカスの外枠と重ねない */
+.ds-l-signage .ls-cell.is-invalid .ls-checkbox:focus-visible { outline: 3px solid var(--ls-focus); outline-offset: 6px; } /* 赤い輪の外に生成りの外枠 */
 .ds-l-signage .ls-field-error { display: flex; align-items: baseline; gap: 8px; margin-top: 6px; color: var(--ls-error); font-size: 14px; }
 .ds-l-signage .ls-field-error__mark, .ds-l-signage .ls-alert__tag span { flex: none; display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; border: 1.5px solid currentColor; border-radius: 50%; font-size: 12px; font-weight: 700; }
 .ds-l-signage .ls-alert .ls-rail { padding-top: 18px; }
@@ -357,4 +358,19 @@
   .ds-l-signage .ls-actions { gap: 10px; padding: 12px 16px 16px; }
   .ds-l-signage .ls-connector { display: none; }
   .ds-l-signage .ls-actions .ls-btn { width: 100%; }
+}
+
+/* ---------- 強制カラー（Windows のハイコントラストなど） ----------
+   ページの色が置き換わると、目盛りの点灯と消灯、ドット文字の点灯が見分けられなくなる。
+   装飾として描いている目盛りとドット文字だけ自動の置き換えを止め、システム色で点灯（塗り）と消灯（枠・薄い点）を描き分ける。
+   本文・入力欄・操作は強制カラーのまま。選んだ区画・行・処理待ちの区分は、背景色の代わりに強調色の枠でも示す。 */
+@media (forced-colors: active) {
+  .ds-l-signage :is(.ld-ticks, .l-dots) { forced-color-adjust: none; }
+  .ds-l-signage .ld-ticks i { background: Canvas; border: 1px solid CanvasText; }
+  .ds-l-signage .ld-ticks i.on { background: CanvasText; }
+  .ds-l-signage .l-dots .on { fill: CanvasText !important; opacity: 1 !important; }
+  .ds-l-signage .l-dots .off { fill: CanvasText !important; opacity: 0.18 !important; }
+  .ds-l-signage .ll-cell input:checked + .ll-cell__face { border: 3px solid Highlight; }
+  .ds-l-signage .ll-table tr.is-open td { border-top: 2px solid Highlight; border-bottom: 2px solid Highlight; }
+  .ds-l-signage :is(.ld-kpi--pending, .ld-group--pending .ld-group__label, .ls-now) { border: 2px solid Highlight; }
 }
