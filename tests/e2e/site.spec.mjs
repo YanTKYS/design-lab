@@ -7,6 +7,8 @@ const pane = (page, index = 0) => page.locator('section.pane').nth(index);
 const rows = (scope) => scope.locator('.pane__root [data-id]');
 const keyword = (scope) => scope.locator('[data-bind="keyword"]');
 const query = (page) => new URL(page.url()).searchParams;
+// 昇順で並べている列。表のデザインは列見出しの aria-sort、表を使わないデザイン（折本）は並べ替えボタンの data-sorted
+const sortedAsc = (scope) => scope.locator('th[aria-sort="ascending"], [data-sorted="ascending"]');
 
 async function setStatus(scope, value) {
   const control = scope.locator('[data-bind="status"]').first();
@@ -48,7 +50,7 @@ test.describe('各デザインの表示と機能', () => {
       await expect(rows(p).first()).toHaveAttribute('data-id', LOWEST_ID);
       expect(query(page).get('sort')).toBe('id');
       expect(query(page).get('order')).toBe('asc');
-      await expect(p.locator('th[aria-sort="ascending"]')).toHaveCount(1);
+      await expect(sortedAsc(p)).toHaveCount(1);
     });
 
     test(`${id}: 詳細表示とフォーカスの復帰`, async ({ page }) => {
@@ -107,7 +109,7 @@ test('デザインを切り替えても検索条件・並び・詳細を維持�
     await expect(p).toHaveAttribute('data-design', id);
     await expect(keyword(p)).toHaveValue('補助金');
     await expect(rows(p)).toHaveCount(countOf({ keyword: '補助金', status: 'reviewing' }));
-    await expect(p.locator('th[aria-sort="ascending"]')).toContainText('申請者');
+    await expect(sortedAsc(p)).toContainText('申請者');
   }
 
   await p.locator('[data-action="open-detail"][data-id="2026-01033"]').click();
@@ -192,6 +194,8 @@ async function openDetailAndGoBack(page, id) {
   const p = pane(page);
   const open = p.locator('[data-action="open-detail"]').nth(DETAIL_ROW);
   const rowId = await open.getAttribute('data-id');
+  // 見開き送りのデザイン（折本）は、その行のある見開きまで送る
+  while (!(await open.isVisible())) await p.locator('[data-action="set-ui"][data-key="page"]').first().click();
   await open.scrollIntoViewIfNeeded();
   await open.click();
   await expect.poll(() => query(page).get('detail')).toBe(rowId);
@@ -296,7 +300,8 @@ test.describe('主要な画面幅でレイアウトが破綻しない', () => {
 const MENU = '[data-action="toggle-ui"][aria-controls]:not([aria-controls$="banner"])';
 
 test.describe('狭い幅：メニューから移動するとメニューが閉じる', () => {
-  for (const id of DESIGNS.filter((d) => d !== 'plain')) {
+  // Plain と折本は、狭い幅でもメニューを開閉せず常に表示する
+  for (const id of DESIGNS.filter((d) => !['plain', 'h-prime'].includes(d))) {
     test(id, async ({ page }) => {
       await page.goto(`?design=${id}&width=375`);
       const p = pane(page);

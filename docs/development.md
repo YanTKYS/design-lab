@@ -101,6 +101,7 @@ tests/
 | `data-action="new"`, `"nav" data-target="…"`, `"dismiss-notice"` | 新規申請（入力フォームへ）、ナビゲーション、通知を閉じる |
 | `data-action="clear"`, `"clear-keyword"` | キーワードと処理状態のクリア／キーワードのみクリア |
 | `data-action="toggle-ui" data-key="…"` | メニュー開閉などデザイン内だけの一時状態（`ctx.ui[key]`） |
+| `data-action="set-ui" data-key="…" data-value="…"` | デザイン内だけの一時状態に値を入れる（例：折本の見開きの番号。値は文字列）。任意の `data-then-focus="…"` で `[data-focus="…"]` へフォーカスを移し、`data-announce` の文言を読み上げる |
 | `<form data-form="entry" novalidate>` | 入力フォーム。送信で検証し、エラーがなければ確認へ進む |
 | `data-field="name"` など | フォームの入力部品（`control()` が付与）。入力値を共通の `form` に反映し、左右へ同期 |
 | `data-action="form-back"`, `"form-confirm"`, `"form-restart"` | 確認から編集へ戻る／申請する／続けて入力する（`form-back` は `data-goto-field` で戻り先の項目を指定可） |
@@ -114,6 +115,18 @@ tests/
 | `data-modal` | Esc で閉じ、Tab をダイアログ内で循環させる要素 |
 
 入力欄には必ず [`control()`](../site/assets/js/designs/form-control.js)を使い、ラベルと `id` / `for`、`aria-describedby`（補足・エラー）、`aria-invalid` を対応させます。ID は左右の画面で重複しないよう `ctx.uid` を接頭辞にします。オーバーレイは `position: fixed` で書けば、各画面の枠の中に表示されます。HTML に属性を直接書くときは、引用符を含む文字列を `${}` に渡さず [`attr()`](../site/assets/js/html.js) を使います（`html` ヘルパーは文字列をエスケープします）。
+
+### 独立した試作から移植するときの注意（折本で分かったこと）
+
+J・K・L など、`site/experiments/` の独立した試作を比較デザインへ移すときに確かめる点です。
+
+- 試作の `startListPoc` などの制御は持ち込まない。状態は共通の `state`（URL）と `form`、見た目だけの一時状態は `ctx.ui`（`toggle-ui` / `set-ui`）に置く。
+- 共通のテストは、一覧に**該当する申請がすべて DOM にある**こと（`[data-id]` と `open-detail` が1件に1つ）を前提にしている。ページ送りをするなら、ほかの見開きを `hidden` にして全件を置く（折本の方式）。
+- 処理状態の絞り込みは `data-bind="status"`（セレクトかラジオ）、並べ替えは `data-action="sort" data-key="…"`。表を使わない並べ替えでは、昇順の項目に `data-sorted="ascending"` を付ける（`th[aria-sort]` の代わりにテストが読む）。
+- 試作の独自の属性は共通の名前へ置き換える（例：`data-field-name` → `data-goto-field`、リセットは `aria-disabled` ではなく `data-action="reset-conditions"` と `disabled`）。
+- ダッシュボードの見出しは「申請処理ダッシュボード」。指標・状態・種別から一覧へは `listLink()`、一覧側の引き継ぎ条件の枠には `data-scope` を付ける。集計の定義（`d.definitions`）と基準日を画面に置く。
+- 試作の `:root` の変数は `.ds-<id>` へ、`@media` は `@container frame` へ移す。左右比較では1ペインが約600px になるため、狭い幅の組み方がそのまま使われる。
+- 狭い枠でもメニューを開閉しないデザインは、`tests/e2e/site.spec.mjs` の「狭い幅：メニューから移動するとメニューが閉じる」の対象から外す。
 
 ## 画面を追加する
 

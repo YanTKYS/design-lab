@@ -1,6 +1,6 @@
 // 実験中の独立した試作：H′・J・K・L（いずれも仮称）の4案×3画面の比較ハブ。
 // ハブから各案の一覧を開き、メニューで 一覧 → 新規申請 → ダッシュボード → 一覧 と同じ案の中を回り、
-// 各画面の「比較ハブ」から戻れることを、4案の小さなループで確かめる（9デザインの比較サイトへは移らない）。
+// 各画面の「比較ハブ」から戻れることを、4案の小さなループで確かめる（比較サイト本体へは移らない）。
 import { expect, test } from './fixtures.mjs';
 
 const DESIGNS = [
@@ -23,9 +23,9 @@ test('比較ハブ：12画面への入口と、各案の 一覧 → 新規申請
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('experiments/hjkl/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('4案×3画面の比較ハブ');
-  await expect(page.getByText('4案とも未採用の実験的なデザイン')).toBeVisible();
+  await expect(page.getByText('比較サイトへ登録する前に作った独立した試作')).toBeVisible();
   await expect(page.getByText('12画面はそれぞれ独立した試作')).toBeVisible();
-  await expect(page.getByRole('link', { name: '← 9デザインの比較サイトへ戻る' })).toHaveAttribute('href', '../../');
+  await expect(page.getByRole('link', { name: '← デザイン比較サイトへ戻る' })).toHaveAttribute('href', '../../');
 
   // 4×3 のリンクが、それぞれの案・画面の試作を指す
   const grid = page.locator('table.hb-grid');

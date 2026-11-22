@@ -561,6 +561,16 @@ function handleAction(action, el, pane) {
       panes[pane].ui[key] = !panes[pane].ui[key];
       render();
       break;
+    case 'set-ui': {
+      // デザイン内だけの一時状態に値を入れる（例：見開きの番号）。必要ならフォーカスの移動先と読み上げも指定できる。
+      // 再描画では同じ位置のボタンが再利用され、属性が次の操作用に書き換わるため、移動先と文言は描画の前に取っておく
+      const { thenFocus, announce: message } = el.dataset;
+      panes[pane].ui[key] = value;
+      render();
+      if (thenFocus) applyFocus({ pane, selector: `[data-focus="${thenFocus}"]` });
+      if (message) announce(message);
+      break;
+    }
     default:
       break;
   }

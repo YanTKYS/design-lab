@@ -9,7 +9,8 @@ import plain from './plain.js';
 import material3 from './material3.js';
 import astryx from './astryx.js';
 import okinawaThread from './okinawa-thread.js';
+import hPrime from './h-prime.js';
 
-export const DESIGNS = [dads, carbon, fluent, govuk, uswds, plain, material3, astryx, okinawaThread];
+export const DESIGNS = [dads, carbon, fluent, govuk, uswds, plain, material3, astryx, okinawaThread, hPrime];
 export const DESIGN_IDS = DESIGNS.map((d) => d.id);
 export const getDesign = (id) => DESIGNS.find((d) => d.id === id) ?? DESIGNS[0];
