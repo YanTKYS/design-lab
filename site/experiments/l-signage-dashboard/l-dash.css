@@ -100,7 +100,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ld-empty { padding: 18px 10px; text-align: center !important; color: var(--ls-muted); }
 
 /* 1目盛り＝1件の点灯 */
-.ld-ticks { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 2px; }
+.ld-ticks { display: grid; grid-template-columns: repeat(var(--n), minmax(3px, 1fr)); gap: 2px; } /* 1目盛りは最低 3px：列が狭くても0幅にしない */
 .ld-ticks i { height: 10px; background: #3a3f38; }
 .ld-ticks i.on { background: #c9cdc2; }
 .ld-table--types .ld-ticks { max-width: 140px; margin-left: auto; }
@@ -125,5 +125,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .ld-dots { height: 26px; width: calc(var(--w) * 26px / 7); }
   .ld-table th, .ld-table td { padding: 6px; }
   .ld-table .ld-group__label { width: auto; padding: 6px; font-size: 13px; white-space: nowrap; }
-  .ld-table--types .ld-ticks { max-width: 70px; }
+  /* 種別名が長くても目盛りの列幅を確保する（15目盛り×4px＋間 1px） */
+  .ld-table--types .ld-ticks { width: 74px; max-width: none; gap: 1px; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
 }

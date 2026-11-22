@@ -12,6 +12,12 @@ export function conditionFields(d, prefix) {
     <button type="button" class="${prefix}-reset" data-action="reset" aria-disabled="${String(d.isDefault)}">既定に戻す</button>`;
 }
 
+/**
+ * 割合（受付総数に対する構成比）を棒の長さ 0〜1 にする。共通モデルの tenths（0.1% 単位、0件なら null）をそのまま使い、
+ * 隣に出す割合の文字（shareText）と同じ尺度にする。共通モデルの types[].ratio は「最多の種別＝1」なので棒には使わない。
+ */
+export const shareRatio = (item) => (item.tenths == null ? 0 : item.tenths / 1000);
+
 /** 状態の記号（色に頼らない手がかり）。 */
 export const STATUS_MARK = { received: '○', reviewing: '◐', returned: '△', approved: '●', rejected: '×' };
 

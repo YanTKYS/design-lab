@@ -9,7 +9,7 @@ import { aggregate, buildDashboardModel, percentText } from '../../site/assets/j
 import { APPLICATIONS } from '../../site/assets/js/data.js';
 import { view as hView } from '../../site/experiments/h-prime-dashboard/h-dash-view.js';
 import { view as jView } from '../../site/experiments/j-risograph-dashboard/j-dash-view.js';
-import { curve, view as kView } from '../../site/experiments/k-shoreline-dashboard/k-dash-view.js';
+import { curve, points, view as kView } from '../../site/experiments/k-shoreline-dashboard/k-dash-view.js';
 import { view as lView } from '../../site/experiments/l-signage-dashboard/l-dash-view.js';
 
 const VIEWS = [
@@ -83,7 +83,7 @@ for (const [name, v] of VIEWS) {
 test('汀線（K）: 月別の曲線は、隣り合う2か月の値の範囲からはみ出さない', () => {
   for (const c of CONDITIONS) {
     const d = buildDashboardModel(c);
-    const pts = d.months.map((m, i) => ({ x: ((i + 0.5) / d.months.length) * 100, y: 12 + m.ratio * 66 }));
+    const pts = points(d.months);
     const path = curve(pts);
     const segments = [...path.matchAll(/C([\d. -]+)/g)].map((m) => m[1].trim().split(/\s+/).map(Number));
     assert.equal(segments.length, pts.length - 1);
@@ -93,5 +93,25 @@ test('汀線（K）: 月別の曲線は、隣り合う2か月の値の範囲か�
       const [lo, hi] = [Math.min(a, b) - 0.01, Math.max(a, b) + 0.01];
       for (const y of [c1y, c2y]) assert.ok(y >= lo && y <= hi, `${c.period}/${c.dept || '全課'} ${i}〜${i + 1}か月目: ${y} が ${lo}〜${hi} の外`);
     });
+  }
+});
+
+for (const [name, v] of VIEWS.slice(0, 3)) {
+  test(`${name}: 申請種別の棒は、隣の割合と同じ「受付総数に対する構成比」で描く`, () => {
+    const width = (out, type) => out.match(new RegExp(`<th scope="row">${type}</th><td><span[^>]*><i style="width:([\\d.]+)%`))?.[1];
+    assert.equal(width(render(v, buildDashboardModel({ period: 'fy', dept: '' })), '住民票の写し等交付申請'), '18.3'); // 13件／71件
+    assert.equal(width(render(v, buildDashboardModel({ period: 'q2', dept: '市民課' })), '住民票の写し等交付申請'), '100.0'); // 8件／8件
+  });
+}
+
+test('汀線（K）: 0件の月は点・縦の線・面を基準線に置き、件数に比例して立ち上げる', () => {
+  const d = buildDashboardModel({ period: 'fy', dept: '都市計画課' });
+  const out = render(kView, d);
+  const zero = d.months.filter((m) => m.count === 0);
+  assert.ok(zero.length > 0, 'この条件には0件の月がある');
+  for (const m of d.months) {
+    const y = Number(out.match(new RegExp(`--y:([\\d.]+)%"[^>]*>(?:(?!</li>).)*data-month="${m.key}"`, 's'))?.[1]);
+    assert.ok(Math.abs(y - m.ratio * 78) < 0.01, `${m.key}: ${y}`);
+    if (m.count === 0) assert.equal(y, 0, `${m.key} は基準線`);
   }
 });

@@ -2,7 +2,7 @@
 // 青の版に数値と棒、ピンクの版は版ずれ・網点の飾りに限る。値はすべて buildDashboardModel のまま表示する。
 
 import { html } from '../../assets/js/html.js';
-import { STATUS_MARK, conditionFields } from '../shared/dashboard-parts.js';
+import { STATUS_MARK, conditionFields, shareRatio } from '../shared/dashboard-parts.js';
 
 const bar = (ratio) => html`<span class="jd-mini" aria-hidden="true"><i style="width:${(ratio * 100).toFixed(1)}%"></i></span>`;
 
@@ -12,7 +12,7 @@ const table = (caption, head, rows, empty) => html`<table class="jd-table"><capt
 
 export function view(d) {
   const statusRows = d.statuses.map((s) => html`<tr><th scope="row"><span aria-hidden="true">${STATUS_MARK[s.value]} </span>${s.label}</th><td>${bar(s.ratio)}</td><td class="jd-num" data-status="${s.value}">${s.count}</td><td class="jd-num jd-share" data-status-share="${s.value}">${s.shareText}</td></tr>`);
-  const typeRows = d.types.map((t) => html`<tr><th scope="row">${t.type}</th><td>${bar(t.ratio)}</td><td class="jd-num" data-type-count="${t.type}">${t.count}</td><td class="jd-num jd-share" data-type-share="${t.type}">${t.shareText}</td></tr>`);
+  const typeRows = d.types.map((t) => html`<tr><th scope="row">${t.type}</th><td>${bar(shareRatio(t))}</td><td class="jd-num" data-type-count="${t.type}">${t.count}</td><td class="jd-num jd-share" data-type-share="${t.type}">${t.shareText}</td></tr>`);
   return html`
     <div class="jd-head">
       <div><h1 class="jd-title" data-text="ダッシュボード">ダッシュボード</h1><p class="jd-ref">基準日　${d.refDate}<span>${d.period.rangeText}・${d.dept || 'すべての担当課'}</span></p></div>

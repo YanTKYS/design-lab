@@ -79,5 +79,12 @@ for (const poc of POCS) {
     await page.setViewportSize({ width: 375, height: 812 });
     await expectKpis(page, DEFAULT);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+    // 標示盤：375px でも種別の目盛りが見える（1目盛り＝1件。13件と12件を点灯数で比べられる）
+    const typeTicks = page.locator('.ld-table--types tbody tr').first().locator('.ld-ticks i');
+    if (await typeTicks.count()) {
+      const widths = await typeTicks.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
+      expect(Math.min(...widths)).toBeGreaterThan(1);
+      await expect(page.locator('.ld-table--types tbody tr').first().locator('.ld-ticks i.on')).toHaveCount(13);
+    }
   });
 }

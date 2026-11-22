@@ -2,12 +2,15 @@
 // 月別は、月ごとの点・縦の目盛り線・件数で離散値を示し、滑らかな線と面は推移の目安として淡く添える。値は buildDashboardModel のまま。
 
 import { html, raw } from '../../assets/js/html.js';
-import { STATUS_MARK, conditionFields } from '../shared/dashboard-parts.js';
+import { STATUS_MARK, conditionFields, shareRatio } from '../shared/dashboard-parts.js';
 
 const bar = (ratio) => html`<span class="kd-mini" aria-hidden="true"><i style="width:${(ratio * 100).toFixed(1)}%"></i></span>`;
 
-/** 月の点の位置（横は各月の列の中央、縦は件数の比）。 */
-const points = (months) => months.map((m, i) => ({ x: ((i + 0.5) / months.length) * 100, y: 12 + m.ratio * 66, m }));
+/**
+ * 月の点の位置（横は各月の列の中央、縦は件数に比例）。0件の月は基準線（y=0）に置き、点・縦の線・面がそこから立ち上がる。
+ * 最多の月を 78%（上に件数を書く余白を残す）とする比例の目盛りで、底上げはしない。
+ */
+export const points = (months) => months.map((m, i) => ({ x: ((i + 0.5) / months.length) * 100, y: m.ratio * 78, m }));
 
 /**
  * 点を通る滑らかな曲線（単調3次補間：Fritsch–Carlson）。SVG の座標は上が 0。
@@ -63,7 +66,7 @@ const table = (caption, head, rows, empty) => html`<table class="kd-table"><capt
 
 export function view(d) {
   const statusRows = d.statuses.map((s) => html`<tr><th scope="row"><span aria-hidden="true">${STATUS_MARK[s.value]} </span>${s.label}</th><td>${bar(s.ratio)}</td><td class="kd-num" data-status="${s.value}">${s.count}</td><td class="kd-num kd-share" data-status-share="${s.value}">${s.shareText}</td></tr>`);
-  const typeRows = d.types.map((t) => html`<tr><th scope="row">${t.type}</th><td>${bar(t.ratio)}</td><td class="kd-num" data-type-count="${t.type}">${t.count}</td><td class="kd-num kd-share" data-type-share="${t.type}">${t.shareText}</td></tr>`);
+  const typeRows = d.types.map((t) => html`<tr><th scope="row">${t.type}</th><td>${bar(shareRatio(t))}</td><td class="kd-num" data-type-count="${t.type}">${t.count}</td><td class="kd-num kd-share" data-type-share="${t.type}">${t.shareText}</td></tr>`);
   return html`
     <div class="kd-hero">
       <div class="kd-hero__text">
