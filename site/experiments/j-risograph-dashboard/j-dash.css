@@ -1,0 +1,107 @@
+/* J「二色刷り」（仮称）ダッシュボードの試作。青の版に数値と棒、ピンクの版は版ずれと網点の飾り。 */
+:root {
+  --jd-paper: #f3eee2;
+  --jd-blue: #2948a0;     /* 青の版：文字・罫・操作 */
+  --jd-ink: #23397f;      /* 本文の青（紙の上で 9:1 程度） */
+  --jd-muted: #4c5a8c;
+  --jd-pink: #ff579b;     /* ピンクの版：飾り */
+  --jd-pink-soft: #fac4db;
+  --jd-field: #fffdf8;
+  --jd-font: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--jd-paper); color: var(--jd-ink); font: 15px/1.6 var(--jd-font); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.jd-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--jd-ink); outline-offset: 3px; box-shadow: 0 0 0 7px #fff3c0; }
+
+.jd-experiment { padding: 8px 44px; background: #e9e2d2; font-size: 13px; }
+.jd-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.jd-experiment a { color: var(--jd-ink); }
+
+.jd-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 0 44px; min-height: 54px; border-bottom: 2px solid var(--jd-blue); }
+.jd-top__org { font-size: 20px; font-weight: 900; }
+.jd-top__system { font-size: 13px; }
+.jd-nav { margin-left: auto; }
+.jd-nav ul { display: flex; gap: 6px; }
+.jd-nav a, .jd-nav__off { display: block; padding: 3px 12px; border-radius: 999px; color: var(--jd-ink); font-size: 14px; text-decoration: none; }
+.jd-nav a[aria-current] { background: var(--jd-blue); color: var(--jd-paper); font-weight: 900; box-shadow: 3px 2px 0 var(--jd-pink); }
+.jd-nav__off { color: #7581a8; }
+.jd-top__user { margin-left: 28px; font-size: 14px; }
+
+.jd-main { max-width: 1280px; margin: 0 auto; padding: 22px 40px 48px; }
+.jd-num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.jd-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 24px; padding-bottom: 20px; }
+.jd-title { position: relative; z-index: 1; font-size: 56px; font-weight: 900; line-height: 1.15; color: var(--jd-blue); white-space: nowrap; }
+.jd-title::before { content: attr(data-text); position: absolute; left: 4px; top: 4px; z-index: -1; color: var(--jd-pink); mix-blend-mode: multiply; }
+.jd-ref { margin-top: 6px; font-size: 14px; }
+.jd-ref span { display: block; font-size: 13px; color: var(--jd-muted); }
+.jd-cond { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.jd-cond__field label { display: block; font-size: 13px; font-weight: 900; margin-bottom: 4px; }
+.jd-cond select { min-height: 38px; min-width: 12em; padding: 4px 14px; background: var(--jd-field); color: var(--jd-ink); border: 2px solid var(--jd-blue); border-radius: 999px; font-weight: 700; }
+.jd-reset { min-height: 38px; padding: 4px 16px; background: var(--jd-blue); color: var(--jd-paper); border: 0; border-radius: 999px; font-weight: 900; box-shadow: 3px 3px 0 var(--jd-pink); cursor: pointer; }
+.jd-reset[aria-disabled="true"] { background: transparent; color: #7581a8; border: 2px solid #b4bedc; box-shadow: none; }
+
+/* 指標：上下の青い罫、点線の区切り、最初の指標の背に網点 */
+.jd-kpis { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 3px solid var(--jd-blue); border-bottom: 3px solid var(--jd-blue); overflow: hidden; }
+/* 網点は数値・説明の文字に掛からない位置（最初の指標の右上、上の罫で切れる）に置き、文字はつねに網点より上に描く */
+.jd-kpis__dots { position: absolute; left: 212px; top: -30px; width: 88px; height: 88px; border-radius: 50%; background: radial-gradient(circle, var(--jd-pink) 0 2.4px, transparent 2.8px) 0 0 / 7px 7px; }
+.jd-kpi { position: relative; z-index: 1; padding: 12px 18px 14px; }
+.jd-kpi + .jd-kpi { border-left: 2px dotted #8898c3; }
+.jd-kpi dt { font-size: 16px; font-weight: 900; }
+.jd-kpi__value { margin: 0; font-size: 18px; font-weight: 700; }
+.jd-kpi__value b { font-size: 50px; font-weight: 900; line-height: 1.1; margin-right: 4px; color: var(--jd-blue); font-variant-numeric: tabular-nums; }
+.jd-kpi__note { margin: 0; font-size: 13px; }
+
+/* 月別：青い棒にピンクのずれた縁 */
+.jd-months { display: grid; grid-template-columns: 210px minmax(0, 1fr); margin-top: 22px; border-top: 2px solid var(--jd-blue); border-bottom: 2px solid var(--jd-blue); }
+.jd-months__head { padding: 22px 0; border-right: 2px dotted #8898c3; }
+.jd-months__head p { font-size: 13px; color: var(--jd-muted); }
+.jd-chapter { display: inline-block; font-size: 20px; font-weight: 900; color: var(--jd-blue); }
+.jd-chapter::after { content: ''; display: inline-block; width: 34px; height: 6px; margin-left: 12px; vertical-align: middle; background: radial-gradient(circle, var(--jd-pink) 0 1.6px, transparent 2px) 0 0 / 5px 6px; }
+.jd-cols { --jd-bar-max: 72px; display: flex; align-items: flex-end; justify-content: space-around; padding: 14px 18px 8px; }
+.jd-cols li { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
+.jd-cols b { line-height: 1.2; font-size: 18px; font-weight: 900; color: var(--jd-blue); }
+.jd-cols__track { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: calc(var(--jd-bar-max) + 28px); } /* 件数は棒の真上に置く（読み上げは月の後の「○件」） */
+.jd-cols__bar { height: calc(var(--r) * var(--jd-bar-max)); margin-top: 4px; width: 38px; background: var(--jd-blue); box-shadow: 3px 0 0 var(--jd-pink); }
+.jd-cols__label { margin-top: 2px; font-size: 13px; font-weight: 900; }
+
+.jd-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 32px; margin-top: 22px; align-items: start; }
+.jd-grid .jd-chapter { margin: 8px 0 10px; }
+.jd-card { padding: 4px 14px 12px; background: var(--jd-field); border: 2px solid var(--jd-blue); border-radius: 12px; box-shadow: 4px 4px 0 var(--jd-pink); }
+.jd-table { width: 100%; border-collapse: collapse; }
+.jd-table th, .jd-table td { padding: 8px 6px; border-bottom: 2px dotted #b4bedc; text-align: left; font-weight: 400; }
+.jd-table thead th { font-size: 12px; color: var(--jd-muted); border-bottom: 1px solid var(--jd-blue); }
+.jd-table td.jd-num { font-weight: 900; }
+.jd-table .jd-num { text-align: right; white-space: nowrap; }
+.jd-table td.jd-share { font-weight: 400; }
+.jd-mini { display: block; width: 72px; height: 6px; background: #dcd8e4; }
+.jd-mini i { display: block; height: 100%; background: var(--jd-blue); box-shadow: 1px 1px 0 var(--jd-pink); }
+.jd-empty { padding: 18px 6px; text-align: center !important; }
+
+@media (max-width: 759px) {
+  .jd-experiment, .jd-top { padding-left: 16px; padding-right: 16px; }
+  .jd-nav { order: 1; width: 100%; margin: 4px 0 8px; }
+  .jd-nav ul { justify-content: space-between; gap: 0; }
+  .jd-nav a, .jd-nav__off { font-size: 13px; padding: 3px 8px; }
+  .jd-top__user { margin-left: auto; }
+  .jd-main { padding: 14px 16px 32px; }
+  .jd-title { font-size: 36px; }
+  .jd-cond, .jd-cond__field, .jd-cond select { width: 100%; }
+  .jd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jd-kpi:nth-child(odd) { border-left: 2px dotted #8898c3; }
+  .jd-kpi:nth-child(even) { border-left: 0; }
+  .jd-kpi:nth-child(n + 4) { border-top: 2px dotted #8898c3; }
+  .jd-kpis__dots { left: 108px; width: 56px; height: 56px; top: -26px; }
+  .jd-kpi__value b { font-size: 38px; }
+  .jd-months { grid-template-columns: 1fr; }
+  .jd-months__head { padding: 12px 0 0; border-right: 0; }
+  .jd-cols { padding: 10px 0 8px; }
+  .jd-cols__bar { width: 22px; }
+  .jd-cols b { font-size: 15px; }
+  .jd-grid { grid-template-columns: 1fr; gap: 22px; }
+  .jd-mini { width: 48px; }
+}
