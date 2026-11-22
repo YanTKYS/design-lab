@@ -1,0 +1,129 @@
+/* L「標示盤」（仮称）ダッシュボードの試作。ドット文字の盤面、1目盛り＝1件の点灯、処理待ちを琥珀で結ぶ。 */
+:root {
+  --ls-ground: #202321;   /* ページの地 */
+  --ls-gap: #191c19;      /* 区画の継ぎ目 */
+  --ls-rail: #282d28;     /* 左の列（章名） */
+  --ls-cell: #262a27;     /* 右の列（入力欄の区画） */
+  --ls-bar: #30342f;      /* 表題の帯 */
+  --ls-foot-l: #2e332e;
+  --ls-foot-r: #252925;
+  --ls-field: #343a34;    /* 入力欄 */
+  --ls-field-line: #858f7f;
+  --ls-field-under: #a5ae9e;
+  --ls-rule: #495146;     /* 区画の中の罫 */
+  --ls-text: #f1efe5;
+  --ls-muted: #a6aba2;
+  --ls-amber: #f4b741;    /* 現在の手順・主操作 */
+  --ls-amber-line: #d79f3d;
+  --ls-ink: #24251f;      /* 琥珀の上の文字 */
+  --ls-error: #ff9f8f;    /* エラーの文字と枠（暗い地の上） */
+  --ls-focus: #fffaf0;
+  --ls-top: #efeee6;
+  --ls-font: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', '游ゴシック', 'Noto Sans JP', Meiryo, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--ls-ground); color: var(--ls-text); font: 15px/1.6 var(--ls-font); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.ls-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* フォーカス：琥珀（現在地・主操作）と混同しない、生成りの外枠 */
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--ls-focus); outline-offset: 2px; }
+
+/* ---------- 試作の注記と上部の帯 ---------- */
+
+.ls-experiment { padding: 8px 44px; background: #3b3f38; color: #e6e4da; font-size: 13px; }
+.ls-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.ls-experiment a { color: #ffe0a3; }
+
+.ls-top { background: var(--ls-top); color: #2a2b27; }
+.ls-top__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 0 14px; padding: 0 44px; min-height: 50px; }
+.ls-top__mark { color: #2a2b27; }
+.ls-top__org { font-size: 19px; font-weight: 700; }
+.ls-top__system { font-size: 14px; }
+.ls-nav { margin-left: 34px; }
+.ls-nav ul { display: flex; gap: 26px; }
+.ls-nav a, .ls-nav__off { display: block; padding: 13px 0 11px; color: #2a2b27; font-size: 14px; text-decoration: none; border-bottom: 3px solid transparent; }
+.ls-nav a:hover { text-decoration: underline; }
+.ls-nav a[aria-current] { font-weight: 700; border-bottom-color: #272928; }
+.ls-nav__off { color: #6b6c66; }
+.ls-top__user { margin-left: auto; font-size: 14px; }
+
+:root { --ls-font: 'BIZ UDPGothic', 'BIZ UDPゴシック', 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', '游ゴシック', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif; --ld-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Noto Sans Mono CJK JP', monospace; }
+.ls-main { max-width: 1280px; margin: 0 auto; padding: 0 40px 48px; }
+.ld-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ld-num { text-align: right; font-family: var(--ld-mono); font-variant-numeric: tabular-nums; }
+
+.ld-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 24px; padding: 26px 0 18px; }
+.ld-title { font-size: 50px; font-weight: 700; line-height: 1.15; }
+.ld-ref { margin-top: 6px; font-size: 14px; }
+.ld-ref span { display: block; font-size: 13px; color: var(--ls-muted); }
+.ld-cond { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.ld-cond__field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.ld-cond select { min-height: 38px; min-width: 12em; padding: 4px 10px; background: #2b2f2a; color: var(--ls-text); border: 1px solid var(--ls-field-line); }
+.ld-reset { min-height: 38px; padding: 4px 14px; background: transparent; color: var(--ls-amber); border: 1px solid var(--ls-amber); font-weight: 700; cursor: pointer; }
+.ld-reset[aria-disabled="true"] { color: #7d837a; border-color: #4e554b; }
+
+/* 盤面：4指標。処理待ちは琥珀（下の処理状態の区分と同じ色） */
+.ld-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin: 0; padding: 6px 0; border-top: 3px solid #bcc1b2; border-bottom: 3px solid #bcc1b2; }
+.ld-kpi { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 10px; padding: 12px 14px 10px; background: var(--ls-bar); border: 1px solid #454b43; }
+.ld-kpi dt { font-size: 17px; font-weight: 700; }
+.ld-kpi__value { display: flex; align-items: flex-end; gap: 4px; margin: 0; }
+.ld-dots { height: 34px; width: calc(var(--w) * 34px / 7); }
+.ld-dots .on { fill: #d5d9cf; }
+.ld-dots .off { fill: #d5d9cf; opacity: .1; }
+.ld-kpi__unit { font-size: 14px; }
+.ld-kpi__note { grid-column: 1 / -1; margin: 0; padding-top: 8px; border-top: 1px solid #5b6258; font-size: 12.5px; }
+.ld-kpi--pending { background: var(--ls-amber); color: var(--ls-ink); border-color: var(--ls-amber); }
+.ld-kpi--pending .ld-dots .on, .ld-kpi--pending .ld-dots .off { fill: var(--ls-ink); }
+.ld-kpi--pending .ld-kpi__note { border-color: rgba(36, 37, 31, .35); }
+
+.ld-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 22px; margin-top: 22px; align-items: start; }
+.ld-col { display: grid; gap: 18px; }
+.ld-sec__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 6px 12px; background: var(--ls-bar); box-shadow: inset 4px 0 0 #bcc1b2; }
+.ld-sec__head h2 { font-size: 18px; }
+.ld-sec__head p { font-size: 12px; color: var(--ls-muted); }
+.ld-table { width: 100%; border-collapse: collapse; }
+.ld-table th, .ld-table td { padding: 6px 10px; border-bottom: 1px solid #3a4038; text-align: left; font-weight: 400; vertical-align: middle; }
+.ld-table thead th { font-size: 12px; color: var(--ls-muted); }
+.ld-table td.ld-num { font-weight: 700; }
+.ld-table .ld-num { text-align: right; white-space: nowrap; }
+.ld-table td.ld-share { font-weight: 400; color: var(--ls-muted); }
+.ld-table--months th[scope="row"] { width: 3.5em; }
+.ld-table--months td.ld-num { width: 3em; font-size: 16px; }
+.ld-group__label { width: 6.5em; font-weight: 700 !important; text-align: center !important; border-right: 1px solid #3a4038; }
+.ld-group--pending .ld-group__label { background: var(--ls-amber); color: var(--ls-ink); }
+.ld-group--done .ld-group__label { background: #3a3f38; }
+.ld-table--types tbody tr:nth-child(odd) { background: #262a26; }
+.ld-empty { padding: 18px 10px; text-align: center !important; color: var(--ls-muted); }
+
+/* 1目盛り＝1件の点灯 */
+.ld-ticks { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 2px; }
+.ld-ticks i { height: 10px; background: #3a3f38; }
+.ld-ticks i.on { background: #c9cdc2; }
+.ld-table--types .ld-ticks { max-width: 140px; margin-left: auto; }
+.ld-table--types .ld-ticks i { height: 8px; }
+
+@media (max-width: 999px) {
+  .ls-main { padding: 0 24px 40px; }
+  .ls-experiment, .ls-top__inner { padding-left: 24px; padding-right: 24px; }
+  .ld-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ld-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 759px) {
+  .ls-main { padding: 0 16px 32px; }
+  .ls-experiment, .ls-top__inner { padding-left: 16px; padding-right: 16px; }
+  .ls-nav { order: 1; width: 100%; margin-left: 0; }
+  .ls-nav ul { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 0; }
+  .ls-nav a, .ls-nav__off { padding: 8px 0; font-size: 13px; }
+  .ld-title { font-size: 34px; }
+  .ld-cond, .ld-cond__field, .ld-cond select { width: 100%; }
+  .ld-kpi { grid-template-columns: 1fr; padding: 10px; }
+  .ld-kpi dt { font-size: 14px; }
+  .ld-dots { height: 26px; width: calc(var(--w) * 26px / 7); }
+  .ld-table th, .ld-table td { padding: 6px; }
+  .ld-table .ld-group__label { width: auto; padding: 6px; font-size: 13px; white-space: nowrap; }
+  .ld-table--types .ld-ticks { max-width: 70px; }
+}

@@ -1,0 +1,110 @@
+/* H′「折本」（仮称）ダッシュボードの試作。右端の受付件数から左へ折本の面で指標を並べ、縦組みの章題で集計を区切る。 */
+:root {
+  --hd-ground: #fbf8ee;
+  --hd-ink: #2e2430;
+  --hd-deep: #391e37;      /* 表題 */
+  --hd-grape: #542240;     /* 葡萄色：帯・主操作・現在地 */
+  --hd-muted: #6c5a69;
+  --hd-page-r: #e2d4dd;    /* 右頁（先に読む） */
+  --hd-page-l: #eee5e8;    /* 左頁 */
+  --hd-field: #fffdf6;
+  --hd-line: #a38a9b;
+  --hd-rule: #baaaba;
+  --hd-error: #a31f1b;
+  --hd-mincho: 'BIZ UDPMincho', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif;
+  --hd-gothic: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--hd-ground); color: var(--hd-ink); font: 15px/1.6 var(--hd-gothic); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.hd-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--hd-grape); outline-offset: 3px; box-shadow: 0 0 0 6px rgba(84, 34, 64, .18); }
+
+.hd-experiment { padding: 8px 44px; background: #efe6e9; font-size: 13px; color: var(--hd-muted); }
+.hd-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.hd-experiment a { color: var(--hd-grape); }
+
+.hd-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 0 44px; min-height: 54px; border-bottom: 1px solid var(--hd-line); }
+.hd-top__mark { color: var(--hd-grape); }
+.hd-top__org { font-family: var(--hd-mincho); font-size: 20px; font-weight: 700; color: var(--hd-deep); }
+.hd-top__system { font-size: 13px; }
+.hd-nav { margin-left: 36px; }
+.hd-nav ul { display: flex; gap: 26px; }
+.hd-nav a, .hd-nav__off { display: block; padding: 15px 0 12px; color: var(--hd-ink); font-size: 14px; text-decoration: none; border-bottom: 3px solid transparent; }
+.hd-nav a[aria-current] { font-weight: 700; border-bottom-color: var(--hd-grape); }
+.hd-nav__off { color: #8a7c88; }
+.hd-top__user { margin-left: auto; font-size: 14px; }
+
+.hd-main { max-width: 1280px; margin: 0 auto; padding: 22px 40px 48px; }
+.hd-num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* 表題と集計条件 */
+.hd-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 24px; padding-bottom: 20px; }
+.hd-title { font-family: var(--hd-mincho); font-size: 56px; font-weight: 700; line-height: 1.15; letter-spacing: .04em; color: var(--hd-deep); }
+.hd-ref { margin-top: 6px; font-size: 14px; }
+.hd-ref span { display: block; font-size: 13px; color: var(--hd-muted); }
+.hd-cond { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.hd-cond__field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.hd-cond select { min-height: 38px; min-width: 12em; padding: 4px 10px; background: #fffdf6; border: 1px solid var(--hd-line); border-radius: 0; }
+.hd-reset { min-height: 38px; padding: 4px 14px; background: transparent; color: var(--hd-grape); border: 1.5px solid var(--hd-grape); font-weight: 700; cursor: pointer; }
+.hd-reset[aria-disabled="true"] { color: #a99aa6; border-color: #d6c9d1; }
+
+/* 指標：右端の受付件数から左へ。上辺は綴じへ向かう折り目のように交互に傾く */
+.hd-dir { text-align: right; font-size: 12px; color: var(--hd-muted); margin-bottom: 4px; }
+.hd-kpis { display: flex; flex-direction: row-reverse; margin: 0; }
+.hd-kpi { position: relative; flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 0 12px; padding: 34px 18px 16px 20px; background: var(--hd-page-l); border-left: 1px solid #c9b7c4; clip-path: polygon(0 12px, 100% 0, 100% 100%, 0 100%); }
+.hd-kpi:nth-child(even) { background: var(--hd-page-r); clip-path: polygon(0 0, 100% 12px, 100% 100%, 0 100%); }
+.hd-kpi--total { background: var(--hd-grape) !important; color: #fbf3f0; }
+.hd-kpi__title { grid-column: 2; grid-row: 1 / span 2; writing-mode: vertical-rl; font-family: var(--hd-mincho); font-size: 20px; font-weight: 700; letter-spacing: .06em; line-height: 1.15; }
+.hd-kpi__value { grid-column: 1; grid-row: 1; margin: 0; font-family: var(--hd-mincho); font-size: 18px; }
+.hd-kpi__value b { font-size: 58px; font-weight: 500; line-height: 1.1; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.hd-kpi__note { grid-column: 1; grid-row: 2; margin: 0; font-size: 13px; align-self: end; }
+.hd-kpi--total :is(.hd-kpi__title, .hd-kpi__value) { color: #fbf3f0; }
+
+/* 集計の区画：右端に縦組みの章題 */
+.hd-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; margin-top: 22px; }
+.hd-col { display: grid; gap: 22px; align-content: start; }
+.hd-sec { display: grid; grid-template-columns: minmax(0, 1fr) 40px; gap: 0 10px; padding-top: 10px; border-top: 2px solid var(--hd-deep); }
+.hd-sec__title { writing-mode: vertical-rl; font-family: var(--hd-mincho); font-size: 20px; font-weight: 700; letter-spacing: .06em; line-height: 1.15; color: var(--hd-deep); }
+.hd-cols { --hd-bar-max: 110px; display: flex; align-items: flex-end; justify-content: space-around; height: 160px; padding: 0 6px; border-bottom: 1px solid var(--hd-line); }
+.hd-cols li { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1; min-width: 0; }
+.hd-cols b { font-family: var(--hd-mincho); font-size: 18px; line-height: 1.2; }
+.hd-cols__track { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: calc(var(--hd-bar-max) + 28px); } /* 件数は棒の真上に置く（読み上げは月の後の「○件」） */
+.hd-cols__bar { height: calc(var(--r) * var(--hd-bar-max)); margin-top: 4px; width: 20px; background: #9a6a85; }
+.hd-cols__label { position: relative; top: 4px; height: 0; font-size: 13px; }
+.hd-axis { display: flex; justify-content: space-between; margin-top: 22px; font-size: 12px; color: var(--hd-muted); }
+.hd-table { width: 100%; border-collapse: collapse; }
+.hd-table th, .hd-table td { padding: 8px 6px; border-bottom: 1px solid var(--hd-line); text-align: left; font-weight: 400; }
+.hd-table thead th { font-size: 12px; color: var(--hd-muted); }
+.hd-table tbody th { font-size: 14.5px; }
+.hd-table td.hd-num { font-weight: 700; }
+.hd-table .hd-num { text-align: right; white-space: nowrap; }
+.hd-table td.hd-share { font-weight: 400; color: var(--hd-muted); }
+.hd-mini { display: block; width: 72px; height: 6px; background: #e5d8e1; }
+.hd-mini i { display: block; height: 100%; background: #6d2c52; }
+.hd-empty { padding: 18px 6px; text-align: center !important; color: var(--hd-muted); }
+
+/* 狭い幅：指標は上から（受付件数が先頭）、章題は右端の縦組みのまま */
+@media (max-width: 759px) {
+  .hd-experiment, .hd-top { padding-left: 16px; padding-right: 16px; }
+  .hd-nav { order: 1; width: 100%; margin-left: 0; }
+  .hd-nav ul { justify-content: space-between; gap: 0; }
+  .hd-nav a, .hd-nav__off { padding: 8px 0; font-size: 13px; }
+  .hd-main { padding: 14px 16px 32px; }
+  .hd-title { font-size: 38px; }
+  .hd-cond, .hd-cond__field, .hd-cond select { width: 100%; }
+  .hd-dir { display: none; }
+  .hd-kpis { flex-direction: column; }
+  .hd-kpi { padding: 22px 14px 12px; clip-path: polygon(0 8px, 100% 0, 100% 100%, 0 100%); border-left: 0; border-top: 1px solid #c9b7c4; }
+  .hd-kpi:nth-child(even) { clip-path: polygon(0 0, 100% 8px, 100% 100%, 0 100%); }
+  .hd-kpi__value b { font-size: 46px; }
+  .hd-kpi__title { font-size: 17px; }
+  .hd-grid { grid-template-columns: 1fr; }
+  .hd-sec { grid-template-columns: minmax(0, 1fr) 30px; }
+  .hd-sec__title { font-size: 17px; }
+  .hd-cols__bar { width: 16px; }
+  .hd-cols b { font-size: 15px; }
+  .hd-mini { width: 48px; }
+}

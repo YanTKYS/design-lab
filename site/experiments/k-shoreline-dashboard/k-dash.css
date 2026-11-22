@@ -1,0 +1,124 @@
+/* K「汀線」（仮称）ダッシュボードの試作。淡い緑の面と曲線。月別は点と件数で離散値を示し、曲線は目安として淡く添える。 */
+:root {
+  --kd-ground: #f8f9f1;
+  --kd-hero: #f5f4eb;
+  --kd-rail: #d6e7da;      /* 章名の面（陸） */
+  --kd-area: #f3f6ee;      /* 入力欄の面（水際の内側） */
+  --kd-ink: #193f3c;
+  --kd-deep: #1d4a44;
+  --kd-green: #1f5e52;     /* 主操作・現在地 */
+  --kd-muted: #4d6762;
+  --kd-line: #9fb7ab;
+  --kd-sep: #b7c9bd;
+  --kd-field: #fffefa;
+  --kd-error: #a5361f;
+  --kd-mincho: 'BIZ UDPMincho', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif;
+  --kd-gothic: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--kd-ground); color: var(--kd-ink); font: 15px/1.6 var(--kd-gothic); overflow-wrap: anywhere; }
+h1, h2, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.kd-vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible, [data-focus-ring]:focus { outline: 3px solid var(--kd-green); outline-offset: 3px; box-shadow: 0 0 0 6px rgba(31, 94, 82, .18); }
+
+.kd-experiment { padding: 8px 44px; background: #e6eee6; font-size: 13px; color: var(--kd-muted); }
+.kd-experiment__links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.kd-experiment a { color: var(--kd-green); }
+
+.kd-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 0 44px; min-height: 54px; border-bottom: 1px solid #8ba99c; }
+.kd-top__mark { color: var(--kd-green); }
+.kd-top__org { font-size: 20px; font-weight: 700; }
+.kd-top__system { font-size: 13px; }
+.kd-nav { margin-left: 36px; }
+.kd-nav ul { display: flex; gap: 26px; }
+.kd-nav a, .kd-nav__off { display: block; padding: 15px 0 12px; color: var(--kd-ink); font-size: 14px; text-decoration: none; border-bottom: 3px solid transparent; }
+.kd-nav a[aria-current] { font-weight: 700; border-bottom-color: var(--kd-green); }
+.kd-nav__off { color: #7f928d; }
+.kd-top__user { margin-left: auto; font-size: 14px; }
+
+.kd-link { padding: 0; background: none; border: 0; color: var(--kd-green); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.kd-mono, .kd-id, .kd-date, .kd-detail__id { font-family: ui-monospace, 'SFMono-Regular', Consolas, 'Noto Sans Mono CJK JP', monospace; }
+
+.kd-num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* 表題の段：表題・基準日・集計条件、右に等高線の装飾 */
+.kd-hero { display: flex; justify-content: space-between; min-height: 150px; background: var(--kd-hero); border-bottom: 1px solid #8ba99c; overflow: hidden; }
+.kd-hero__text { padding: 22px 40px 18px; }
+.kd-hero__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 22px; }
+.kd-title { font-family: var(--kd-mincho); font-size: 52px; font-weight: 700; line-height: 1.15; color: var(--kd-deep); }
+.kd-ref { font-size: 14px; }
+.kd-ref span { margin-left: 12px; font-size: 13px; color: var(--kd-muted); }
+.kd-cond { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 12px; }
+.kd-cond__field { display: flex; align-items: center; gap: 8px; }
+.kd-cond__field label { font-size: 13px; font-weight: 700; }
+.kd-cond select { min-height: 38px; min-width: 11em; padding: 4px 10px; background: var(--kd-field); border: 1px solid var(--kd-line); color: var(--kd-ink); }
+.kd-reset { min-height: 38px; padding: 4px 14px; background: transparent; color: var(--kd-green); border: 1.5px solid var(--kd-green); font-weight: 700; cursor: pointer; }
+.kd-reset[aria-disabled="true"] { color: #8fa39c; border-color: #c8d6cc; }
+.kd-hero__art { display: block; flex: none; height: 150px; width: auto; }
+
+.kd-body { max-width: 1280px; margin: 0 auto; padding: 18px 40px 48px; }
+.kd-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 14px 0; background: #e6efe8; border-top: 1px solid var(--kd-line); border-bottom: 1px solid var(--kd-line); }
+.kd-kpi { padding: 4px 18px; }
+.kd-kpi + .kd-kpi { border-left: 1px solid var(--kd-line); }
+.kd-kpi dt { font-family: var(--kd-mincho); font-size: 18px; font-weight: 700; }
+.kd-kpi__value { margin: 0; font-family: var(--kd-mincho); font-size: 18px; }
+.kd-kpi__value b { font-size: 50px; font-weight: 400; line-height: 1.15; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.kd-kpi__note { margin: 0; font-size: 13px; color: var(--kd-muted); }
+
+.kd-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; margin-top: 22px; align-items: start; }
+.kd-col { display: grid; gap: 22px; }
+.kd-sec__head { display: flex; align-items: baseline; justify-content: space-between; padding: 0 6px 8px; border-bottom: 1px solid var(--kd-line); }
+.kd-sec__head h2 { font-family: var(--kd-mincho); font-size: 21px; }
+.kd-sec__head p { font-size: 13px; color: var(--kd-muted); }
+.kd-panel { padding: 14px 14px 10px; background: #e3eee6; border-top: 4px solid #5f8f7f; }
+
+/* 月別：滑らかな線と面は淡い目安、点・縦の線・件数が各月の値 */
+.kd-chart { position: relative; height: 170px; margin: 6px 0 0; }
+.kd-chart__shore { position: absolute; left: 0; right: 0; top: 0; height: 140px; width: 100%; }
+.kd-chart__area { fill: #cfe3d6; }
+.kd-chart__contour { fill: none; stroke: #b2d1bf; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.kd-chart__line { fill: none; stroke: #6c9e8c; stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.kd-chart__points { position: absolute; inset: 0; }
+.kd-chart__points li { position: absolute; bottom: 30px; height: 140px; width: 0; } /* 線（SVG）と同じ高さで点を置く */
+.kd-chart__stem { position: absolute; left: -0.5px; bottom: 0; width: 1px; height: var(--y); background: #8bb3a3; }
+.kd-chart__dot { position: absolute; left: -5px; bottom: calc(var(--y) - 5px); width: 10px; height: 10px; border-radius: 50%; background: #1f5e52; box-shadow: 0 0 0 2px #f8f9f1; }
+.kd-chart__points b { position: absolute; left: 50%; bottom: calc(var(--y) + 8px); transform: translateX(-50%); font-family: var(--kd-mincho); font-size: 18px; line-height: 1; white-space: nowrap; }
+.kd-chart__month { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 6px; font-size: 13px; white-space: nowrap; }
+.kd-chart::after { content: ''; position: absolute; left: 0; right: 0; bottom: 30px; border-bottom: 1px solid var(--kd-line); }
+.kd-note { margin-top: 4px; font-size: 12px; color: var(--kd-muted); }
+
+.kd-table { width: 100%; border-collapse: collapse; }
+.kd-table th, .kd-table td { padding: 8px 6px; border-bottom: 1px solid #c6d4ca; text-align: left; font-weight: 400; }
+.kd-table thead th { font-size: 12px; color: var(--kd-muted); }
+.kd-table td.kd-num { font-weight: 700; }
+.kd-table .kd-num { text-align: right; white-space: nowrap; }
+.kd-table td.kd-share { font-weight: 400; color: var(--kd-muted); }
+.kd-mini { display: block; width: 72px; height: 6px; background: #d6e3da; }
+.kd-mini i { display: block; height: 100%; background: #3f7a6b; }
+.kd-empty { padding: 18px 6px; text-align: center !important; color: var(--kd-muted); }
+
+@media (max-width: 759px) {
+  .kd-experiment, .kd-top { padding-left: 16px; padding-right: 16px; }
+  .kd-nav { order: 1; width: 100%; margin-left: 0; }
+  .kd-nav ul { justify-content: space-between; gap: 0; }
+  .kd-nav a, .kd-nav__off { padding: 8px 0; font-size: 13px; }
+  .kd-hero { position: relative; }
+  .kd-hero__text { position: relative; z-index: 1; padding: 16px; width: 100%; }
+  .kd-hero__art { position: absolute; right: -260px; top: 0; height: 100%; opacity: .45; }
+  .kd-title { font-size: 36px; }
+  .kd-ref span { display: block; margin: 0; }
+  .kd-cond, .kd-cond__field { width: 100%; }
+  .kd-cond__field label { width: 4.5em; }
+  .kd-cond select { flex: 1; min-width: 0; }
+  .kd-body { padding: 14px 16px 32px; }
+  .kd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 10px; }
+  .kd-kpi { padding: 4px 12px; }
+  .kd-kpi:nth-child(odd) { border-left: 0; }
+  .kd-kpi__value b { font-size: 38px; }
+  .kd-grid { grid-template-columns: 1fr; }
+  .kd-chart__points b { font-size: 15px; }
+  .kd-chart__month { font-size: 12px; }
+  .kd-mini { width: 48px; }
+}
