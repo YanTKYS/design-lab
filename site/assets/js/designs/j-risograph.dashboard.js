@@ -1,0 +1,87 @@
+// 二色刷り：ダッシュボード。青の版に数値と棒、ピンクの版は版ずれ・網点の飾りに限る。
+// 集計・割合・一覧へ引き継ぐ条件は共通の dashboard.js（buildDashboardModel）と ctx.listHref を使う。
+// 状態別・種別別の細い棒は、隣に書く割合と同じ尺度（受付総数に対する構成比）で描く。
+import { html } from '../html.js';
+import { kpiMark, listLink, statusMark, statusShareMark, typeMark, typeShareMark } from './dash-common.js';
+import { STATUS_MARK } from './j-risograph.js';
+
+/** 割合（受付総数に対する構成比）を棒の長さ 0〜1 にする。共通モデルの tenths（0.1% 単位、0件なら null）をそのまま使う。 */
+const share = (item) => (item.tenths == null ? 0 : item.tenths / 1000);
+const bar = (ratio) => html`<span class="jd-mini" aria-hidden="true"><i style="width:${(ratio * 100).toFixed(1)}%"></i></span>`;
+
+function conditions(d, ctx) {
+  const select = (name, label, options) => html`<div class="jd-cond__field">
+    <label for="${ctx.uid}-jd-${name}">${label}</label>
+    <select id="${ctx.uid}-jd-${name}" data-bind="${name}">${options.map((o) => html`<option value="${o.value}" ${o.selected ? 'selected' : ''}>${o.label}</option>`)}</select>
+  </div>`;
+  return html`<div class="jd-head">
+    <div class="jd-ref">
+      <p>基準日　${d.refDate}</p>
+      <p class="jd-ref__scope">${d.scopeText}</p>
+      <details class="jd-defs">
+        <summary>集計の定義</summary>
+        <dl>${d.definitions.map((x) => html`<div><dt>${x.term}</dt><dd>${x.text}</dd></div>`)}</dl>
+        <p>基準日：${d.refDate}（架空のデータ）</p>
+      </details>
+    </div>
+    <div class="jd-cond" role="group" aria-label="集計条件">
+      ${select('period', '対象期間', d.periodOptions)}${select('dept', '担当課', d.deptOptions)}
+      <button type="button" class="jd-reset" data-action="reset-conditions" ${d.isDefault ? 'disabled' : ''}>リセット</button>
+    </div>
+  </div>`;
+}
+
+function kpis(d, ctx) {
+  return html`<dl class="jd-kpis" aria-label="受付と処理の概況">
+    ${d.kpis.map(
+      (k, i) => html`<div class="jd-kpi">
+        ${i === 0 ? html`<span class="jd-kpis__dots" aria-hidden="true"></span>` : ''}
+        <dt>${k.label}</dt>
+        <dd class="jd-kpi__value"><b ${kpiMark(k.key)}>${k.value}</b>${k.unit}</dd>
+        <dd class="jd-kpi__note">${k.note}</dd>
+        ${k.link ? html`<dd class="jd-kpi__link">${listLink(ctx, k.link, '一覧を見る →', { cls: 'jl-link', hint: `${k.label} ${k.value}件` })}</dd>` : ''}
+      </div>`,
+    )}
+  </dl>`;
+}
+
+function months(d, ctx) {
+  return html`<section class="jd-months" aria-labelledby="${ctx.uid}-jd-months">
+    <div class="jd-months__head"><h3 class="jd-chapter" id="${ctx.uid}-jd-months">月別の受付件数</h3><p>単位　件</p></div>
+    <ol class="jd-cols" aria-label="月別の受付件数（${d.period.rangeText}）">${d.months.map(
+      (m) => html`<li><span class="jd-cols__track" aria-hidden="true"><b data-month="${m.key}">${m.count}</b><span class="jd-cols__bar" style="--r:${m.ratio.toFixed(4)}"></span></span><span class="jd-cols__label">${m.label}</span><span class="visually-hidden">${m.count}件</span></li>`,
+    )}</ol>
+  </section>`;
+}
+
+const tableHead = (head) => html`<thead><tr><th scope="col">${head}</th><th scope="col"><span class="visually-hidden">割合の棒</span></th><th scope="col" class="jd-num">件数</th><th scope="col" class="jd-num">割合</th></tr></thead>`;
+
+function statuses(d, ctx) {
+  return html`<section aria-labelledby="${ctx.uid}-jd-status"><h3 class="jd-chapter" id="${ctx.uid}-jd-status">処理状況の内訳</h3>
+    <table class="jd-table"><caption class="visually-hidden">処理状況の内訳</caption>${tableHead('処理状態')}
+      <tbody>${d.statuses.map(
+        (s) => html`<tr>
+          <th scope="row"><span aria-hidden="true">${STATUS_MARK[s.value]} </span>${s.count ? listLink(ctx, s.link, s.label, { cls: 'jl-link', hint: `${s.label} ${s.count}件の一覧` }) : s.label}</th>
+          <td>${bar(s.ratio)}</td><td class="jd-num" ${statusMark(s.value)}>${s.count}</td><td class="jd-num jd-share" ${statusShareMark(s.value)}>${s.shareText}</td>
+        </tr>`,
+      )}</tbody></table></section>`;
+}
+
+function types(d, ctx) {
+  return html`<section class="jd-card" aria-labelledby="${ctx.uid}-jd-types"><h3 class="jd-chapter" id="${ctx.uid}-jd-types">申請種別の内訳</h3>
+    <table class="jd-table"><caption class="visually-hidden">申請種別の内訳</caption>${tableHead('申請種別')}
+      <tbody>${d.types.length
+        ? d.types.map(
+            (t) => html`<tr>
+              <th scope="row">${listLink(ctx, t.link, t.type, { cls: 'jl-link', hint: `${t.type} ${t.count}件の一覧` })}</th>
+              <td>${bar(share(t))}</td><td class="jd-num" ${typeMark(t.type)}>${t.count}</td><td class="jd-num jd-share" ${typeShareMark(t.type)}>${t.shareText}</td>
+            </tr>`,
+          )
+        : html`<tr><td colspan="4" class="jd-empty">この条件に該当する申請はありません。</td></tr>`}</tbody></table></section>`;
+}
+
+export function dashboardPage(model, ctx) {
+  const d = model.dashboard;
+  return html`${conditions(d, ctx)}${kpis(d, ctx)}${months(d, ctx)}
+    <div class="jd-grid">${statuses(d, ctx)}${types(d, ctx)}</div>`;
+}
