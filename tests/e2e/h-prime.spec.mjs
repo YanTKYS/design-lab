@@ -24,6 +24,7 @@ test('折本：8件ずつの見開き送り、条件変更で1見開き目へ、
   const top = p.locator('.hp-panels:not([hidden]) [data-focus="page-top"]');
   await expect(top).toBeFocused(); // 新しい見開きの先頭の受付番号
   await expect(top).toContainText('2026-');
+  await expect(page.locator('#lab-live')).toHaveText('2見開き目を表示しています'); // 表示中の見開きと同じ番号を読み上げる
   expect(page.url()).toBe(url);
   await expect(visibleRows(p).first()).not.toHaveAttribute('data-id', first);
   await p.getByRole('button', { name: '前の8件 →' }).click();
