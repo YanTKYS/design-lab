@@ -32,8 +32,8 @@ function conditions(d, ctx) {
 }
 
 function kpis(d, ctx) {
-  return html`<p class="hd-dir" aria-hidden="true">指標は右端から ←</p>
-    <dl class="hd-kpis" aria-label="受付と処理の概況（右端の受付件数から）">
+  return html`<p class="hd-dir" aria-hidden="true">指標は右から左へ ←</p>
+    <dl class="hd-kpis" aria-label="受付と処理の概況">
       ${d.kpis.map(
         (k) => html`<div class="hd-kpi hd-kpi--${k.key}">
           <dt class="hd-kpi__title">${k.label}</dt>

@@ -94,9 +94,10 @@ function name(applicant) {
   return html`<span class="hp-name ${size}">${m ? html`<small>${m[1]}</small>` : ''}${main}</span>`;
 }
 
-function panel(r, open) {
+/** top：現在の見開きの先頭の面。見開きを送ったあとは、その受付番号へフォーカスを移す（縦に積む幅でも先頭が見える位置へ）。 */
+function panel(r, open, top = false) {
   return html`<li class="hp-panel ${open ? 'is-open' : ''}">
-    <p class="hp-panel__id"><small>受付番号</small>${r.id}</p>
+    <p class="hp-panel__id" ${attr('data-focus', top && 'page-top')} ${attr('tabindex', top && '-1')}><small>受付番号</small>${r.id}</p>
     <div class="hp-panel__tate">${name(r.applicant)}<span class="hp-type">${r.type}</span></div>
     <p class="hp-panel__st">${statusText(r.status)}</p>
     <p class="hp-panel__date"><small>受付日</small>${date(r.receivedAt)}</p>
@@ -167,8 +168,8 @@ function listPage(model, ctx) {
     ${model.rows.length
       ? html`<p class="hp-dir" aria-hidden="true"><span class="hp-dir--one">右から左へ読みます ←</span><span class="hp-dir--two">右から左・上の段から ←</span><span class="hp-dir--narrow">上から下へ ↓</span></p>
           ${groups.map(
-            (rows, i) => html`<ol class="hp-panels" ${i === page ? '' : 'hidden'} ${attr('data-focus', i === page && 'page-top')} ${attr('tabindex', i === page && '-1')} aria-label="申請（右から左へ、${i * PAGE_SIZE + 1}件目から）">
-              ${rows.map((r) => panel(r, model.detail?.id === r.id))}
+            (rows, i) => html`<ol class="hp-panels" ${i === page ? '' : 'hidden'} aria-label="申請（${i * PAGE_SIZE + 1}件目から）">
+              ${rows.map((r, j) => panel(r, model.detail?.id === r.id, i === page && j === 0))}
             </ol>`,
           )}
           ${onPage ? detail(model.detail, ctx) : ''}${pager({ page, pages }, model.rows.length)}`
@@ -200,7 +201,7 @@ export default {
     confirm: '同じ見開きのまま値を並べ、各項目の「修正」から元の欄へ戻る。確認事項は葡萄色の帯。主操作は葡萄色の塗り。',
   },
   dashboardTraits: {
-    kpi: '受付件数を右端の起点（葡萄色）に、処理待ち→処理完了→処理完了率と左へ読む。指標名は縦組み。各指標から同じ条件の一覧へ移れる。',
+    kpi: '受付件数を右端の起点（葡萄色）に、処理待ち→処理完了→処理完了率と左へ読む。中間の幅では2面ずつ2段（右上から）、狭い枠では縦に積む。指標名は縦組み。各指標から同じ条件の一覧へ移れる。',
     density: '指標は大きな明朝の数字の4面。集計の区画は罫と縦組みの章題で区切り、表は行間を詰めない。',
     chart: '月別は左から右への時系列の縦棒で、件数を棒の真上に書く。状態・種別は件数・割合と、割合と同じ尺度（受付総数に対する構成比）の細い棒。',
     filter: '表題の右に対象期間・担当課のセレクトとリセット。基準日と集計の範囲は表題の下に文字で示す。',

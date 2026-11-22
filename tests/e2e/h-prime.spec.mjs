@@ -21,7 +21,9 @@ test('折本：8件ずつの見開き送り、条件変更で1見開き目へ、
   const url = page.url();
   await p.getByRole('button', { name: '← 次の8件' }).click();
   await expect(pageText(p)).toHaveText(`9〜16件目 ／ 2・${pages}見開き`);
-  await expect(p.locator('.hp-panels:not([hidden])')).toBeFocused();
+  const top = p.locator('.hp-panels:not([hidden]) [data-focus="page-top"]');
+  await expect(top).toBeFocused(); // 新しい見開きの先頭の受付番号
+  await expect(top).toContainText('2026-');
   expect(page.url()).toBe(url);
   await expect(visibleRows(p).first()).not.toHaveAttribute('data-id', first);
   await p.getByRole('button', { name: '前の8件 →' }).click();
@@ -41,4 +43,17 @@ test('折本：8件ずつの見開き送り、条件変更で1見開き目へ、
   await expect(pageText(p)).toContainText(`${pages}・${pages}見開き`);
   await p.locator('.hp-detail [data-action="close-detail"]').click();
   await expect(p.locator('[data-action="open-detail"][data-id="2026-00770"]')).toBeFocused();
+});
+
+test('折本 375px：見開きを送ると、新しい見開きの先頭（9件目）の受付番号が見える位置にフォーカスが移る', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('?design=h-prime');
+  const p = pane(page);
+  const next = p.getByRole('button', { name: '← 次の8件' });
+  await next.scrollIntoViewIfNeeded(); // 縦に積んだ8件の下にある
+  await next.click();
+  const top = p.locator('.hp-panels:not([hidden]) [data-focus="page-top"]');
+  await expect(top).toBeFocused();
+  await expect(top).toBeInViewport();
+  await expect(pageText(p)).toContainText('9〜16件目');
 });

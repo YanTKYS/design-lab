@@ -97,7 +97,7 @@
 /* 折本の面：右から左へ。上辺は交互に傾き、折り目のように連なる */
 .ds-h-prime .hp-panels { display: flex; flex-direction: row-reverse; }
 .ds-h-prime .hp-panels[hidden] { display: none; }
-.ds-h-prime .hp-panels:focus { outline-offset: 4px; }
+.ds-h-prime .hp-panel__id[tabindex='-1']:focus-visible { outline-offset: 2px; }
 .ds-h-prime .hp-panel { position: relative; display: grid; grid-template-rows: auto 1fr auto auto auto; flex: 0 0 12.5%; min-width: 0; padding: 26px 12px 12px; background: var(--hp-page-l); border-left: 1px solid #c9b7c4; clip-path: polygon(0 0, 100% 12px, 100% 100%, 0 100%); }
 .ds-h-prime .hp-panel:nth-child(even) { background: var(--hp-page-r); clip-path: polygon(0 12px, 100% 0, 100% 100%, 0 100%); }
 .ds-h-prime .hp-panel__id { font-family: var(--hp-mono); font-weight: 700; font-size: 13.5px; padding-bottom: 8px; border-bottom: 1px solid var(--hp-line); }
@@ -221,7 +221,7 @@
 .ds-h-prime .hd-kpi:nth-child(even) { background: var(--hp-page-r); clip-path: polygon(0 0, 100% 12px, 100% 100%, 0 100%); }
 .ds-h-prime .hd-kpi--total { background: var(--hp-grape) !important; color: var(--hp-light); }
 .ds-h-prime .hd-kpi__title { grid-column: 2; grid-row: 1 / span 2; writing-mode: vertical-rl; font-family: var(--hp-mincho); font-size: 20px; font-weight: 700; letter-spacing: 0.06em; line-height: 1.15; }
-.ds-h-prime .hd-kpi__value { grid-column: 1; grid-row: 1; font-family: var(--hp-mincho); font-size: 18px; }
+.ds-h-prime .hd-kpi__value { grid-column: 1; grid-row: 1; font-family: var(--hp-mincho); font-size: 18px; white-space: nowrap; } /* 73.2% や 100.0% を途中で折り返さない */
 .ds-h-prime .hd-kpi__value b { font-size: 54px; font-weight: 500; line-height: 1.1; margin-right: 4px; font-variant-numeric: tabular-nums; }
 .ds-h-prime .hd-kpi__note { grid-column: 1; grid-row: 2; align-self: end; font-size: 13px; }
 .ds-h-prime .hd-kpi__link { display: block; margin-top: 4px; }
@@ -260,7 +260,14 @@
   .ds-h-prime .hp-panel__tate { min-height: 220px; }
   .ds-h-prime .hp-dir--one { display: none; }
   .ds-h-prime .hp-dir--two { display: inline; }
-  .ds-h-prime .hd-kpi__value b { font-size: 44px; }
+  .ds-h-prime .hd-kpi__value b { font-size: 40px; }
+}
+
+/* 中間の狭い幅：指標は2面ずつ2段（右上の受付件数から左へ、次の段の右から。一覧の2段と同じ読み順） */
+@container frame (max-width: 939px) {
+  .ds-h-prime .hd-kpis { flex-wrap: wrap; }
+  .ds-h-prime .hd-kpi { flex: 1 1 50%; }
+  .ds-h-prime .hd-kpi__value b { font-size: 46px; }
 }
 
 /* ---------- 狭い幅：面を横組みの帯にして縦に積む（先頭が上）。見開きは右頁を先に縦へ積む ---------- */
