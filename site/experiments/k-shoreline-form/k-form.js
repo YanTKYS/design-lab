@@ -86,7 +86,7 @@ function view(model) {
     return html`${head(model)}<div class="ks-body">${tools()}
       <form class="ks-form" novalidate aria-label="新規申請フォーム">
         ${errors(model)}${panel(model, field)}
-        <div class="ks-actions"><a class="ks-back" href="../../">← 申請一覧に戻る</a><button type="submit" class="ks-btn">確認へ<span aria-hidden="true">→</span></button></div>
+        <div class="ks-actions"><a class="ks-back" href="../k-shoreline-list/">← 申請一覧に戻る</a><button type="submit" class="ks-btn">確認へ<span aria-hidden="true">→</span></button></div>
       </form></div>`;
   }
   if (model.step === 'confirm') {
@@ -101,7 +101,7 @@ function view(model) {
       html`<div class="ks-field is-wide"><p class="ks-done" id="poc-sheet-title" tabindex="-1">申請を受け付けました（試作）</p>
         <p class="ks-hint">これは比較用の試作です。入力内容は送信・保存されず、受付番号も発行されません。</p></div>`,
     )}</div>
-    <div class="ks-actions"><button type="button" class="ks-btn ks-btn--ghost" data-action="form-restart">新しい申請を入力する</button><a class="ks-btn" href="../../">申請一覧へ<span aria-hidden="true">→</span></a></div></div>`;
+    <div class="ks-actions"><button type="button" class="ks-btn ks-btn--ghost" data-action="form-restart">新しい申請を入力する</button><a class="ks-btn" href="../k-shoreline-list/">申請一覧へ<span aria-hidden="true">→</span></a></div></div>`;
 }
 
 startFormPoc({ app: document.getElementById('poc-app'), live: document.getElementById('poc-live'), view, title: '新規申請（汀線 試作）— Design Lab' });

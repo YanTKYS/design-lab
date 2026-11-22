@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>4案×3画面の比較ハブ（H′・J・K・L 試作）— Design Lab</title>
+    <meta name="description" content="Design Lab の実験中の独立した試作。H′・J・K・L（いずれも仮称）の申請一覧・新規申請・ダッシュボード、計12画面への入口。" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="hjkl.css" />
+  </head>
+  <body>
+    <header class="hb-head">
+      <p class="hb-head__back"><a href="../../">← 9デザインの比較サイトへ戻る</a></p>
+      <h1 class="hb-title">4案×3画面の比較ハブ</h1>
+      <p class="hb-lead">
+        独自デザイン H′・J・K・L（いずれも仮称）の申請一覧・新規申請・ダッシュボード、計12画面への入口です。行をたどると同じ案の3画面を、列をたどると同じ画面の4案を開けます。
+      </p>
+      <ul class="hb-notes">
+        <li><b>4案とも未採用の実験的なデザイン</b>です。9デザインの比較サイトには登録していません。並び順は案の名前の順で、順位や評価ではありません。</li>
+        <li><b>12画面はそれぞれ独立した試作</b>です。画面を移っても、フォームの入力内容・一覧の検索や絞り込み・ダッシュボードの集計条件は引き継ぎません。各画面のメニューは移動のためだけのリンクです。</li>
+        <li>データは比較サイトと同じ架空の71件です。申請の送信や更新はしません。「設定」画面はどの案にもありません。</li>
+      </ul>
+    </header>
+
+    <main class="hb-main">
+      <table class="hb-grid">
+        <caption class="hb-vh">4案×3画面の試作へのリンク（行：案、列：画面）</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="hb-grid__corner">案 ＼ 画面</th>
+            <th scope="col">申請一覧</th>
+            <th scope="col">新規申請</th>
+            <th scope="col">ダッシュボード</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hb-row hb-row--h" data-design="h-prime">
+            <th scope="row">
+              <span class="hb-sample" aria-hidden="true"><span class="hb-sample__mark"></span>さくら野市</span>
+              <span class="hb-name"><b>H′ 折本</b><span>縦組みの面を右から左へ、明朝と葡萄色</span></span>
+            </th>
+            <td><a href="../h-prime-list/">申請一覧<span class="hb-vh">（折本・H′）</span></a></td>
+            <td><a href="../h-prime-form/">新規申請<span class="hb-vh">（折本・H′）</span></a></td>
+            <td><a href="../h-prime-dashboard/">ダッシュボード<span class="hb-vh">（折本・H′）</span></a></td>
+          </tr>
+          <tr class="hb-row hb-row--j" data-design="j-risograph">
+            <th scope="row">
+              <span class="hb-sample" aria-hidden="true"><span class="hb-sample__mark"></span>さくら野市</span>
+              <span class="hb-name"><b>J 二色刷り</b><span>青とピンクの2版、版ずれと網点</span></span>
+            </th>
+            <td><a href="../j-risograph-list/">申請一覧<span class="hb-vh">（二色刷り・J）</span></a></td>
+            <td><a href="../j-risograph-form/">新規申請<span class="hb-vh">（二色刷り・J）</span></a></td>
+            <td><a href="../j-risograph-dashboard/">ダッシュボード<span class="hb-vh">（二色刷り・J）</span></a></td>
+          </tr>
+          <tr class="hb-row hb-row--k" data-design="k-shoreline">
+            <th scope="row">
+              <span class="hb-sample" aria-hidden="true"><span class="hb-sample__mark"></span>さくら野市</span>
+              <span class="hb-name"><b>K 汀線</b><span>淡い緑の面と水際の曲線</span></span>
+            </th>
+            <td><a href="../k-shoreline-list/">申請一覧<span class="hb-vh">（汀線・K）</span></a></td>
+            <td><a href="../k-shoreline-form/">新規申請<span class="hb-vh">（汀線・K）</span></a></td>
+            <td><a href="../k-shoreline-dashboard/">ダッシュボード<span class="hb-vh">（汀線・K）</span></a></td>
+          </tr>
+          <tr class="hb-row hb-row--l" data-design="l-signage">
+            <th scope="row">
+              <span class="hb-sample" aria-hidden="true"><span class="hb-sample__mark"></span>さくら野市</span>
+              <span class="hb-name"><b>L 標示盤</b><span>暗い盤面、ドット文字と琥珀</span></span>
+            </th>
+            <td><a href="../l-signage-list/">申請一覧<span class="hb-vh">（標示盤・L）</span></a></td>
+            <td><a href="../l-signage-form/">新規申請<span class="hb-vh">（標示盤・L）</span></a></td>
+            <td><a href="../l-signage-dashboard/">ダッシュボード<span class="hb-vh">（標示盤・L）</span></a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="hb-foot">
+        各画面の上部にある「4案×3画面の比較ハブ」からこのページへ戻れます。「比較サイトへ戻る」は9デザインの比較サイトへのリンクです。
+      </p>
+    </main>
+  </body>
+</html>

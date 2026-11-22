@@ -85,7 +85,7 @@ function view(model) {
       <form class="hp-form" novalidate aria-labelledby="hp-title-form">
         <span class="hp-vh" id="hp-title-form">新規申請フォーム</span>
         ${errors(model)}${book(model, field)}
-        <div class="hp-actions"><a class="hp-back" href="../../">← 申請一覧に戻る</a><button type="submit" class="hp-btn">確認へ<span aria-hidden="true">→</span></button></div>
+        <div class="hp-actions"><a class="hp-back" href="../h-prime-list/">← 申請一覧に戻る</a><button type="submit" class="hp-btn">確認へ<span aria-hidden="true">→</span></button></div>
       </form>`;
   }
   if (model.step === 'confirm') {
@@ -99,7 +99,7 @@ function view(model) {
       <div class="hp-page__body"><p class="hp-done" id="poc-sheet-title" tabindex="-1">申請を受け付けました（試作）</p>
         <p class="hp-hint">これは比較用の試作です。入力内容は送信・保存されず、受付番号も発行されません。</p></div>
       <p class="hp-page__title" aria-hidden="true">受付</p></section></div>
-    <div class="hp-actions"><button type="button" class="hp-btn hp-btn--ghost" data-action="form-restart">新しい申請を入力する</button><a class="hp-btn" href="../../">申請一覧へ<span aria-hidden="true">→</span></a></div>`;
+    <div class="hp-actions"><button type="button" class="hp-btn hp-btn--ghost" data-action="form-restart">新しい申請を入力する</button><a class="hp-btn" href="../h-prime-list/">申請一覧へ<span aria-hidden="true">→</span></a></div>`;
 }
 
 startFormPoc({ app: document.getElementById('poc-app'), live: document.getElementById('poc-live'), view, title: '新規申請（折本 試作）— Design Lab' });
