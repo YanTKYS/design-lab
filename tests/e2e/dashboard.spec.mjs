@@ -180,16 +180,17 @@ test.describe('各デザインのダッシュボード', () => {
   }
 });
 
-test('全デザインが同じ条件で同じ集計値を表示する', async ({ page }) => {
-  for (const c of CONDITIONS) {
+// 条件ごとに1つのテストに分ける（デザインが増えると1つのテストの時間が延び、並列実行で制限時間を超えていたため）
+for (const c of CONDITIONS) {
+  test(`全デザインが同じ条件で同じ集計値を表示する：${c.period}/${c.dept || '全課'}`, async ({ page }) => {
     const { a, values } = expectedOf(c);
     for (const id of DESIGNS) {
       await page.goto(urlOf(c, id));
       await expect(kpi(page, 'total')).toHaveText(String(a.total));
       expect(await readAll(page, 0, a), `${id} ${JSON.stringify(c)}`).toEqual(values);
     }
-  }
-});
+  });
+}
 
 test('画面の切り替え：一覧・フォームの状態を初期化せず、条件の変更は他の画面に影響しない', async ({ page }) => {
   await page.goto('?design=carbon');

@@ -300,8 +300,8 @@ test.describe('主要な画面幅でレイアウトが破綻しない', () => {
 const MENU = '[data-action="toggle-ui"][aria-controls]:not([aria-controls$="banner"])';
 
 test.describe('狭い幅：メニューから移動するとメニューが閉じる', () => {
-  // Plain・折本・二色刷りは、狭い幅でもメニューを開閉せず常に表示する
-  for (const id of DESIGNS.filter((d) => !['plain', 'h-prime', 'j-risograph'].includes(d))) {
+  // Plain・折本・二色刷り・汀線は、狭い幅でもメニューを開閉せず常に表示する
+  for (const id of DESIGNS.filter((d) => !['plain', 'h-prime', 'j-risograph', 'k-shoreline'].includes(d))) {
     test(id, async ({ page }) => {
       await page.goto(`?design=${id}&width=375`);
       const p = pane(page);

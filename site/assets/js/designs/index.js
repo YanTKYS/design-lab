@@ -11,7 +11,8 @@ import astryx from './astryx.js';
 import okinawaThread from './okinawa-thread.js';
 import hPrime from './h-prime.js';
 import jRisograph from './j-risograph.js';
+import kShoreline from './k-shoreline.js';
 
-export const DESIGNS = [dads, carbon, fluent, govuk, uswds, plain, material3, astryx, okinawaThread, hPrime, jRisograph];
+export const DESIGNS = [dads, carbon, fluent, govuk, uswds, plain, material3, astryx, okinawaThread, hPrime, jRisograph, kShoreline];
 export const DESIGN_IDS = DESIGNS.map((d) => d.id);
 export const getDesign = (id) => DESIGNS.find((d) => d.id === id) ?? DESIGNS[0];

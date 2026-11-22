@@ -1,0 +1,317 @@
+/* 汀線（独自デザイン・K案。名称は仮称）。すべて .ds-k-shoreline 配下に限定する。
+   淡い緑の面と曲線（汀線）で、情報のまとまりと選択を示す。表題の右の等高線は自作の装飾（assets/img/k-shore.svg）。
+   色値は独立した試作（site/experiments/k-shoreline-*）と同じ。幅の切り替えは比較ペインの幅（@container frame）で行う。
+   外部フォント・CDN は使わない。 */
+
+.ds-k-shoreline {
+  --k-ground: #f8f9f1;
+  --k-hero: #f5f4eb;
+  --k-rail: #d6e7da; /* 章名の面・選んだ行（陸） */
+  --k-area: #f3f6ee; /* 入力欄の面（水際の内側） */
+  --k-sea: #e3eee6; /* 詳細の面 */
+  --k-ink: #193f3c;
+  --k-deep: #1d4a44;
+  --k-green: #1f5e52; /* 主操作・現在地 */
+  --k-muted: #4d6762;
+  --k-line: #9fb7ab;
+  --k-sep: #b7c9bd;
+  --k-row: #c6d4ca;
+  --k-field: #fffefa;
+  --k-error: #a5361f;
+  --k-mincho: 'BIZ UDPMincho', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif;
+  --k-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Noto Sans Mono CJK JP', monospace;
+  --k-pad: 44px;
+  min-height: 100%;
+  background: var(--k-ground);
+  color: var(--k-ink);
+  font: 15px/1.6 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+  overflow-wrap: anywhere;
+  color-scheme: light;
+}
+.ds-k-shoreline *, .ds-k-shoreline *::before, .ds-k-shoreline *::after { box-sizing: border-box; }
+.ds-k-shoreline :is(h2, h3, p, ul, ol, dl, dd, fieldset) { margin: 0; }
+.ds-k-shoreline :is(ul, ol) { padding: 0; list-style: none; }
+.ds-k-shoreline fieldset { padding: 0; border: 0; min-width: 0; }
+.ds-k-shoreline :is(button, input, select, textarea) { font: inherit; color: inherit; }
+.ds-k-shoreline :focus-visible { outline: 3px solid var(--k-green); outline-offset: 3px; box-shadow: 0 0 0 6px rgba(31, 94, 82, 0.18); }
+.ds-k-shoreline [tabindex='-1']:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+
+/* ---------- 枠 ---------- */
+.ds-k-shoreline .kl-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; padding: 0 var(--k-pad); min-height: 54px; border-bottom: 1px solid #8ba99c; }
+.ds-k-shoreline .kl-top__mark { color: var(--k-green); }
+.ds-k-shoreline .kl-top__org { font-size: 20px; font-weight: 700; }
+.ds-k-shoreline .kl-top__system { font-size: 13px; }
+.ds-k-shoreline .kl-nav { margin-left: 36px; }
+.ds-k-shoreline .kl-nav ul { display: flex; gap: 26px; }
+.ds-k-shoreline .kl-nav a { display: block; padding: 15px 0 12px; color: var(--k-ink); font-size: 14px; text-decoration: none; border-bottom: 3px solid transparent; }
+.ds-k-shoreline .kl-nav a:hover { text-decoration: underline; }
+.ds-k-shoreline .kl-nav a[aria-current] { font-weight: 700; border-bottom-color: var(--k-green); }
+.ds-k-shoreline .kl-top__user { margin-left: auto; font-size: 14px; }
+
+.ds-k-shoreline .kl-link { padding: 0; background: none; border: 0; color: var(--k-green); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.ds-k-shoreline .kl-btn { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; padding: 8px 28px; background: var(--k-green); color: #fff; border: 1.5px solid var(--k-green); border-radius: 2px; font-size: 16px; font-weight: 700; text-decoration: none; cursor: pointer; }
+.ds-k-shoreline .kl-btn--ghost { background: transparent; color: var(--k-green); }
+
+/* 表題の段：右に等高線の装飾（背景画像。読み上げない） */
+.ds-k-shoreline .kl-hero { display: flex; justify-content: space-between; min-height: 154px; background: var(--k-hero); border-bottom: 1px solid #8ba99c; overflow: hidden; }
+.ds-k-shoreline .kl-hero__text { flex: 1 1 auto; min-width: 0; padding: 22px var(--k-pad) 18px; }
+.ds-k-shoreline .kl-hero__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 22px; }
+.ds-k-shoreline .kl-title { font-family: var(--k-mincho); font-size: 56px; font-weight: 700; line-height: 1.15; color: var(--k-deep); }
+.ds-k-shoreline .kl-hero__count { display: inline-block; margin-top: 10px; margin-right: 18px; font-size: 15px; }
+.ds-k-shoreline .kl-hero__count b { margin-right: 12px; }
+.ds-k-shoreline .kl-hero__count span { font-family: var(--k-mincho); font-style: italic; font-size: 28px; margin-right: 2px; }
+.ds-k-shoreline .kl-new { min-height: 40px; padding: 6px 20px; font-size: 15px; vertical-align: middle; }
+.ds-k-shoreline .kl-hero__art { flex: 0 1 560px; min-width: 140px; background: url('../../img/k-shore.svg') left center / auto 100% no-repeat; }
+
+.ds-k-shoreline .kl-body { max-width: 1280px; margin: 0 auto; padding: 18px var(--k-pad) 48px; }
+.ds-k-shoreline .kl-notice { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 16px; padding: 10px 16px; background: var(--k-sea); border-left: 4px solid var(--k-green); border-radius: 0 0 24px 0; }
+
+/* ---------- 申請一覧 ---------- */
+.ds-k-shoreline .kl-tools { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 12px 48px; padding-bottom: 22px; border-bottom: 1px solid var(--k-sep); }
+.ds-k-shoreline :is(.kl-search label, .kl-status legend) { display: block; margin-bottom: 6px; padding: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+.ds-k-shoreline .kl-search div { display: flex; }
+.ds-k-shoreline .kl-search input { flex: 1; min-width: 0; min-height: 40px; padding: 6px 12px; background: var(--k-field); border: 1px solid var(--k-line); border-right: 0; border-radius: 0; }
+.ds-k-shoreline .kl-search button { min-height: 40px; padding: 6px 20px; background: var(--k-green); color: #fff; border: 0; font-weight: 700; cursor: pointer; }
+.ds-k-shoreline .kl-status div { display: flex; flex-wrap: wrap; gap: 4px; }
+.ds-k-shoreline .kl-status__item { position: relative; display: inline-flex; }
+.ds-k-shoreline .kl-status__item input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ds-k-shoreline .kl-status__item > span { display: inline-flex; align-items: center; min-height: 40px; padding: 4px 12px; border-bottom: 1px solid var(--k-line); }
+.ds-k-shoreline .kl-status__n { margin-left: 8px; font-family: var(--k-mono); color: var(--k-muted); }
+.ds-k-shoreline .kl-status__item input:checked + span { background: var(--k-rail); font-weight: 700; border-bottom: 3px solid var(--k-green); }
+.ds-k-shoreline .kl-status__item input:checked + span .kl-status__n { color: var(--k-ink); }
+.ds-k-shoreline .kl-status__item input:focus-visible + span { outline: 3px solid var(--k-green); outline-offset: 2px; }
+.ds-k-shoreline .kl-scope { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-top: 14px; padding: 8px 14px; background: var(--k-sea); border-left: 4px solid var(--k-green); border-radius: 0 0 24px 0; }
+.ds-k-shoreline .kl-scope__title { font-weight: 700; }
+.ds-k-shoreline .kl-scope ul { display: flex; flex-wrap: wrap; gap: 0 14px; }
+
+/* 結果と詳細：選んだ行の淡い緑が、右の詳細の面へ続く */
+.ds-k-shoreline .kl-work { position: relative; margin-top: 22px; }
+.ds-k-shoreline .kl-results__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding-bottom: 10px; }
+.ds-k-shoreline .kl-results__head h3 { font-family: var(--k-mincho); font-size: 26px; }
+.ds-k-shoreline .kl-results__head .kl-link { margin-left: auto; font-size: 14px; }
+.ds-k-shoreline .kl-table { width: 100%; border-collapse: collapse; }
+.ds-k-shoreline .kl-table th { padding: 8px; text-align: left; font-size: 13px; font-weight: 400; color: var(--k-muted); border-top: 1px solid var(--k-line); border-bottom: 1px solid var(--k-line); }
+.ds-k-shoreline .kl-sort { padding: 0; background: none; border: 0; color: inherit; cursor: pointer; white-space: nowrap; }
+.ds-k-shoreline th:not([aria-sort='none']) .kl-sort { color: var(--k-ink); font-weight: 700; }
+.ds-k-shoreline .kl-sort span { margin-left: 4px; }
+.ds-k-shoreline .kl-table td { padding: 14px 8px; border-bottom: 1px solid var(--k-row); vertical-align: middle; }
+.ds-k-shoreline :is(.kl-id, .kl-date) { font-family: var(--k-mono); font-size: 13.5px; white-space: nowrap; }
+.ds-k-shoreline .kl-name { font-weight: 700; }
+.ds-k-shoreline .kl-st { white-space: nowrap; }
+.ds-k-shoreline .kl-st span { margin-right: 6px; }
+.ds-k-shoreline .kl-act { white-space: nowrap; }
+.ds-k-shoreline :is(.kl-col-act, .kl-act) { width: 6.5em; } /* 「詳細 ›」と「閉じる ×」で列の幅が変わり、行が折り返し直さないように */
+.ds-k-shoreline .kl-table tr.is-open td { background: var(--k-rail); }
+.ds-k-shoreline .kl-table tr.is-open td:first-child { box-shadow: inset 4px 0 0 var(--k-green); }
+.ds-k-shoreline .kl-table tr.is-open .kl-act .kl-link { color: var(--k-ink); }
+.ds-k-shoreline .kl-empty { padding: 36px 0; text-align: center; font-family: var(--k-mincho); font-size: 18px; border-top: 1px solid var(--k-line); border-bottom: 1px solid var(--k-line); }
+
+.ds-k-shoreline .kl-detail { display: grid; grid-template-columns: 26px minmax(0, 1fr); background: var(--k-rail); }
+.ds-k-shoreline .kl-shore { width: 26px; height: 100%; }
+.ds-k-shoreline .kl-shore path { fill: none; stroke: #a9cdb9; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.ds-k-shoreline .kl-shore .kl-shore__sea { fill: var(--k-sea); stroke: none; }
+.ds-k-shoreline .kl-detail__in { padding: 18px 20px 20px 8px; background: var(--k-sea); border-top: 4px solid var(--k-green); }
+.ds-k-shoreline .kl-detail__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 8px; }
+.ds-k-shoreline .kl-detail__close { font-size: 14px; }
+.ds-k-shoreline .kl-detail h3 { font-family: var(--k-mincho); font-size: 22px; }
+.ds-k-shoreline .kl-badge { width: fit-content; margin-top: 8px; padding: 0 8px; border: 1px solid var(--k-green); font-size: 13px; }
+.ds-k-shoreline .kl-detail__note { margin-top: 6px; font-size: 13px; color: var(--k-muted); }
+.ds-k-shoreline .kl-detail__id { margin-top: 12px; font-family: var(--k-mono); font-size: 20px; letter-spacing: 0.04em; }
+.ds-k-shoreline .kl-detail__name { margin-top: 4px; font-family: var(--k-mincho); font-size: 21px; font-weight: 700; }
+.ds-k-shoreline .kl-detail__kana { font-size: 13px; color: var(--k-muted); }
+.ds-k-shoreline .kl-detail dl { margin: 12px 0 14px; border-top: 1px solid var(--k-sep); }
+.ds-k-shoreline .kl-detail dl div { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--k-sep); font-size: 14px; }
+.ds-k-shoreline .kl-detail dt { color: var(--k-muted); }
+.ds-k-shoreline .kl-work > .kl-detail { margin-bottom: 14px; } /* 一覧に無い申請の詳細（表の上） */
+.ds-k-shoreline .kl-detail-slot { display: none; }
+
+/* 広いペイン：選んだ行の直後の詳細の行を、表の右の列へ移す（DOM・Tab の順は行の直後のまま）。
+   列は結果の高さいっぱいに伸ばし、詳細の面はその中で画面の上に留まる（試作と同じ sticky） */
+@container frame (min-width: 1000px) {
+  /* 右の列は詳細を開く前から確保する（開いた瞬間に表が狭まって行が折り返し直し、選んだ行が見えなくなるのを防ぐ） */
+  .ds-k-shoreline .kl-work.has-rows { padding-right: 300px; }
+  .ds-k-shoreline :is(.kl-detail-row, .kl-detail-slot) { position: absolute; top: 44px; right: 0; bottom: 0; display: block; width: 300px; }
+  .ds-k-shoreline .kl-detail-row td { display: block; height: 100%; padding: 0; border: 0; background: none; }
+  /* 詳細は画面の上に留める。表示できる高さを超える分は詳細の中でスクロールし、見出しの横の「詳細を閉じる」はいつも見える */
+  .ds-k-shoreline .kl-detail-row .kl-detail { position: sticky; top: 12px; display: flex; max-height: max(260px, calc(100dvh - 300px)); }
+  .ds-k-shoreline .kl-detail-row .kl-shore { flex: none; height: auto; }
+  .ds-k-shoreline .kl-detail-row .kl-detail__in { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; min-height: 0; }
+  .ds-k-shoreline .kl-detail-row .kl-detail__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .ds-k-shoreline .kl-detail-slot__text { position: sticky; top: 12px; display: grid; grid-template-columns: 26px minmax(0, 1fr); min-height: 120px; color: var(--k-muted); font-size: 14px; }
+  .ds-k-shoreline .kl-detail-slot__text span { padding: 18px 16px; background: var(--k-sea); border-top: 4px solid var(--k-sep); }
+}
+
+/* ---------- 新規申請フォーム ---------- */
+.ds-k-shoreline .ks-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin-top: 10px; }
+.ds-k-shoreline .ks-steps li { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.ds-k-shoreline .ks-steps li + li::before { content: ''; width: 30px; height: 1px; margin: 0 14px; background: var(--k-line); }
+.ds-k-shoreline .ks-steps__n { display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--k-line); border-radius: 50%; font-size: 13px; }
+.ds-k-shoreline .ks-steps small { font-size: 11px; color: var(--k-muted); }
+.ds-k-shoreline .ks-steps li.is-current { font-weight: 700; }
+.ds-k-shoreline .ks-steps li.is-current .ks-steps__n { background: var(--k-green); border-color: var(--k-green); color: #fff; }
+.ds-k-shoreline .ks-steps li.is-current .ks-steps__label { text-decoration: underline; text-underline-offset: 4px; }
+
+.ds-k-shoreline .ks-errors { margin-bottom: 14px; padding: 14px 18px; background: #fffdf8; border: 1px solid #e3c4b8; border-left: 5px solid var(--k-error); border-radius: 0 12px 12px 0; }
+.ds-k-shoreline .ks-errors h3 { font-family: var(--k-mincho); font-size: 19px; color: var(--k-error); }
+.ds-k-shoreline .ks-errors p { font-size: 13px; color: var(--k-muted); }
+.ds-k-shoreline .ks-errors ul { margin-top: 6px; display: grid; gap: 2px; }
+
+/* 章：左の陸（章名）と右の水際（入力欄）を曲線で分ける。曲線は章の高さに合わせて伸びる */
+.ds-k-shoreline .ks-panel { border-top: 2px solid #709986; border-bottom: 1px solid var(--k-sep); }
+.ds-k-shoreline .ks-chapter { display: grid; grid-template-columns: 256px minmax(0, 1fr); background: var(--k-area); }
+.ds-k-shoreline .ks-chapter + .ks-chapter { border-top: 1px solid var(--k-sep); }
+.ds-k-shoreline .ks-rail { position: relative; padding: 26px 60px 22px 26px; }
+.ds-k-shoreline .ks-chapter__title { position: relative; z-index: 1; font-family: var(--k-mincho); font-size: 24px; font-weight: 700; line-height: 1.4; }
+.ds-k-shoreline .ks-chapter__err { position: relative; z-index: 1; margin-top: 6px; color: var(--k-error); font-size: 14px; font-weight: 700; }
+.ds-k-shoreline .ks-shore { position: absolute; inset: 0 0 0 auto; width: 100%; height: 100%; }
+.ds-k-shoreline .ks-shore path { fill: none; stroke: #a9cdb9; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.ds-k-shoreline .ks-shore .ks-shore__land { fill: var(--k-rail); stroke: none; }
+.ds-k-shoreline .ks-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 26px; padding: 20px 20px 22px 18px; }
+.ds-k-shoreline .ks-field { min-width: 0; }
+.ds-k-shoreline .ks-field.is-wide { grid-column: 1 / -1; }
+.ds-k-shoreline .ks-label { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 16px; font-weight: 700; }
+.ds-k-shoreline .ks-req { padding: 0 5px; background: #e1efe3; border: 1px solid #476863; font-size: 11px; font-weight: 700; line-height: 1.6; }
+.ds-k-shoreline .ks-req.is-opt { background: transparent; border-color: var(--k-line); font-weight: 400; color: var(--k-muted); }
+.ds-k-shoreline .ks-input { display: block; width: 100%; min-height: 40px; padding: 6px 10px; background: var(--k-field); border: 1px solid var(--k-line); border-radius: 0; font-size: 16px; color: var(--k-ink); }
+.ds-k-shoreline .ks-input::placeholder { color: #6f857e; }
+.ds-k-shoreline .ks-select { appearance: none; padding-right: 32px; background: var(--k-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231f5e52' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; }
+.ds-k-shoreline .ks-textarea { min-height: 5.5em; resize: vertical; }
+.ds-k-shoreline .ks-hint { margin-top: 4px; font-size: 12.5px; color: var(--k-muted); }
+.ds-k-shoreline .ks-error { margin-top: 4px; color: var(--k-error); font-size: 14px; }
+.ds-k-shoreline .ks-field.is-invalid .ks-input { border: 2px solid var(--k-error); }
+.ds-k-shoreline .ks-field.is-invalid .ks-checkbox { outline: 2px solid var(--k-error); outline-offset: 2px; }
+.ds-k-shoreline .ks-check { display: flex; align-items: flex-start; gap: 10px; }
+.ds-k-shoreline .ks-checkbox { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--k-green); }
+.ds-k-shoreline .ks-value { font-size: 16px; white-space: pre-wrap; padding: 4px 0 6px; border-bottom: 1px solid #d5e2d8; }
+.ds-k-shoreline .ks-value.is-empty { color: var(--k-muted); }
+.ds-k-shoreline .ks-fix { margin-left: auto; font-size: 13px; }
+.ds-k-shoreline .ks-lead { margin-bottom: 12px; color: var(--k-muted); }
+.ds-k-shoreline .ks-done { font-family: var(--k-mincho); font-size: 26px; font-weight: 700; color: var(--k-deep); }
+.ds-k-shoreline .ks-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.ds-k-shoreline .ks-actions .kl-btn:last-child { margin-left: auto; }
+.ds-k-shoreline .ks-back { color: var(--k-ink); font-weight: 400; }
+.ds-k-shoreline .ks-demo { font-size: 13px; color: var(--k-muted); }
+
+/* ---------- ダッシュボード ---------- */
+.ds-k-shoreline .kd-num { text-align: right; font-variant-numeric: tabular-nums; }
+.ds-k-shoreline .kd-ref { font-size: 14px; }
+.ds-k-shoreline .kd-ref span { margin-left: 12px; font-size: 13px; color: var(--k-muted); }
+.ds-k-shoreline .kd-cond { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 12px; }
+.ds-k-shoreline .kd-cond__field { display: flex; align-items: center; gap: 8px; }
+.ds-k-shoreline .kd-cond__field label { font-size: 13px; font-weight: 700; }
+.ds-k-shoreline .kd-cond select { min-height: 38px; min-width: 11em; padding: 4px 10px; background: var(--k-field); border: 1px solid var(--k-line); color: var(--k-ink); }
+.ds-k-shoreline .kd-reset { min-height: 38px; padding: 4px 14px; background: transparent; color: var(--k-green); border: 1.5px solid var(--k-green); font-weight: 700; cursor: pointer; }
+.ds-k-shoreline .kd-reset:disabled { color: #6f857e; border-color: #c8d6cc; cursor: default; }
+.ds-k-shoreline .kd-defs { margin-bottom: 10px; font-size: 13px; }
+.ds-k-shoreline .kd-defs summary { cursor: pointer; color: var(--k-green); font-weight: 700; }
+.ds-k-shoreline .kd-defs dl { display: grid; gap: 4px; max-width: 44em; margin-top: 6px; padding: 8px 12px; background: var(--k-sea); border-radius: 0 0 18px 0; }
+.ds-k-shoreline .kd-defs dt { font-weight: 700; }
+.ds-k-shoreline .kd-defs p { margin-top: 4px; color: var(--k-muted); }
+
+.ds-k-shoreline .kd-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 14px 0; background: #e6efe8; border-top: 1px solid var(--k-line); border-bottom: 1px solid var(--k-line); }
+.ds-k-shoreline .kd-kpi { padding: 4px 18px; min-width: 0; }
+.ds-k-shoreline .kd-kpi + .kd-kpi { border-left: 1px solid var(--k-line); }
+.ds-k-shoreline .kd-kpi dt { font-family: var(--k-mincho); font-size: 18px; font-weight: 700; }
+.ds-k-shoreline .kd-kpi__value { font-family: var(--k-mincho); font-size: 18px; white-space: nowrap; } /* 73.2% や 100.0% を途中で折り返さない */
+.ds-k-shoreline .kd-kpi__value b { font-size: 48px; font-weight: 400; line-height: 1.15; margin-right: 4px; font-variant-numeric: tabular-nums; }
+.ds-k-shoreline .kd-kpi__note { font-size: 13px; color: var(--k-muted); }
+.ds-k-shoreline .kd-kpi__link { margin-top: 2px; font-size: 13px; }
+
+.ds-k-shoreline .kd-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; margin-top: 22px; align-items: start; }
+.ds-k-shoreline .kd-col { display: grid; gap: 22px; min-width: 0; }
+.ds-k-shoreline .kd-sec { min-width: 0; }
+.ds-k-shoreline .kd-sec__head { display: flex; align-items: baseline; justify-content: space-between; padding: 0 6px 8px; border-bottom: 1px solid var(--k-line); }
+.ds-k-shoreline .kd-sec__head h3 { font-family: var(--k-mincho); font-size: 21px; }
+.ds-k-shoreline .kd-sec__head p { font-size: 13px; color: var(--k-muted); }
+.ds-k-shoreline .kd-panel { padding: 14px 14px 10px; background: var(--k-sea); border-top: 4px solid #5f8f7f; }
+
+/* 月別：滑らかな線と面は淡い目安、点・縦の線・件数が各月の値。SVG と点は同じ高さ（140px）・同じ基準線 */
+.ds-k-shoreline .kd-chart { position: relative; height: 170px; margin: 6px 0 0; }
+.ds-k-shoreline .kd-chart__shore { position: absolute; left: 0; right: 0; top: 0; height: 140px; width: 100%; }
+.ds-k-shoreline .kd-chart__area { fill: #cfe3d6; }
+.ds-k-shoreline .kd-chart__contour { fill: none; stroke: #b2d1bf; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ds-k-shoreline .kd-chart__line { fill: none; stroke: #6c9e8c; stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.ds-k-shoreline .kd-chart__points { position: absolute; inset: 0; }
+.ds-k-shoreline .kd-chart__points li { position: absolute; bottom: 30px; height: 140px; width: 0; }
+.ds-k-shoreline .kd-chart__stem { position: absolute; left: -0.5px; bottom: 0; width: 1px; height: var(--y); background: #8bb3a3; }
+.ds-k-shoreline .kd-chart__dot { position: absolute; left: -5px; bottom: calc(var(--y) - 5px); width: 10px; height: 10px; border-radius: 50%; background: var(--k-green); box-shadow: 0 0 0 2px var(--k-ground); }
+.ds-k-shoreline .kd-chart__points b { position: absolute; left: 50%; bottom: calc(var(--y) + 8px); transform: translateX(-50%); font-family: var(--k-mincho); font-size: 18px; line-height: 1; white-space: nowrap; }
+.ds-k-shoreline .kd-chart__month { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 6px; font-size: 13px; white-space: nowrap; }
+.ds-k-shoreline .kd-chart::after { content: ''; position: absolute; left: 0; right: 0; bottom: 30px; border-bottom: 1px solid var(--k-line); }
+.ds-k-shoreline .kd-note { margin-top: 4px; font-size: 12px; color: var(--k-muted); }
+
+.ds-k-shoreline .kd-table { width: 100%; border-collapse: collapse; }
+.ds-k-shoreline .kd-table :is(th, td) { padding: 8px 6px; border-bottom: 1px solid var(--k-row); text-align: left; font-weight: 400; }
+.ds-k-shoreline .kd-table thead th { font-size: 12px; color: var(--k-muted); }
+.ds-k-shoreline .kd-table td.kd-num { font-weight: 700; }
+.ds-k-shoreline .kd-table .kd-num { text-align: right; white-space: nowrap; }
+.ds-k-shoreline .kd-table td.kd-share { font-weight: 400; color: var(--k-muted); }
+.ds-k-shoreline .kd-mini { display: block; width: 72px; height: 6px; background: #d6e3da; }
+.ds-k-shoreline .kd-mini i { display: block; height: 100%; background: #3f7a6b; }
+.ds-k-shoreline .kd-empty { padding: 18px 6px; text-align: center !important; color: var(--k-muted); }
+
+/* ---------- 中間の幅 ---------- */
+@container frame (max-width: 1099px) {
+  .ds-k-shoreline { --k-pad: 28px; }
+  .ds-k-shoreline .kl-tools { grid-template-columns: 1fr; gap: 14px; }
+  .ds-k-shoreline .kd-kpi__value b { font-size: 40px; }
+}
+
+/* 指標は2列2段、集計の区画は1列 */
+@container frame (max-width: 939px) {
+  .ds-k-shoreline .kd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 10px; }
+  .ds-k-shoreline .kd-kpi:nth-child(odd) { border-left: 0; }
+  .ds-k-shoreline .kd-kpi__value b { font-size: 42px; }
+  .ds-k-shoreline .kd-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- 狭い幅：表は行ごとに縦へ積み、詳細はその行の直後。章名は上、入力欄は1列 ---------- */
+@container frame (max-width: 759px) {
+  .ds-k-shoreline { --k-pad: 16px; }
+  .ds-k-shoreline .kl-nav { order: 1; width: 100%; margin-left: 0; }
+  .ds-k-shoreline .kl-nav ul { justify-content: space-between; gap: 0; }
+  .ds-k-shoreline .kl-nav a { padding: 8px 0; font-size: 13px; }
+  .ds-k-shoreline .kl-hero { position: relative; min-height: 0; }
+  /* 等高線は表題の上の細い帯だけに見せ、表題・件数・集計条件・操作には重ねない */
+  .ds-k-shoreline .kl-hero__text { position: relative; z-index: 1; padding: 46px var(--k-pad) 16px; }
+  .ds-k-shoreline .kl-hero__art { position: absolute; top: 0; left: 0; right: 0; height: 34px; min-width: 0; background-position: right top; background-size: auto 154px; }
+  .ds-k-shoreline .kl-title { font-size: 36px; }
+  .ds-k-shoreline .kl-new { width: 100%; justify-content: center; margin-top: 8px; }
+  .ds-k-shoreline .kd-ref span { display: block; margin: 0; }
+  .ds-k-shoreline .ks-steps li + li::before { width: 14px; margin: 0 8px; }
+
+  .ds-k-shoreline .kl-table, .ds-k-shoreline .kl-table tbody, .ds-k-shoreline .kl-table thead, .ds-k-shoreline .kl-table td { display: block; }
+  .ds-k-shoreline .kl-table thead tr { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 8px 4px; border-top: 1px solid var(--k-line); border-bottom: 1px solid var(--k-line); }
+  .ds-k-shoreline .kl-table thead tr::before { content: '並べ替え'; font-size: 13px; color: var(--k-muted); }
+  .ds-k-shoreline .kl-table th { padding: 0; border: 0; }
+  .ds-k-shoreline .kl-table th.kl-col-act { display: none; }
+  .ds-k-shoreline .kl-sort { min-height: 32px; padding: 2px 4px; border-bottom: 1px solid var(--k-line); }
+  .ds-k-shoreline .kl-table th:not([aria-sort='none']) .kl-sort { background: var(--k-rail); border-bottom: 3px solid var(--k-green); }
+  .ds-k-shoreline .kl-table tr.kl-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 8px; border-bottom: 1px solid var(--k-row); }
+  .ds-k-shoreline .kl-table td { padding: 0; border: 0; }
+  .ds-k-shoreline .kl-table :is(.kl-name, .kl-type, .kl-date, .kl-status-cell) { grid-column: 1 / -1; }
+  .ds-k-shoreline .kl-table .kl-date::before { content: '受付日　'; font-family: inherit; font-size: 13px; color: var(--k-muted); }
+  .ds-k-shoreline .kl-act { grid-column: 2; grid-row: 1; }
+  .ds-k-shoreline .kl-table tr.kl-row.is-open { background: var(--k-rail); box-shadow: inset 4px 0 0 var(--k-green); border-bottom: 0; }
+  .ds-k-shoreline .kl-table tr.is-open td, .ds-k-shoreline .kl-table tr.is-open td:first-child { background: none; box-shadow: none; }
+  .ds-k-shoreline .kl-detail-row { display: block; }
+  .ds-k-shoreline .kl-detail-row td { padding: 0 0 14px; background: var(--k-rail); }
+  .ds-k-shoreline .kl-detail { grid-template-columns: 1fr; }
+  .ds-k-shoreline .kl-shore { display: none; }
+  .ds-k-shoreline .kl-detail__in { padding: 14px 16px; border-radius: 0 0 0 28px; }
+
+  .ds-k-shoreline .ks-chapter { grid-template-columns: 1fr; }
+  .ds-k-shoreline .ks-rail { padding: 14px 16px 18px; background: var(--k-rail); border-radius: 0 0 50% 0 / 0 0 18px 0; }
+  .ds-k-shoreline .ks-shore { display: none; }
+  .ds-k-shoreline .ks-fields { grid-template-columns: 1fr; padding: 14px 16px 18px; }
+  .ds-k-shoreline .ks-actions .kl-btn { width: 100%; justify-content: space-between; }
+
+  .ds-k-shoreline .kd-cond, .ds-k-shoreline .kd-cond__field { width: 100%; }
+  .ds-k-shoreline .kd-cond__field label { width: 4.5em; flex: none; }
+  .ds-k-shoreline .kd-cond select { flex: 1; min-width: 0; }
+  .ds-k-shoreline .kd-kpi { padding: 4px 12px; }
+  .ds-k-shoreline .kd-kpi__value b { font-size: 34px; }
+  .ds-k-shoreline .kd-chart__points b { font-size: 15px; }
+  .ds-k-shoreline .kd-chart__month { font-size: 12px; }
+  .ds-k-shoreline .kd-mini { width: 44px; }
+}
