@@ -64,8 +64,14 @@ for (const name of skillDirs) {
   });
 }
 
+// 適用見本（examples/<名前>/）と、その見本が使う Skill
+const EXAMPLES = [
+  { dir: 'examples/okinawa-thread-memo', skill: 'okinawa-thread-ui', assets: ['tokens.css', 'thread-pattern.svg'] },
+  { dir: 'examples/h-prime-room-booking', skill: 'h-prime-ui', assets: ['tokens.css'] },
+];
+
 test('skills/README.md と適用見本の記録の相対リンクが存在する', () => {
-  for (const file of ['skills/README.md', 'examples/okinawa-thread-memo/VERIFICATION.md']) {
+  for (const file of ['skills/README.md', ...EXAMPLES.map((e) => `${e.dir}/VERIFICATION.md`)]) {
     const text = readFileSync(join(ROOT, file), 'utf8').replace(/```[\s\S]*?```/g, '');
     for (const [, target] of text.matchAll(/\]\(([^)\s]+)\)/g)) {
       if (/^(https?:|mailto:|#)/.test(target)) continue;
@@ -75,11 +81,19 @@ test('skills/README.md と適用見本の記録の相対リンクが存在する
 });
 
 test('適用見本の assets は Skill の assets と同じ内容', () => {
-  for (const f of ['tokens.css', 'thread-pattern.svg']) {
-    assert.equal(
-      readFileSync(join(ROOT, 'examples/okinawa-thread-memo/assets', f), 'utf8'),
-      readFileSync(join(SKILLS, 'okinawa-thread-ui/assets', f), 'utf8'),
-      f,
-    );
+  for (const { dir, skill, assets } of EXAMPLES) {
+    for (const f of assets) {
+      assert.equal(readFileSync(join(ROOT, dir, 'assets', f), 'utf8'), readFileSync(join(SKILLS, skill, 'assets', f), 'utf8'), `${dir}: ${f}`);
+    }
+  }
+});
+
+test('適用見本は比較サイト（site/）や外部のファイルを読み込まない', () => {
+  for (const { dir } of EXAMPLES) {
+    const html = readFileSync(join(ROOT, dir, 'index.html'), 'utf8');
+    for (const [, url] of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
+      assert.ok(!/^(https?:)?\/\//.test(url) && !url.startsWith('..') && !url.startsWith('/'), `${dir}: ${url}`);
+      assert.ok(existsSync(join(ROOT, dir, url)), `${dir}: ${url} がない`);
+    }
   }
 });

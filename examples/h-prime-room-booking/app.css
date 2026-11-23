@@ -1,0 +1,202 @@
+/* 部屋の予約台帳：h-prime-ui Skill の適用見本。色・書体・罫は assets/tokens.css（Skill の assets と同じ内容）を使う。 */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--hp-ground); }
+body { margin: 0; background: var(--hp-ground); color: var(--hp-ink); font: var(--hp-body)/var(--hp-line-height) var(--hp-gothic); overflow-wrap: anywhere; }
+:is(h1, h2, h3, p, ul, ol, dl, dd, fieldset) { margin: 0; }
+:is(ul, ol) { padding: 0; list-style: none; }
+:is(button, input, select, textarea) { font: inherit; color: inherit; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hp-mono { font-family: var(--hp-mono); }
+
+/* フォーカス：選択の塗りとは別の形。プログラムで移したフォーカス（tabindex="-1"）にも出す */
+:focus-visible, [tabindex='-1']:focus { outline: var(--hp-focus-ring); outline-offset: var(--hp-focus-offset); box-shadow: var(--hp-focus-halo); }
+main:focus { outline: none; box-shadow: none; }
+
+.hp-skip { position: absolute; left: 8px; top: -60px; padding: 8px 14px; background: var(--hp-grape); color: var(--hp-light); font-weight: 700; z-index: 1; }
+.hp-skip:focus { top: 8px; outline-color: var(--hp-light); }
+
+/* ---------- 帯と表題 ---------- */
+.hp-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; min-height: 54px; padding: 0 var(--hp-pad); border-bottom: 1px solid var(--hp-line); }
+.hp-top__mark { color: var(--hp-grape); }
+.hp-top__org { font-family: var(--hp-mincho); font-size: 20px; font-weight: 700; color: var(--hp-deep); }
+.hp-top__system { font-size: 13px; }
+.hp-top__user { margin-left: auto; font-size: 14px; }
+.hp-main { max-width: 1280px; margin: 0 auto; padding: 18px var(--hp-pad) 48px; }
+.hp-title { font-family: var(--hp-mincho); font-size: 48px; font-weight: 700; line-height: 1.12; letter-spacing: 0.04em; color: var(--hp-deep); }
+.hp-lead { margin-top: 8px; max-width: 46em; color: var(--hp-muted); }
+.hp-status:not(:empty) { margin-top: 16px; padding: 10px 16px; background: var(--hp-field); border-left: 5px solid var(--hp-grape); box-shadow: 0 0 0 1px var(--hp-rule); font-weight: 700; }
+
+/* ---------- 操作 ---------- */
+.hp-btn { display: inline-flex; align-items: center; gap: 18px; min-height: 44px; padding: 8px 26px; background: var(--hp-grape); color: #fff; border: 1.5px solid var(--hp-grape); font-size: 16px; font-weight: 700; cursor: pointer; }
+.hp-btn--ghost { background: transparent; color: var(--hp-grape); }
+.hp-btn--small { min-height: 40px; padding: 6px 16px; font-size: 15px; }
+.hp-btn--light { background: var(--hp-light); color: var(--hp-grape); border-color: var(--hp-light); }
+.hp-btn--outline-light { background: transparent; color: var(--hp-light); border-color: var(--hp-light-sub); }
+.hp-link { padding: 0; background: none; border: 0; color: var(--hp-grape); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.hp-link--light { color: var(--hp-light); }
+
+/* ---------- 入力欄 ---------- */
+.hp-input { display: block; width: 100%; min-height: 40px; padding: 6px 10px; background: var(--hp-field); color: var(--hp-ink); border: 1px solid var(--hp-control-line); border-radius: 0; font-size: 16px; }
+.hp-input--short { max-width: 8em; }
+.hp-input--date { width: auto; }
+.hp-select { appearance: none; padding-right: 32px; background: var(--hp-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23542240' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; }
+
+/* ---------- その日の予約 ---------- */
+.hp-day { margin-top: 26px; padding-top: 12px; border-top: var(--hp-section-rule); }
+.hp-day__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; }
+.hp-day__title { font-family: var(--hp-mincho); font-size: 28px; font-weight: 700; color: var(--hp-deep); }
+.hp-day__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* 部屋の選択：選んだものは葡萄色の塗り＋✓＋太字。フォーカスは見た目の側に外枠 */
+.hp-rooms { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; margin: 14px 0 0; padding: 8px 0; border: 0; border-top: 1px solid var(--hp-line); border-bottom: 1px solid var(--hp-line); }
+.hp-rooms__label { float: left; padding: 0; font-size: 13px; font-weight: 700; }
+.hp-rooms__items { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.hp-choice { position: relative; display: inline-flex; cursor: pointer; }
+.hp-choice input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.hp-choice > span { display: inline-flex; align-items: baseline; gap: 6px; min-height: 34px; padding: 4px 12px; }
+.hp-choice input:checked + span { background: var(--hp-grape); color: #fff; font-weight: 700; }
+.hp-choice input:checked + span::before { content: '✓'; }
+.hp-choice input:focus-visible + span { outline: var(--hp-focus-ring); outline-offset: 2px; box-shadow: var(--hp-focus-halo); }
+.hp-n { font-family: var(--hp-mincho); color: var(--hp-muted); }
+.hp-choice input:checked + span .hp-n { color: #f4dfe8; }
+
+.hp-count { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding: 14px 0 8px; }
+.hp-count p:first-child { font-family: var(--hp-mincho); font-size: 17px; }
+.hp-dir { font-size: 12px; color: var(--hp-muted); }
+.hp-dir[hidden] { display: none; }
+
+/* 面：DOM の先頭（最初の時刻）が右端。上辺は交互に傾き、折り目の線で連なる */
+.hp-faces { display: flex; flex-direction: row-reverse; }
+.hp-faces[hidden] { display: none; }
+.hp-face { display: grid; grid-template-rows: auto 1fr auto auto; flex: 1 1 0; min-width: 0; max-width: 200px; padding: calc(var(--hp-tilt) + 14px) 12px 12px; background: var(--hp-page-l); border-left: 1px solid var(--hp-fold); clip-path: polygon(0 0, 100% var(--hp-tilt), 100% 100%, 0 100%); }
+.hp-face:nth-child(even) { background: var(--hp-page-r); clip-path: polygon(0 var(--hp-tilt), 100% 0, 100% 100%, 0 100%); }
+.hp-face__id { padding-bottom: 8px; border-bottom: 1px solid var(--hp-line); font-weight: 700; font-size: 14px; }
+.hp-face__id small { display: block; font-weight: 400; font-size: 12.5px; color: var(--hp-muted); }
+.hp-face__tate { display: flex; flex-direction: row-reverse; justify-content: center; gap: 8px; min-height: 250px; padding: 14px 0; }
+.hp-name { writing-mode: vertical-rl; font-family: var(--hp-mincho); font-size: 28px; font-weight: 700; line-height: 1.1; letter-spacing: 0.06em; color: var(--hp-deep); }
+.hp-name.is-long { font-size: 23px; }
+.hp-name small { display: block; margin-bottom: 6px; font-size: 13px; letter-spacing: 0.02em; }
+.hp-sub { writing-mode: vertical-rl; font-size: 13px; line-height: 1.3; }
+.hp-face__st { font-size: 13.5px; }
+.hp-face__people { color: var(--hp-muted); }
+.hp-face__btn { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 36px; margin-top: 8px; padding: 6px 0 0; background: none; border: 0; border-top: 1px solid var(--hp-line); font-size: 13.5px; font-weight: 700; text-align: left; cursor: pointer; }
+.hp-face__btn span[aria-hidden] { font-size: 17px; }
+/* 取り消した予約：記号と文字で示し、名前の色を弱める（色だけに頼らない） */
+.hp-face.is-cancelled :is(.hp-name, .hp-sub) { color: var(--hp-muted); }
+/* 選んだ面：葡萄色に反転し、下の詳細の帯へ続く */
+.hp-face.is-open { background: var(--hp-grape); color: var(--hp-light); border-left-color: var(--hp-grape); }
+.hp-face.is-open :is(.hp-name, .hp-sub) { color: var(--hp-light); }
+.hp-face.is-open :is(small, .hp-face__st, .hp-face__people, .hp-face__btn) { color: var(--hp-light-sub); }
+.hp-face.is-open :is(.hp-face__id, .hp-face__btn) { border-color: var(--hp-light-rule); }
+.hp-face.is-open :focus-visible { outline-color: var(--hp-light); }
+
+.hp-detail { display: grid; grid-template-columns: 58px minmax(0, 0.9fr) minmax(0, 1.6fr); gap: 0 28px; padding: 22px 28px; background: var(--hp-grape); color: var(--hp-light); }
+.hp-detail[hidden] { display: none; }
+.hp-detail__title { writing-mode: vertical-rl; justify-self: center; padding-right: 22px; border-right: 1px solid var(--hp-light-rule); font-family: var(--hp-mincho); font-size: 20px; letter-spacing: 0.1em; }
+.hp-detail :focus-visible, .hp-detail__title:focus { outline-color: var(--hp-light); }
+.hp-detail :is(small, dt) { display: block; font-size: 12px; color: var(--hp-light-sub); }
+.hp-detail__who { display: grid; align-content: start; gap: 10px; padding-right: 24px; border-right: 1px solid var(--hp-light-rule); }
+.hp-detail__who b { font-size: 17px; }
+.hp-detail__name { display: block; font-family: var(--hp-mincho); font-size: 22px; }
+.hp-detail__use { padding-bottom: 8px; border-bottom: 1px solid var(--hp-light-rule); font-family: var(--hp-mincho); font-size: 22px; }
+.hp-detail__use small { font-family: var(--hp-gothic); }
+.hp-detail dl { display: flex; flex-wrap: wrap; gap: 8px 26px; margin-top: 10px; }
+.hp-detail__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 16px; }
+.hp-detail__actions .hp-btn { min-height: 40px; padding: 6px 18px; font-size: 15px; }
+
+.hp-empty { padding: 36px 0; text-align: center; border-top: 1px solid var(--hp-line); border-bottom: 1px solid var(--hp-line); }
+.hp-empty[hidden] { display: none; }
+.hp-empty p { margin-bottom: 8px; font-family: var(--hp-mincho); font-size: 18px; }
+
+/* ---------- 予約の入力（見開き） ---------- */
+.hp-entry { margin-top: 40px; padding-top: 12px; border-top: var(--hp-section-rule); }
+.hp-entry__title { font-family: var(--hp-mincho); font-size: 28px; font-weight: 700; color: var(--hp-deep); }
+.hp-entry__lead { margin: 4px 0 18px; color: var(--hp-muted); }
+
+.hp-errors { margin-bottom: 18px; padding: 14px 18px; background: #fff; border-left: 5px solid var(--hp-error); box-shadow: 0 0 0 1px #e1c8c6; }
+.hp-errors[hidden] { display: none; }
+.hp-errors h3 { font-family: var(--hp-mincho); font-size: 19px; color: var(--hp-error); }
+.hp-errors p { font-size: 13px; color: var(--hp-muted); }
+.hp-errors ul { display: grid; gap: 2px; margin-top: 6px; }
+
+.hp-book { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: 'left right'; clip-path: polygon(0 var(--hp-book-tilt), 50% 0, 100% var(--hp-book-tilt), 100% 100%, 0 100%); }
+.hp-page { display: grid; grid-template-columns: minmax(0, 1fr) var(--hp-page-title); gap: 0 18px; padding: calc(var(--hp-book-tilt) + 24px) 0 22px 26px; }
+.hp-page--right { grid-area: right; background: var(--hp-page-r); box-shadow: inset 8px 0 10px -8px rgba(57, 30, 55, 0.18); }
+.hp-page--left { grid-area: left; background: var(--hp-page-l); box-shadow: inset -1px 0 0 var(--hp-fold); }
+.hp-page__title { writing-mode: vertical-rl; justify-self: center; padding-left: 18px; border-left: 1px solid var(--hp-rule); font-family: var(--hp-mincho); font-size: 30px; font-weight: 700; line-height: 1.1; letter-spacing: 0.08em; color: var(--hp-deep); }
+.hp-page__body { display: grid; gap: 18px; align-content: start; min-width: 0; }
+
+.hp-label { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-family: var(--hp-mincho); font-size: 17px; font-weight: 700; }
+.hp-req { padding: 0 5px; border: 1px solid var(--hp-grape); color: var(--hp-grape); font-family: var(--hp-gothic); font-size: 11px; font-weight: 700; line-height: 1.6; }
+.hp-hint { margin-top: 4px; font-size: 12.5px; color: var(--hp-muted); }
+.hp-time { display: flex; align-items: center; gap: 10px; }
+.hp-time .hp-input { width: auto; min-width: 7.5em; }
+.hp-error { margin-bottom: 6px; color: var(--hp-error); font-size: 14px; font-weight: 700; }
+.hp-error span { margin-right: 4px; }
+.hp-field.is-invalid { padding-left: 12px; border-left: 4px solid var(--hp-error); }
+.hp-field.is-invalid .hp-input { border: 2px solid var(--hp-error); }
+
+/* 確認事項：葡萄色の帯 */
+.hp-band { display: grid; grid-template-columns: 136px minmax(0, 1fr); align-items: center; gap: 0 24px; margin-top: 20px; padding: 18px 24px; background: var(--hp-grape); color: var(--hp-light); }
+.hp-band__title { padding-right: 24px; border-right: 1px solid var(--hp-light-rule); font-family: var(--hp-mincho); font-size: 22px; letter-spacing: 0.1em; }
+.hp-band .hp-label { margin-bottom: 4px; font-size: 15px; }
+.hp-band .hp-req { color: var(--hp-light); border-color: var(--hp-light); }
+.hp-band.is-invalid { box-shadow: inset 6px 0 0 #ffb3ad; }
+.hp-band .hp-error { color: var(--hp-error-on-grape); }
+.hp-band :focus-visible { outline-color: var(--hp-light); }
+.hp-check { display: flex; align-items: flex-start; gap: 10px; }
+.hp-checkbox { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--hp-light-sub); }
+
+.hp-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--hp-line); }
+.hp-actions .hp-btn { margin-left: auto; }
+.hp-demo { font-size: 13px; color: var(--hp-muted); }
+
+/* ---------- 中間の幅：面を4面ずつ折り返す（上の段の右端が先頭） ---------- */
+@media (max-width: 1099px) {
+  :root { --hp-pad: 28px; }
+  .hp-faces { flex-wrap: wrap; }
+  .hp-face { flex: 0 0 25%; max-width: none; }
+  .hp-face__tate { min-height: 220px; }
+  .hp-detail { grid-template-columns: 58px minmax(0, 1fr); }
+  .hp-detail__body { grid-column: 2; margin-top: 16px; }
+  .hp-detail__who { padding-right: 0; border-right: 0; }
+  .hp-detail__title { grid-row: 1 / span 2; }
+}
+
+/* ---------- 狭い幅：縦組みを横組みにし、面は上から積む。見開きは右頁を上に ---------- */
+@media (max-width: 759px) {
+  :root { --hp-pad: 16px; --hp-tilt: 8px; --hp-book-tilt: 8px; --hp-page-title: 40px; }
+  .hp-top__user { display: none; }
+  .hp-title { font-size: 34px; }
+  .hp-day__title, .hp-entry__title { font-size: 22px; }
+  .hp-day__nav { width: 100%; }
+  .hp-day__nav .hp-input--date { flex: 1; min-width: 0; }
+  .hp-rooms__label { float: none; width: 100%; }
+  .hp-dir { display: none; }
+
+  .hp-faces { flex-direction: column; flex-wrap: nowrap; }
+  .hp-face { flex: none; max-width: none; grid-template-rows: none; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: calc(var(--hp-tilt) + 8px) 14px 10px; border-left: 0; border-top: 1px solid var(--hp-fold); }
+  .hp-face__id { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0 10px; align-items: baseline; padding: 0; border: 0; }
+  .hp-face__id small { display: inline; }
+  .hp-face__tate { grid-column: 1 / -1; flex-direction: column; align-items: flex-start; min-height: 0; padding: 2px 0; gap: 0; }
+  .hp-name, .hp-sub { writing-mode: horizontal-tb; }
+  .hp-name, .hp-name.is-long { font-size: 21px; letter-spacing: 0.02em; }
+  .hp-name small { display: inline; margin: 0 6px 0 0; }
+  .hp-face__st { grid-column: 1 / -1; }
+  .hp-face__btn { grid-column: 1 / -1; }
+
+  .hp-detail { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
+  .hp-detail__title { grid-row: auto; writing-mode: horizontal-tb; justify-self: start; padding: 0 0 6px; border-right: 0; border-bottom: 1px solid var(--hp-light-rule); }
+  .hp-detail__body { grid-column: auto; margin-top: 0; }
+  /* 詳細は選んだ帯の中に開く（app.js）。帯の葡萄色がそのまま続く */
+  .hp-face .hp-detail { grid-column: 1 / -1; margin: 6px -14px -10px; border-top: 1px solid var(--hp-light-rule); }
+
+  .hp-book { grid-template-columns: 1fr; grid-template-areas: 'right' 'left'; }
+  .hp-page { gap: 0 10px; padding-left: 16px; }
+  .hp-page__title { padding-left: 10px; font-size: 22px; }
+  .hp-time .hp-input { min-width: 0; flex: 1; }
+  .hp-band { grid-template-columns: 1fr; gap: 8px; padding: 16px; }
+  .hp-band__title { padding: 0 0 6px; border-right: 0; border-bottom: 1px solid var(--hp-light-rule); }
+  .hp-actions .hp-btn { width: 100%; justify-content: space-between; }
+}

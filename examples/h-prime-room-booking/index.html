@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>部屋の予約台帳 — 折本 Skill の適用見本</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="hp-skip" href="#main">本文へ移動</a>
+
+  <header class="hp-top">
+    <svg class="hp-top__mark" width="26" height="22" viewBox="0 0 26 22" aria-hidden="true" focusable="false"><path d="M1 2l12 3v16L1 18zM25 2l-12 3v16l12-3z" fill="currentColor"/></svg>
+    <span class="hp-top__org">架空市 中央公民館</span>
+    <span class="hp-top__system">部屋の予約</span>
+    <span class="hp-top__user">受付担当</span>
+  </header>
+
+  <main id="main" class="hp-main" tabindex="-1">
+    <h1 class="hp-title">予約台帳</h1>
+    <p class="hp-lead">窓口や電話で受けた部屋の予約を、日ごとに記録します。入力した内容はこのページの中だけで扱い、再読み込みすると見本の状態に戻ります。</p>
+    <p id="status" class="hp-status" role="status" aria-live="polite"></p>
+
+    <section class="hp-day" aria-labelledby="day-title">
+      <div class="hp-day__head">
+        <h2 id="day-title" class="hp-day__title" tabindex="-1"></h2>
+        <div class="hp-day__nav" role="group" aria-label="表示する日">
+          <button type="button" class="hp-btn hp-btn--ghost hp-btn--small" id="prev-day">← 前日</button>
+          <label class="visually-hidden" for="view-date">表示する日</label>
+          <input type="date" id="view-date" class="hp-input hp-input--date">
+          <button type="button" class="hp-btn hp-btn--ghost hp-btn--small" id="next-day">翌日 →</button>
+        </div>
+      </div>
+
+      <fieldset class="hp-rooms">
+        <legend class="hp-rooms__label">部屋</legend>
+        <div id="rooms" class="hp-rooms__items"></div>
+      </fieldset>
+
+      <div class="hp-count">
+        <p id="count"></p>
+        <p class="hp-dir" id="dir" aria-hidden="true">右から時刻の順に読みます ←</p>
+      </div>
+      <ol id="faces" class="hp-faces" aria-label="この日の予約（右から時刻の順）"></ol>
+      <div id="empty" class="hp-empty" hidden>
+        <p>この日の予約はありません。</p>
+        <button type="button" class="hp-link" id="empty-entry">この日の予約を入力する</button>
+      </div>
+      <section id="detail" class="hp-detail" aria-labelledby="detail-title" hidden></section>
+    </section>
+
+    <section class="hp-entry" aria-labelledby="entry-title">
+      <h2 id="entry-title" class="hp-entry__title" tabindex="-1">予約の入力</h2>
+      <p class="hp-entry__lead">右頁の「利用の内容」から、左頁の「申込者」へ入力します。登録した予約は仮予約になります。</p>
+
+      <div id="errors" class="hp-errors" tabindex="-1" hidden aria-labelledby="errors-title">
+        <h3 id="errors-title"></h3>
+        <p>項目名を選ぶと、その欄へ移動します。</p>
+        <ul id="error-list"></ul>
+      </div>
+
+      <form id="form" novalidate aria-labelledby="entry-title">
+        <div class="hp-book">
+          <section class="hp-page hp-page--right" aria-labelledby="ch-use">
+            <div class="hp-page__body">
+              <div class="hp-field" data-field="date">
+                <label class="hp-label" for="f-date">利用日<span class="hp-req">必須</span></label>
+                <input type="date" id="f-date" name="date" class="hp-input" aria-describedby="f-date-hint">
+                <p class="hp-hint" id="f-date-hint">予約を受け付けている期間は、2026年12月末までです。</p>
+              </div>
+              <div class="hp-field" data-field="room">
+                <label class="hp-label" for="f-room">部屋<span class="hp-req">必須</span></label>
+                <select id="f-room" name="room" class="hp-input hp-select" aria-describedby="f-room-hint"></select>
+                <p class="hp-hint" id="f-room-hint">かっこ内は定員です。</p>
+              </div>
+              <div class="hp-field hp-field--time" data-field="time">
+                <p class="hp-label" id="f-time-label">利用時間<span class="hp-req">必須</span></p>
+                <div class="hp-time" role="group" aria-labelledby="f-time-label">
+                  <label for="f-start" class="visually-hidden">開始</label>
+                  <select id="f-start" name="start" class="hp-input hp-select" aria-describedby="f-time-hint"></select>
+                  <span aria-hidden="true">〜</span>
+                  <label for="f-end" class="visually-hidden">終了</label>
+                  <select id="f-end" name="end" class="hp-input hp-select" aria-describedby="f-time-hint"></select>
+                </div>
+                <p class="hp-hint" id="f-time-hint">9時から21時まで、1時間単位です。</p>
+              </div>
+              <div class="hp-field" data-field="purpose">
+                <label class="hp-label" for="f-purpose">利用目的<span class="hp-req">必須</span></label>
+                <input type="text" id="f-purpose" name="purpose" class="hp-input" autocomplete="off" aria-describedby="f-purpose-hint">
+                <p class="hp-hint" id="f-purpose-hint">30字以内。例：役員会、書道教室</p>
+              </div>
+            </div>
+            <h3 class="hp-page__title" id="ch-use">利用の内容</h3>
+          </section>
+
+          <section class="hp-page hp-page--left" aria-labelledby="ch-who">
+            <div class="hp-page__body">
+              <div class="hp-field" data-field="group">
+                <label class="hp-label" for="f-group">団体名<span class="hp-req">必須</span></label>
+                <input type="text" id="f-group" name="group" class="hp-input" autocomplete="organization" aria-describedby="f-group-hint">
+                <p class="hp-hint" id="f-group-hint">40字以内。個人の利用は氏名を入力してください。</p>
+              </div>
+              <div class="hp-field" data-field="person">
+                <label class="hp-label" for="f-person">担当者の氏名<span class="hp-req">必須</span></label>
+                <input type="text" id="f-person" name="person" class="hp-input" autocomplete="name">
+              </div>
+              <div class="hp-field" data-field="phone">
+                <label class="hp-label" for="f-phone">電話番号<span class="hp-req">必須</span></label>
+                <input type="tel" id="f-phone" name="phone" class="hp-input" autocomplete="tel" aria-describedby="f-phone-hint">
+                <p class="hp-hint" id="f-phone-hint">日中に連絡がとれる番号。ハイフンはあってもなくても構いません。</p>
+              </div>
+              <div class="hp-field" data-field="people">
+                <label class="hp-label" for="f-people">利用人数<span class="hp-req">必須</span></label>
+                <input type="text" inputmode="numeric" id="f-people" name="people" class="hp-input hp-input--short" autocomplete="off" aria-describedby="f-people-hint">
+                <p class="hp-hint" id="f-people-hint">部屋の定員までです。</p>
+              </div>
+            </div>
+            <h3 class="hp-page__title" id="ch-who">申込者</h3>
+          </section>
+        </div>
+
+        <section class="hp-band" data-field="agree" aria-labelledby="ch-agree">
+          <h3 class="hp-band__title" id="ch-agree">確認事項</h3>
+          <div class="hp-band__body">
+            <p class="hp-label">利用の決まりの確認<span class="hp-req">必須</span></p>
+            <div class="hp-check"><input type="checkbox" id="f-agree" name="agree" class="hp-checkbox"><label for="f-agree">利用の決まり（飲食は調理室のみ、終了時刻までに原状に戻す）を申込者へ伝えました。</label></div>
+          </div>
+        </section>
+
+        <div class="hp-actions">
+          <button type="button" class="hp-link" id="clear-form">入力を消す</button>
+          <span class="hp-demo">デモのため、送信・保存はしません。</span>
+          <button type="submit" class="hp-btn">予約を登録する<span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

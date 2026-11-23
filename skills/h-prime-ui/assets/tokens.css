@@ -1,0 +1,57 @@
+/*
+ * 折本（仮称・H′案）— デザイントークン
+ * 蛇腹に折った本（折本）に着想した独自のデザイン。和本・経本の再現や公式の様式ではありません。
+ * 色・書体・罫・余白だけを定義します。部品の CSS は対象アプリに合わせて書いてください。
+ * 外部フォント・画像・CDN は使いません（端末にある書体へ順に落ちます）。
+ * 原本（design-lab の h-prime）から変えた値は、補助文字と入力欄の枠の2つだけです（コメントに記載）。
+ */
+:root {
+  /* 地と頁 */
+  --hp-ground: #fbf8ee;       /* 生成りの地 */
+  --hp-page-r: #e2d4dd;       /* 右頁・先に読む面（やや濃い） */
+  --hp-page-l: #eee5e8;       /* 左頁・後に読む面 */
+  --hp-field: #fffdf6;        /* 入力欄・エラーの一覧の地 */
+
+  /* 文字 */
+  --hp-ink: #2e2430;          /* 本文 */
+  --hp-deep: #391e37;         /* 表題・章名・縦組みの名前 */
+  --hp-muted: #655362;        /* 補助文字。原本 #6c5a69 は右頁の地で 4.45:1 のため、どの地でも 4.5:1 以上になる値にした */
+
+  /* 葡萄色：今ここ（選択・現在地・主操作・確認の帯）だけに使う */
+  --hp-grape: #542240;
+  --hp-light: #fbf3f0;        /* 葡萄色の上の文字 */
+  --hp-light-sub: #f2c7b5;    /* 葡萄色の上の補助文字 */
+  --hp-light-rule: rgba(255, 255, 255, 0.35); /* 葡萄色の上の区切り */
+
+  /* 罫 */
+  --hp-line: #a38a9b;         /* 装飾の罫（行・面の区切り）。部品の境界には使わない */
+  --hp-rule: #baaaba;         /* 薄い罫・非活性の枠 */
+  --hp-fold: #c9b7c4;         /* 面と面の折り目 */
+  --hp-control-line: #866c82; /* 入力欄・選択欄の枠。原本 #a38a9b は右頁の地で 2.2:1 のため、どの地でも 3:1 以上になる値にした */
+  --hp-section-rule: 2px solid var(--hp-deep); /* 区画の上の太罫 */
+
+  /* 状態 */
+  --hp-error: #a31f1b;        /* エラーの文字・帯（生成り・頁・白の地の上） */
+  --hp-error-on-grape: #ffd0cc; /* 葡萄色の帯の上のエラーの文字 */
+  --hp-bar: #9a6a85;          /* 縦棒 */
+  --hp-bar-track: #e5d8e1;    /* 細い棒の地 */
+  --hp-bar-fill: #6d2c52;     /* 細い棒 */
+
+  /* 書体（明朝は表題・章名・項目名・縦組みの名前・大きな数字。本文・入力・操作はゴシック。番号・日付・時刻は等幅） */
+  --hp-mincho: 'BIZ UDPMincho', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif;
+  --hp-gothic: 'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', Meiryo, sans-serif;
+  --hp-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Noto Sans Mono CJK JP', monospace;
+  --hp-body: 15px;
+  --hp-line-height: 1.6;
+
+  /* 余白と折り */
+  --hp-pad: 44px;             /* 画面の左右の余白。中間の幅 28px、狭い幅 16px */
+  --hp-tilt: 12px;            /* 面の上辺の傾き。狭い幅では 8px */
+  --hp-book-tilt: 14px;       /* 見開きの上辺が綴じ（中央）へ上がる量。狭い幅では 8px */
+  --hp-page-title: 64px;      /* 頁の右端の縦組みの章名の列。狭い幅では 40px */
+
+  /* フォーカス（選択の塗りとは別の形）。葡萄色の面の上では outline-color を --hp-light にする */
+  --hp-focus-ring: 3px solid var(--hp-grape);
+  --hp-focus-offset: 3px;
+  --hp-focus-halo: 0 0 0 6px rgba(84, 34, 64, 0.18);
+}
