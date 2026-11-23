@@ -1,8 +1,10 @@
 # 検証記録：okinawa-thread-ui Skill を別の画面に適用する（PoC）
 
-[Skill の導入方法に戻る](../../skills/README.md)
+[Skill の配布・導入方法（design-skills）](https://github.com/YanTKYS/design-skills#導入する)
 
-「糸の交点」の Skill（[skills/okinawa-thread-ui](../../skills/okinawa-thread-ui/SKILL.md)）を、比較サイトにない別の業務（職員の業務メモの管理）に当てはめて、Skill の資料だけで同じ系統の画面を組めるかを確かめた記録です。
+「糸の交点」の Skill（[okinawa-thread-ui](https://github.com/YanTKYS/design-skills/tree/main/skills/okinawa-thread-ui)）を、比較サイトにない別の業務（職員の業務メモの管理）に当てはめて、Skill の資料だけで同じ系統の画面を組めるかを確かめた記録です。
+
+> Skill の正本は [YanTKYS/design-skills](https://github.com/YanTKYS/design-skills/tree/main/skills/okinawa-thread-ui) に移りました。この見本は、Skill を design-lab で作った当時に作った**固定の見本**です。`assets/` は当時のコピーで、design-skills の最新版とは同期しません（design-lab での最後の版：[skills/okinawa-thread-ui](https://github.com/YanTKYS/design-lab/tree/0dfc2b7/skills/okinawa-thread-ui)）。
 
 ## 結論を読む前の注意
 
@@ -17,7 +19,7 @@
 - `SKILL.md`（手順と自己点検）
 - `references/design-principles.md`（守る規則・調整してよい点・避ける実装）
 - `references/patterns.md`（帯・格子帯・章と項目軸・台帳・行型の指標と横棒・操作とエラー・狭い幅）
-- `assets/tokens.css`、`assets/thread-pattern.svg`（`skills/README.md` の導入手順と同じく、[assets/](assets/) へそのままコピー。中身が Skill と同じことをユニットテストで確認）
+- `assets/tokens.css`、`assets/thread-pattern.svg`（Skill の導入手順と同じく、[assets/](assets/) へそのままコピー。当時は中身が Skill と同じことをユニットテストで確認していた）
 
 **依頼文として想定したもの**
 

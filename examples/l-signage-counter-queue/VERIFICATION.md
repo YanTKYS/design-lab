@@ -1,8 +1,10 @@
 # 検証記録：l-signage-ui Skill を別の業務に適用する（PoC）
 
-[Skill の導入方法に戻る](../../skills/README.md)
+[Skill の配布・導入方法（design-skills）](https://github.com/YanTKYS/design-skills#導入する)
 
-「標示盤」（L案）の Skill（[skills/l-signage-ui](../../skills/l-signage-ui/SKILL.md)）を、比較サイトにない別の業務（市民課の窓口の呼び出しと整理番号の管理、職員用）に当てはめて、Skill の規則で同じ系統の画面を組めるかを確かめた記録です。
+「標示盤」（L案）の Skill（[l-signage-ui](https://github.com/YanTKYS/design-skills/tree/main/skills/l-signage-ui)）を、比較サイトにない別の業務（市民課の窓口の呼び出しと整理番号の管理、職員用）に当てはめて、Skill の規則で同じ系統の画面を組めるかを確かめた記録です。
+
+> Skill の正本は [YanTKYS/design-skills](https://github.com/YanTKYS/design-skills/tree/main/skills/l-signage-ui) に移りました。この見本は、Skill を design-lab で作った当時に作った**固定の見本**です。`assets/` は当時のコピーで、design-skills の最新版とは同期しません（design-lab での最後の版：[skills/l-signage-ui](https://github.com/YanTKYS/design-lab/tree/0dfc2b7/skills/l-signage-ui)）。
 
 ## 結論を読む前の注意
 
@@ -18,7 +20,7 @@
 - `SKILL.md`（手順・自己点検）
 - `references/design-principles.md`（デザインの核・部品の判断表・守る規則・変えてよい点・避ける誤用・未検証の条件）
 - `references/patterns.md`（盤面と区画・ドット文字・状態の盤面・台帳と詳細・手順のフォーム・エラー・1目盛り＝1件・狭い幅・強制カラー）
-- `assets/tokens.css`、`assets/dot-digits.js`（[assets/](assets/) へそのままコピー。中身が Skill と同じことをユニットテストで確認。`dot-digits.js` の字形が比較サイトの標示盤と同じことも、ユニットテストで確認）
+- `assets/tokens.css`、`assets/dot-digits.js`（[assets/](assets/) へそのままコピー。当時は中身が Skill と同じことをユニットテストで確認していた。`dot-digits.js` の字形が比較サイトの標示盤と同じことも、ユニットテストで確認）
 
 **依頼文として想定したもの**
 

@@ -1,8 +1,10 @@
 # 検証記録：h-prime-ui Skill を別の業務に適用する（PoC）
 
-[Skill の導入方法に戻る](../../skills/README.md)
+[Skill の配布・導入方法（design-skills）](https://github.com/YanTKYS/design-skills#導入する)
 
-「折本」（H′）の Skill（[skills/h-prime-ui](../../skills/h-prime-ui/SKILL.md)）を、比較サイトにない別の業務（公民館の部屋の予約台帳）に当てはめて、Skill の規則で同じ系統の画面を組めるかを確かめた記録です。
+「折本」（H′）の Skill（[h-prime-ui](https://github.com/YanTKYS/design-skills/tree/main/skills/h-prime-ui)）を、比較サイトにない別の業務（公民館の部屋の予約台帳）に当てはめて、Skill の規則で同じ系統の画面を組めるかを確かめた記録です。
+
+> Skill の正本は [YanTKYS/design-skills](https://github.com/YanTKYS/design-skills/tree/main/skills/h-prime-ui) に移りました。この見本は、Skill を design-lab で作った当時に作った**固定の見本**です。`assets/` は当時のコピーで、design-skills の最新版とは同期しません（design-lab での最後の版：[skills/h-prime-ui](https://github.com/YanTKYS/design-lab/tree/0dfc2b7/skills/h-prime-ui)）。
 
 ## 結論を読む前の注意
 
@@ -18,7 +20,7 @@
 - `SKILL.md`（手順・自己点検）
 - `references/design-principles.md`（どの部品を使うかの判断表・守る規則・変えてよい点・避ける誤用）
 - `references/patterns.md`（地と表題・右から左の面と詳細・見開きのフォーム・確認の帯とエラー・狭い幅）
-- `assets/tokens.css`（[assets/](assets/) へそのままコピー。中身が Skill と同じことをユニットテストで確認）
+- `assets/tokens.css`（[assets/](assets/) へそのままコピー。当時は中身が Skill と同じことをユニットテストで確認していた）
 
 **依頼文として想定したもの**
 
@@ -53,7 +55,7 @@ h-prime-ui Skill を使って「折本」で作ってください。
 
 - **狭い幅の詳細の位置**：最初は Skill の型どおり「面の列の直後」に詳細を置いたが、375px では6件の帯の後に開き、2件目を開くと詳細が4件分離れた。狭い幅のときだけ、詳細を選んだ帯の中（開閉ボタンの直後）に置くように変えた（`matchMedia` で置き場所を切り替え、描き直す前に列の外へ戻す。幅が変わっても詳細の見出しのフォーカスを保つ）。この判断は Skill の `patterns.md` にも追記した。
 - **中間の幅（900px）**：面が4面＋2面の2段になり、詳細は2段目の下に開く。上の段で選んだ面とのつながりは弱い（変えていない。Skill に注意として追記した）。
-- **原本から変えた色**：補助文字（`--hp-muted`）と入力欄の枠（`--hp-control-line`）は、原本の値では右頁の地で基準を下回るため、Skill のトークンで濃くしたもの（[design-principles.md](../../skills/h-prime-ui/references/design-principles.md#原本から変えた値)）をそのまま使った。
+- **原本から変えた色**：補助文字（`--hp-muted`）と入力欄の枠（`--hp-control-line`）は、原本の値では右頁の地で基準を下回るため、Skill のトークンで濃くしたもの（[design-principles.md](https://github.com/YanTKYS/design-skills/blob/main/skills/h-prime-ui/references/design-principles.md#原本から変えた値)）をそのまま使った。
 - **部屋の絞り込みのフォーカス**（[PR #83](https://github.com/YanTKYS/design-lab/pull/83) のレビューで指摘）：描き直しのたびに部屋のラジオを作り直していたため、キーボードで部屋を選ぶと、選んだラジオがページから消えてフォーカスが失われ、矢印キーで続けて別の部屋へ移れなかった。ラジオは最初に1回だけ作り、描き直しでは選択の状態と件数だけを更新するように直した。Skill の自己点検に「操作した部品にフォーカスが残る（描き直しで作り直さない）」を追加した。
 - **フォームの中のボタンの id**：「入力を消す」のボタンに `id="reset"` を付けたところ、`form.reset` がボタンを指して `form.reset()` が失敗し、登録後に入力欄が消えなかった。id を `clear-form` に変えた（折本とは無関係の実装上の注意）。
 
