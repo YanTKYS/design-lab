@@ -51,7 +51,7 @@ npm test     # 別のターミナルでユニットテストを実行
 - [独自デザインの再探索（案C・案D）](docs/design-exploration/README.md)：「糸の交点」の次の独自デザインの2案（素地と釉／経路と停留所）の静的モックと設計資料。比較サイトには未登録
 - [独自デザインの追加探索（案E・F・G）](docs/design-exploration-2/README.md)：沖縄に着想した3案（仕次ぎ／透かし／座と裏座）の代表画面と、案C・D を含む5案の比較。比較サイトには未登録
 - [視覚デザインの探索（第3回：案H・I・J）](docs/design-exploration-3/README.md)：見た目の魅力を優先した申請一覧の3案（縦組みの台帳／色面／二色刷り）。比較サイトには未登録
-- [Agent Skills](skills/README.md)：「糸の交点」をほかのアプリへ適用するための Skill（Claude Code・Codex への導入方法、[適用見本の検証記録](examples/okinawa-thread-memo/VERIFICATION.md)）
+- [Agent Skills](skills/README.md)：「糸の交点」「折本」（H′）をほかのアプリへ適用するための Skill（Claude Code・Codex への導入方法、適用見本の検証記録：[糸の交点](examples/okinawa-thread-memo/VERIFICATION.md)・[折本](examples/h-prime-room-booking/VERIFICATION.md)）
 - [変更履歴](CHANGELOG.md)
 
 実験中の独立した試作（3画面を切り替えて操作できる。上記の比較デザイン・比較機能には含めていない）：
