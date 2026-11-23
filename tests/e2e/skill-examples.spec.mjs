@@ -9,6 +9,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const booking = pathToFileURL(resolve(ROOT, 'examples/h-prime-room-booking/index.html')).href;
 const lending = pathToFileURL(resolve(ROOT, 'examples/j-risograph-equipment-lending/index.html')).href;
 const inquiry = pathToFileURL(resolve(ROOT, 'examples/k-shoreline-inquiry-tracker/index.html')).href;
+const queue = pathToFileURL(resolve(ROOT, 'examples/l-signage-counter-queue/index.html')).href;
 
 test('折本の予約台帳：部屋をキーボードで選ぶと、選んだラジオにフォーカスが残り、矢印キーで続けて移れる', async ({ page }) => {
   await page.goto(booking);
@@ -83,4 +84,45 @@ test('汀線の照会台帳：広い幅では詳細を開く前から右の列�
   const narrow = await detail.boundingBox();
   expect(Math.abs(narrow.y - (row.y + row.height))).toBeLessThanOrEqual(2); // 選んだ行のすぐ下
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+});
+
+test('標示盤の窓口の呼び出し：状態の区画をキーボードで選んでもフォーカスが残り、ドット文字と文字の件数が一致する', async ({ page }) => {
+  await page.goto(queue);
+  // ドット文字の SVG の点灯から数字を読み戻す（5×7 の字形。消灯の桁は読み飛ばす）
+  const readDots = (box) =>
+    box.evaluate((root) => {
+      const G = { '01110110111101111011110111101101110': '0', '00110011100011000110001100011001111': '1', '01110110110001100110011001100011111': '2', '01110110110001100110000111101101110': '3', '00011001110101111011111110001100011': '4', '11111110001111000011000111101101110': '5', '00110011001100011110110111101101110': '6', '11111000110011000110011000110001100': '7', '01110110111101101110110111101101110': '8', '01110110111101101111000110011001100': '9' };
+      const svg = root.querySelector('svg');
+      const on = new Map([...svg.querySelectorAll('circle')].map((c) => [`${Math.floor(c.getAttribute('cx'))},${Math.floor(c.getAttribute('cy'))}`, c.classList.contains('on') ? '1' : '0']));
+      let out = '';
+      for (let x0 = 0; x0 < Number(svg.getAttribute('viewBox').split(' ')[2]); x0 += 6) {
+        let key = '';
+        for (let y = 0; y < 7; y += 1) for (let x = x0; x < x0 + 5; x += 1) key += on.get(`${x},${y}`) ?? '0';
+        if (!/^0+$/.test(key)) out += G[key] ?? '?';
+      }
+      return out;
+    });
+  const rows = page.locator('.ls-row');
+  await expect(rows).toHaveCount(15);
+
+  await page.locator('#state-all').focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#state-waiting')).toBeChecked();
+  await expect(page.locator('#state-waiting')).toBeFocused(); // 描き直しても、選んだラジオにフォーカスが残る
+  await expect(rows).toHaveCount(6);
+  expect(await readDots(page.locator('#state-waiting-dots'))).toBe('6'); // ドット文字の件数
+  await expect(page.locator('#state-waiting-n')).toHaveText('6件'); // 読み上げる文字の件数
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('#state-calling')).toBeFocused();
+  await expect(rows).toHaveCount(1);
+
+  // 窓口で番号を呼ぶと、待ちの区画のドット文字と文字が同じ値で減る
+  await page.locator('#counter-窓口1').getByRole('button', { name: '対応を始める' }).click();
+  await page.locator('#counter-窓口1').getByRole('button', { name: '完了にする' }).click();
+  await expect(page.locator('#counter-窓口1').getByRole('button', { name: '次を呼ぶ（40番）' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#state-waiting-n')).toHaveText('5件');
+  expect(await readDots(page.locator('#state-waiting-dots'))).toBe('5');
+  expect(await readDots(page.locator('#counter-窓口1 .ls-counter__now'))).toBe('40');
+  await expect(page.locator('#counter-窓口1 .ls-counter__state .visually-hidden')).toHaveText('40番（呼び出し中）');
 });
