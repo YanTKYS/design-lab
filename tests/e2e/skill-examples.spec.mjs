@@ -126,3 +126,26 @@ test('標示盤の窓口の呼び出し：状態の区画をキーボードで�
   expect(await readDots(page.locator('#counter-窓口1 .ls-counter__now'))).toBe('40');
   await expect(page.locator('#counter-窓口1 .ls-counter__state .visually-hidden')).toHaveText('40番（呼び出し中）');
 });
+
+test('標示盤の窓口の呼び出し：2人の整理番号を発行すると、待ち人数と用件の目盛りは2増え、状態の件数は1増える', async ({ page }) => {
+  await page.goto(queue);
+  const people = page.locator('#waiting-text');
+  const lit = (type) => page.locator('#types tr', { has: page.locator('th', { hasText: type }) }).locator('.ls-ticks i.on');
+  const num = (type) => page.locator(`#types [data-type="${type}"]`);
+  // 初期：待ちの整理番号は6件、41番が2人なので待ち人数は7人。転入・転出は1件・2人
+  await expect(page.locator('#state-waiting-n')).toHaveText('6件');
+  await expect(people).toHaveText('7人');
+  await expect(num('転入・転出')).toHaveText('2');
+  await expect(lit('転入・転出')).toHaveCount(2);
+
+  await page.locator('#f-type').selectOption('転入・転出');
+  await page.locator('#f-people').selectOption('2');
+  await page.getByRole('button', { name: '確認へ' }).click();
+  await page.getByRole('button', { name: '発行する' }).click();
+
+  await expect(page.locator('#state-waiting-n')).toHaveText('7件'); // 整理番号の件数は1増える
+  await expect(people).toHaveText('9人'); // 人数は2増える
+  await expect(num('転入・転出')).toHaveText('4');
+  await expect(lit('転入・転出')).toHaveCount(4); // 点灯の数＝右の人数
+  await expect(page.locator('#status')).toContainText('待っている人は9人です');
+});

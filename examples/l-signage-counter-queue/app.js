@@ -142,12 +142,16 @@
     return box;
   }
 
+  /** 待っている人数（整理番号1件に複数人のことがあるので、件数ではなく people の合計）。 */
+  var peopleOf = function (list) { return list.reduce(function (sum, t) { return sum + t.people; }, 0); };
+
   function renderWaiting() {
     var w = waiting();
+    var total = peopleOf(w);
     $('waiting-dots').textContent = '';
-    $('waiting-dots').appendChild(dots(w.length, 2, 'ls-waiting__dots'));
-    $('waiting-text').textContent = w.length + '人';
-    var counts = TYPES.map(function (ty) { return w.filter(function (t) { return t.type === ty; }).length; });
+    $('waiting-dots').appendChild(dots(total, 2, 'ls-waiting__dots'));
+    $('waiting-text').textContent = total + '人';
+    var counts = TYPES.map(function (ty) { return peopleOf(w.filter(function (t) { return t.type === ty; })); });
     var max = Math.max.apply(null, counts);
     var body = $('types');
     body.textContent = '';
@@ -421,7 +425,7 @@
     renderAll();
     renderForm();
     $('open-' + t.no).focus();
-    announce('整理番号 ' + t.no + '番（' + t.type + '）を発行しました。待っている人は' + waiting().length + '人です。');
+    announce('整理番号 ' + t.no + '番（' + t.type + '）を発行しました。待っている人は' + peopleOf(waiting()) + '人です。');
   }
 
   buildStates();
