@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>備品の貸出台帳 — 二色刷り Skill の適用見本</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="jr-skip" href="#main">本文へ移動</a>
+
+  <header class="jr-top">
+    <span class="jr-top__org">架空市 総務課</span>
+    <span class="jr-top__system">備品の貸出</span>
+    <span class="jr-top__user">管財係</span>
+  </header>
+
+  <main id="main" class="jr-main" tabindex="-1">
+    <div class="jr-hero">
+      <h1 class="jr-title">備品の貸出</h1>
+      <p class="jr-count"><b id="shown">0</b>点 <span id="total"></span></p>
+      <button type="button" class="jr-btn jr-hero__new" id="to-form">＋ 貸出を記録する</button>
+      <span class="jr-hero__dots" aria-hidden="true"></span>
+    </div>
+    <p class="jr-lead">庁内で共用する備品の貸出と返却を記録します。入力した内容はこのページの中だけで扱い、再読み込みすると見本の状態に戻ります（基準日：2026年11月24日）。</p>
+    <p id="status" class="jr-status" role="status" aria-live="polite"></p>
+
+    <section class="jr-list" aria-labelledby="list-title">
+      <h2 class="visually-hidden" id="list-title">備品の一覧</h2>
+      <div class="jr-tools">
+        <form class="jr-search" id="search" role="search" aria-label="備品の検索">
+          <label for="q">キーワード</label>
+          <input id="q" type="search" placeholder="管理番号・備品名・保管場所・借りている課" autocomplete="off">
+          <button type="submit">検索</button>
+        </form>
+        <fieldset class="jr-chips">
+          <legend class="visually-hidden">状態</legend>
+          <div id="chips" class="jr-chips__items"></div>
+        </fieldset>
+        <p class="jr-cond" id="cond"></p>
+      </div>
+      <div id="table-box"></div>
+    </section>
+
+    <section class="jr-entry" aria-labelledby="entry-title">
+      <h2 class="jr-entry__title" id="entry-title" tabindex="-1">貸出の記録</h2>
+      <p class="jr-entry__lead">貸出できる備品を選び、借りる人を入力します。返却予定日は貸出日から14日以内です。</p>
+
+      <div id="errors" class="jr-errors" tabindex="-1" hidden aria-labelledby="errors-title">
+        <h3 id="errors-title"><span class="jr-error-tag">エラー</span><span id="errors-text"></span></h3>
+        <p>項目名を選ぶと、その欄へ移動します。</p>
+        <ul id="error-list"></ul>
+      </div>
+
+      <form id="form" novalidate aria-labelledby="entry-title">
+        <section class="jr-section" aria-labelledby="ch-item">
+          <h3 class="jr-chapter" id="ch-item">借りる備品</h3>
+          <div class="jr-fields">
+            <div class="jr-field is-wide" data-field="item">
+              <label class="jr-label" for="f-item">備品<span class="jr-req">必須</span></label>
+              <select id="f-item" name="item" class="jr-input jr-select" aria-describedby="f-item-hint"></select>
+              <p class="jr-hint" id="f-item-hint">いま貸出できる備品だけが並びます。</p>
+            </div>
+            <div class="jr-field" data-field="lent">
+              <label class="jr-label" for="f-lent">貸出日<span class="jr-req">必須</span></label>
+              <input type="date" id="f-lent" name="lent" class="jr-input">
+            </div>
+            <div class="jr-field" data-field="due">
+              <label class="jr-label" for="f-due">返却予定日<span class="jr-req">必須</span></label>
+              <input type="date" id="f-due" name="due" class="jr-input" aria-describedby="f-due-hint">
+              <p class="jr-hint" id="f-due-hint">貸出日から14日以内。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="jr-section" aria-labelledby="ch-who">
+          <h3 class="jr-chapter" id="ch-who">借りる人</h3>
+          <div class="jr-fields">
+            <div class="jr-field" data-field="dept">
+              <label class="jr-label" for="f-dept">課<span class="jr-req">必須</span></label>
+              <select id="f-dept" name="dept" class="jr-input jr-select"></select>
+            </div>
+            <div class="jr-field" data-field="person">
+              <label class="jr-label" for="f-person">氏名<span class="jr-req">必須</span></label>
+              <input type="text" id="f-person" name="person" class="jr-input" autocomplete="name" placeholder="例：青木 さくら">
+            </div>
+            <div class="jr-field" data-field="ext">
+              <label class="jr-label" for="f-ext">内線番号<span class="jr-req">必須</span></label>
+              <input type="text" inputmode="numeric" id="f-ext" name="ext" class="jr-input jr-input--short" autocomplete="off" aria-describedby="f-ext-hint">
+              <p class="jr-hint" id="f-ext-hint">4桁の数字。</p>
+            </div>
+            <div class="jr-field" data-field="purpose">
+              <label class="jr-label" for="f-purpose">用途<span class="jr-req">必須</span></label>
+              <input type="text" id="f-purpose" name="purpose" class="jr-input" autocomplete="off" aria-describedby="f-purpose-hint">
+              <p class="jr-hint" id="f-purpose-hint">40字以内。例：転入者向け説明会</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="jr-section jr-section--consent" aria-labelledby="ch-agree">
+          <h3 class="jr-chapter" id="ch-agree">確認事項</h3>
+          <div class="jr-consent" data-field="agree">
+            <p class="jr-label">破損・紛失のときの連絡<span class="jr-req">必須</span></p>
+            <div class="jr-check"><input type="checkbox" id="f-agree" name="agree" class="jr-checkbox"><label for="f-agree">破損・紛失したときは、すぐ総務課（内線 2001）へ連絡するよう、借りる人に伝えました。</label></div>
+          </div>
+        </section>
+
+        <div class="jr-actions">
+          <button type="button" class="jr-link" id="clear-form">入力を消す</button>
+          <span class="jr-demo">デモのため、送信・保存はしません。</span>
+          <button type="submit" class="jr-btn">貸出を記録する<span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

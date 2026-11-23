@@ -68,6 +68,7 @@ for (const name of skillDirs) {
 const EXAMPLES = [
   { dir: 'examples/okinawa-thread-memo', skill: 'okinawa-thread-ui', assets: ['tokens.css', 'thread-pattern.svg'] },
   { dir: 'examples/h-prime-room-booking', skill: 'h-prime-ui', assets: ['tokens.css'] },
+  { dir: 'examples/j-risograph-equipment-lending', skill: 'j-risograph-ui', assets: ['tokens.css'] },
 ];
 
 test('skills/README.md と適用見本の記録の相対リンクが存在する', () => {
