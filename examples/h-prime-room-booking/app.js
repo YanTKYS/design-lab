@@ -81,15 +81,14 @@
 
   /* ---------- 部屋の選択 ---------- */
 
-  function renderRooms() {
-    var all = dayBookings(true);
-    var count = function (id) { return all.filter(function (b) { return !id || b.room === id; }).length; };
-    var items = [{ id: '', label: 'すべて' }].concat(ROOMS);
+  var ROOM_ITEMS = [{ id: '', label: 'すべて' }].concat(ROOMS);
+  var roomInputId = function (id) { return 'room-' + (id || 'all'); };
+
+  /** ラジオは最初に1回だけ作る（作り直すと、キーボードで選んだラジオのフォーカスが失われ、矢印キーで続けて移れない）。 */
+  function buildRooms() {
     var box = $('rooms');
-    box.textContent = '';
-    items.forEach(function (r) {
-      var input = el('input', { type: 'radio', name: 'room-filter', value: r.id, id: 'room-' + (r.id || 'all') });
-      input.checked = view.room === r.id;
+    ROOM_ITEMS.forEach(function (r) {
+      var input = el('input', { type: 'radio', name: 'room-filter', value: r.id, id: roomInputId(r.id) });
       input.addEventListener('change', function () {
         view.room = r.id;
         if (openNo !== null && r.id && bookingOf(openNo).room !== r.id) openNo = null;
@@ -97,8 +96,17 @@
       });
       box.appendChild(el('label', { class: 'hp-choice', for: input.id }, [
         input,
-        el('span', {}, [r.label, el('span', { class: 'hp-n', text: count(r.id) + '件' })])
+        el('span', {}, [r.label, el('span', { class: 'hp-n', id: input.id + '-n' })])
       ]));
+    });
+  }
+
+  /** 描き直しでは、選択の状態とその日の件数だけを更新する。 */
+  function renderRooms() {
+    var all = dayBookings(true);
+    ROOM_ITEMS.forEach(function (r) {
+      $(roomInputId(r.id)).checked = view.room === r.id;
+      $(roomInputId(r.id) + '-n').textContent = all.filter(function (b) { return !r.id || b.room === r.id; }).length + '件';
     });
   }
 
@@ -367,6 +375,7 @@
   });
 
   fillOptions();
+  buildRooms();
   F('date').value = view.date;
   renderDay();
 })();
