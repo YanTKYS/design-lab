@@ -1,8 +1,10 @@
 # 検証記録：k-shoreline-ui Skill を別の業務に適用する（PoC）
 
-[Skill の導入方法に戻る](../../skills/README.md)
+[Skill の配布・導入方法（design-skills）](https://github.com/YanTKYS/design-skills#導入する)
 
-「汀線」（K案）の Skill（[skills/k-shoreline-ui](../../skills/k-shoreline-ui/SKILL.md)）を、比較サイトにない別の業務（市民相談課で受けた照会の進捗管理）に当てはめて、Skill の規則で同じ系統の画面を組めるかを確かめた記録です。
+「汀線」（K案）の Skill（[k-shoreline-ui](https://github.com/YanTKYS/design-skills/tree/main/skills/k-shoreline-ui)）を、比較サイトにない別の業務（市民相談課で受けた照会の進捗管理）に当てはめて、Skill の規則で同じ系統の画面を組めるかを確かめた記録です。
+
+> Skill の正本は [YanTKYS/design-skills](https://github.com/YanTKYS/design-skills/tree/main/skills/k-shoreline-ui) に移りました。この見本は、Skill を design-lab で作った当時に作った**固定の見本**です。`assets/` は当時のコピーで、design-skills の最新版とは同期しません（design-lab での最後の版：[skills/k-shoreline-ui](https://github.com/YanTKYS/design-lab/tree/0dfc2b7/skills/k-shoreline-ui)）。
 
 ## 結論を読む前の注意
 
@@ -18,7 +20,7 @@
 - `SKILL.md`（手順・自己点検）
 - `references/design-principles.md`（デザインの核・部品の判断表・守る規則・変えてよい点・避ける誤用）
 - `references/patterns.md`（表題の装飾・絞り込みの札・表と選んだ行と右の列の詳細・章の陸と水際・エラー・推移の曲線・狭い幅・強制カラー）
-- `assets/tokens.css`、`assets/k-shore.svg`（[assets/](assets/) へそのままコピー。中身が Skill と同じことをユニットテストで確認）
+- `assets/tokens.css`、`assets/k-shore.svg`（[assets/](assets/) へそのままコピー。当時は中身が Skill と同じことをユニットテストで確認していた）
 
 **依頼文として想定したもの**
 
