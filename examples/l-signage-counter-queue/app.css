@@ -1,0 +1,267 @@
+/* 窓口の呼び出し：l-signage-ui Skill の適用見本。色・書体・罫は assets/tokens.css（Skill の assets と同じ内容）を使う。 */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--ls-ground); }
+body { margin: 0; background: var(--ls-ground); color: var(--ls-text); font: var(--ls-body)/var(--ls-line-height) var(--ls-font); overflow-wrap: anywhere; }
+:is(h1, h2, h3, p, ul, ol, dl, dd, fieldset) { margin: 0; }
+:is(ul, ol) { padding: 0; list-style: none; }
+fieldset { padding: 0; border: 0; min-width: 0; }
+:is(button, input, select, textarea) { font: inherit; color: inherit; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* フォーカス：生成りの外枠（琥珀の選択と混同しない）。琥珀の面の中では濃い色 */
+:focus-visible, [tabindex='-1']:focus { outline: var(--ls-focus-ring); outline-offset: var(--ls-focus-offset); }
+main:focus { outline: none; }
+.ls-skip { position: absolute; left: 8px; top: -60px; padding: 8px 14px; background: var(--ls-top); color: var(--ls-ink); font-weight: 700; z-index: 2; }
+.ls-skip:focus { top: 8px; outline-color: var(--ls-amber); }
+
+/* ドット文字：幅は字数（--w）に比例 */
+.ls-dots-box { display: inline-flex; }
+.l-dots { display: block; flex: none; height: 34px; width: calc(var(--w) * 34px / 7); }
+.l-dots .on { fill: var(--ls-dot); }
+.l-dots .off { fill: var(--ls-dot); opacity: var(--ls-dot-off); }
+
+/* ---------- 帯と表題 ---------- */
+.ls-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0 14px; min-height: 50px; padding: 0 var(--ls-pad); background: var(--ls-top); color: #2a2b27; }
+.ls-top__org { font-size: 19px; font-weight: 700; }
+.ls-top__system { font-size: 14px; }
+.ls-top__user { margin-left: auto; font-size: 14px; }
+.ls-main { max-width: 1280px; margin: 0 auto; padding: 0 var(--ls-pad) 48px; }
+.ls-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; padding: 28px 0 10px; }
+.ls-title { font-size: 52px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.1; }
+.ls-clock { font-family: var(--ls-mono); font-size: 16px; color: var(--ls-muted); }
+.ls-lead { max-width: 52em; font-size: 14px; color: var(--ls-muted); }
+.ls-status:not(:empty) { margin-top: 14px; padding: 10px 16px; background: var(--ls-bar); box-shadow: inset 5px 0 0 var(--ls-amber); font-weight: 700; }
+
+.ls-sec { margin-top: 30px; }
+.ls-sec__title { margin-bottom: 8px; font-size: 20px; font-weight: 700; }
+
+/* ---------- 操作 ---------- */
+.ls-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 50px; padding: 8px 22px; border: 0; font-size: 17px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.ls-btn--primary { min-width: 160px; background: var(--ls-amber); color: var(--ls-ink); }
+.ls-btn--ghost { min-height: 44px; background: transparent; color: var(--ls-text); border: 1.5px solid var(--ls-muted); }
+.ls-btn--small { min-height: 40px; min-width: 0; padding: 6px 14px; font-size: 15px; }
+.ls-btn--on-amber { background: var(--ls-ink); color: var(--ls-amber); }
+.ls-btn:disabled { background: transparent; color: #8b9186; border: 1.5px dashed #4e554b; cursor: default; }
+.ls-btn__arrow { font-size: 22px; line-height: 1; }
+.ls-link { padding: 0; background: none; border: 0; color: var(--ls-text); font-weight: 700; text-decoration: underline; text-decoration-color: var(--ls-amber); text-underline-offset: 3px; cursor: pointer; }
+
+/* ---------- 窓口：呼び出し中の窓口だけ琥珀 ---------- */
+.ls-counters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ls-seam); padding: 6px 0; background: var(--ls-gap); border-top: 3px solid var(--ls-frame); border-bottom: 3px solid var(--ls-frame); }
+.ls-counter { display: grid; grid-template-rows: auto 1fr auto; gap: 8px; min-width: 0; padding: 12px 16px 14px; background: var(--ls-bar); border: 1px solid #454b43; }
+.ls-counter__name { font-size: 17px; font-weight: 700; }
+.ls-counter__now { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; min-height: 60px; }
+.ls-counter__dots { height: 52px; width: calc(var(--w) * 52px / 7); }
+.ls-counter__idle { font-size: 22px; font-weight: 700; color: var(--ls-muted); letter-spacing: 0.2em; }
+.ls-counter__state { font-weight: 700; }
+.ls-counter__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.ls-counter.is-current { background: var(--ls-amber); color: var(--ls-ink); border-color: var(--ls-amber); }
+.ls-counter.is-current .l-dots :is(.on, .off) { fill: var(--ls-ink); }
+.ls-counter.is-current .l-dots .off { opacity: 0.13; }
+.ls-counter.is-current :focus-visible { outline-color: var(--ls-ink); }
+.ls-counter.is-current .ls-link { color: var(--ls-ink); text-decoration-color: var(--ls-ink); }
+
+/* ---------- 待っている人 ---------- */
+.ls-waiting { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--ls-seam); background: var(--ls-gap); border-top: 3px solid var(--ls-frame); border-bottom: 3px solid var(--ls-frame); padding: 6px 0; }
+.ls-waiting__total { display: grid; grid-template-columns: auto auto; align-content: center; justify-content: start; align-items: end; gap: 6px 10px; padding: 14px 16px; background: var(--ls-bar); }
+.ls-waiting__label { grid-column: 1 / -1; font-size: 17px; font-weight: 700; }
+.ls-waiting__dots { height: 56px; width: calc(var(--w) * 56px / 7); }
+.ls-waiting__unit { font-size: 15px; }
+.ls-types { width: 100%; border-collapse: collapse; background: var(--ls-cell); }
+.ls-types caption { caption-side: top; padding: 8px 14px; background: var(--ls-bar); text-align: left; font-weight: 700; }
+.ls-types caption span { float: right; font-size: 12px; font-weight: 400; color: var(--ls-muted); }
+.ls-types :is(th, td) { padding: 7px 14px; border-bottom: 1px solid var(--ls-row); text-align: left; font-weight: 400; vertical-align: middle; }
+.ls-types th { width: 9em; white-space: nowrap; }
+.ls-ticks { display: grid; grid-template-columns: repeat(var(--n), minmax(3px, 14px)); gap: 2px; } /* 1目盛りの幅はどの行も同じ（最大 14px） */
+.ls-ticks i { height: 10px; background: var(--ls-tick-off); }
+.ls-ticks i.on { background: var(--ls-tick-on); }
+.ls-num { width: 3em; text-align: right; font-family: var(--ls-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 16px; }
+
+/* ---------- 整理番号の一覧：状態の盤面と台帳 ---------- */
+.ls-states { padding: 6px 0; border-top: 3px solid var(--ls-frame); border-bottom: 3px solid var(--ls-frame); }
+.ls-states__label { float: left; width: 100%; padding: 0 0 4px; font-size: 12px; color: var(--ls-muted); }
+.ls-states__items { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--ls-seam); clear: both; }
+.ls-state { position: relative; display: flex; min-width: 0; }
+.ls-state input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ls-state__face { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 8px; min-height: 64px; padding: 8px 12px; background: var(--ls-bar); border: 1px solid #454b43; }
+.ls-state__label { font-size: 16px; font-weight: 700; white-space: nowrap; }
+.ls-state__check { display: none; margin-right: 4px; }
+.ls-state__dots .l-dots { height: 30px; width: calc(var(--w) * 30px / 7); }
+.ls-state input:checked + .ls-state__face { background: var(--ls-amber); color: var(--ls-ink); border-color: var(--ls-amber); }
+.ls-state input:checked + .ls-state__face .ls-state__check { display: inline; }
+.ls-state input:checked + .ls-state__face .l-dots :is(.on, .off) { fill: var(--ls-ink); }
+.ls-state input:checked + .ls-state__face .l-dots .off { opacity: 0.13; }
+.ls-state input:focus-visible + .ls-state__face { outline: var(--ls-focus-ring); outline-offset: var(--ls-focus-offset); }
+
+.ls-count { padding: 14px 0 8px; font-weight: 700; }
+.ls-table { width: 100%; border-collapse: collapse; }
+.ls-table th { padding: 9px 16px; text-align: left; font-size: 13px; font-weight: 400; background: var(--ls-bar); }
+.ls-sort { padding: 0; background: none; border: 0; color: var(--ls-text); cursor: pointer; white-space: nowrap; }
+.ls-table th:not([aria-sort='none']) .ls-sort { font-weight: 700; }
+.ls-sort span { margin-left: 6px; color: var(--ls-amber); }
+.ls-table td { padding: 11px 16px; border-bottom: 1px solid var(--ls-row); vertical-align: middle; }
+.ls-no, .ls-issued { font-family: var(--ls-mono); white-space: nowrap; }
+.ls-no { font-weight: 700; font-size: 16px; }
+.ls-st { white-space: nowrap; }
+.ls-st span { margin-right: 6px; }
+.ls-act { text-align: right; }
+.ls-act button { min-height: 32px; padding: 3px 12px; background: transparent; color: var(--ls-text); border: 1px solid var(--ls-muted); font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.ls-row.is-open td { background: var(--ls-amber); color: var(--ls-ink); border-bottom: 0; font-weight: 700; }
+.ls-row.is-open .ls-act button { color: var(--ls-ink); border-color: var(--ls-ink); }
+.ls-row.is-open :focus-visible { outline-color: var(--ls-ink); }
+.ls-detail-row td { padding: 0; border-bottom: 1px solid var(--ls-row); }
+.ls-detail { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 0 24px; padding: 16px 20px 18px; background: var(--ls-detail); box-shadow: inset 5px 0 0 var(--ls-amber); }
+.ls-detail h3 { color: var(--ls-amber); font-size: 17px; }
+.ls-detail__id { padding-right: 20px; border-right: 1px solid #4e554b; }
+.ls-detail__no { margin: 2px 0 4px; font-family: var(--ls-mono); font-size: 24px; font-weight: 700; }
+.ls-detail__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 12px; }
+.ls-detail dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 20px; align-content: start; }
+.ls-detail dt { font-size: 12px; color: var(--ls-amber); }
+.ls-detail dd { font-size: 14px; }
+.ls-empty { padding: 36px 0; text-align: center; border-top: 1px solid var(--ls-row); border-bottom: 1px solid var(--ls-row); }
+
+/* ---------- 整理番号の発行：手順のフォーム ---------- */
+.ls-form { display: grid; background: var(--ls-gap); border-top: 3px solid var(--ls-frame); border-bottom: 2px solid #858c7d; }
+.ls-frow { display: grid; grid-template-columns: var(--ls-rail-width) minmax(0, 1fr); gap: 0 var(--ls-seam); }
+.ls-fhead { margin-bottom: var(--ls-seam); }
+.ls-foot { margin-top: var(--ls-seam); min-height: 66px; }
+.ls-frow:not(.ls-fhead) + .ls-frow:not(.ls-foot) > * { border-top: 1px solid var(--ls-row); }
+.ls-now { display: flex; align-items: center; gap: 12px; min-height: 80px; padding: 0 18px; background: var(--ls-amber); color: var(--ls-ink); }
+.ls-now__dots { height: 42px; width: calc(var(--w) * 42px / 7); }
+.ls-now .l-dots :is(.on, .off) { fill: var(--ls-ink); }
+.ls-now .l-dots .off { opacity: 0.13; }
+.ls-now__label { font-size: 28px; font-weight: 700; white-space: nowrap; }
+.ls-now__tag { padding: 0 5px; border: 1.5px solid #6a5118; font-size: 13px; font-weight: 700; line-height: 1.5; white-space: nowrap; }
+.ls-titlebar { display: flex; align-items: center; padding: 10px 22px; background: var(--ls-bar); }
+.ls-ftitle { font-size: 32px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.25; }
+.ls-rail { position: relative; padding: 22px 16px 22px 64px; background: var(--ls-rail); }
+.ls-rail::before { content: ''; position: absolute; left: 36px; top: -1px; bottom: 0; width: 3px; background: var(--ls-amber-line); }
+.ls-chapter .ls-rail::after { content: ''; position: absolute; left: 36px; top: 36px; width: 16px; height: 3px; background: var(--ls-amber-line); }
+.ls-chapter:last-of-type .ls-rail::before { bottom: auto; height: 39px; }
+.ls-chapter__title { font-size: 19px; font-weight: 700; line-height: 1.5; }
+.ls-chapter__err { margin-top: 6px; color: var(--ls-error); font-size: 14px; font-weight: 700; }
+.ls-cells { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: var(--ls-cell); }
+.ls-fcell { min-width: 0; padding: 16px 20px 14px; }
+.ls-fcell + .ls-fcell { border-left: 1px solid #4e554b; }
+.ls-fcell__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.ls-label { font-size: 16px; font-weight: 700; }
+.ls-req { padding: 0 6px; border: 1px solid var(--ls-muted); font-size: 12px; line-height: 1.6; }
+.ls-opt { font-size: 12px; color: var(--ls-muted); }
+.ls-hint { margin-top: 6px; font-size: 13px; color: var(--ls-muted); }
+.ls-input { display: block; width: 100%; min-height: 40px; padding: 6px 12px; background: var(--ls-field); color: var(--ls-text); border: 1px solid var(--ls-field-line); border-bottom: 2px solid var(--ls-field-under); border-radius: 0; font-size: 16px; }
+.ls-input--short { max-width: 8em; }
+.ls-input::placeholder { color: var(--ls-placeholder); }
+.ls-input:focus { border-color: var(--ls-amber); }
+.ls-select { appearance: none; padding-right: 36px; background: var(--ls-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23f1efe5' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center; }
+.ls-checks { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.ls-check { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; }
+.ls-checkbox { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--ls-amber); }
+.ls-fcell.is-invalid { box-shadow: inset 4px 0 0 var(--ls-error); }
+.ls-fcell.is-invalid .ls-input { border: 2px solid var(--ls-error); }
+.ls-field-error { display: flex; align-items: baseline; gap: 8px; margin-top: 6px; color: var(--ls-error); font-size: 14px; }
+.ls-field-error__mark, .ls-alert__tag span { flex: none; display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; border: 1.5px solid currentColor; border-radius: 50%; font-size: 12px; font-weight: 700; }
+.ls-alert__tag { display: inline-flex; align-items: center; gap: 6px; color: var(--ls-error); font-weight: 700; }
+.ls-errors { padding: 16px 20px; background: var(--ls-cell); box-shadow: inset 4px 0 0 var(--ls-error); }
+.ls-errors h3 { font-size: 17px; color: var(--ls-error); }
+.ls-errors p { font-size: 13px; color: var(--ls-muted); }
+.ls-errors ul { display: grid; gap: 2px; margin-top: 6px; }
+.ls-value { min-height: 1.6em; font-size: 16px; }
+.ls-fix { font-size: 14px; }
+.ls-next { display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 8px 18px; background: var(--ls-foot-l); }
+.ls-next__item { display: flex; align-items: center; gap: 8px; color: var(--ls-muted); font-size: 13px; }
+.ls-next__item.is-next { color: var(--ls-text); font-size: 15px; font-weight: 700; }
+.ls-next__dots { height: 24px; width: calc(var(--w) * 24px / 7); }
+.ls-next .l-dots :is(.on, .off) { fill: currentColor; }
+.ls-next .l-dots .off { opacity: 0.14; }
+.ls-next__done { padding: 0 4px; border: 1px solid currentColor; font-size: 11px; }
+.ls-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 20px 8px 20px; background: var(--ls-foot-r); }
+.ls-demo { font-size: 13px; color: var(--ls-muted); }
+.ls-connector { flex: 1; min-width: 24px; border-top: 2px dashed var(--ls-amber-line); opacity: 0.75; }
+.ls-foot:has(.ls-btn--primary:is(:hover, :focus-visible)) .ls-next__item.is-next { color: var(--ls-amber); }
+.ls-foot:has(.ls-btn--primary:is(:hover, :focus-visible)) .ls-connector { opacity: 1; border-top-style: solid; }
+
+/* ---------- 中間の幅 ---------- */
+@media (max-width: 999px) {
+  :root { --ls-pad: 24px; --ls-rail-width: 180px; }
+  .ls-states__items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ls-waiting { grid-template-columns: 1fr; }
+  .ls-detail dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ls-cells { grid-template-columns: minmax(0, 1fr); }
+  .ls-fcell + .ls-fcell { border-left: 0; border-top: 1px solid var(--ls-rule); }
+  .ls-now { gap: 8px; padding: 0 14px; }
+  .ls-now__label { font-size: 22px; }
+  .ls-now__dots { height: 26px; width: calc(var(--w) * 26px / 7); }
+  .ls-ftitle { font-size: 26px; }
+}
+
+/* ---------- 狭い幅：窓口と状態は2列、表は行ごとに縦へ積む ---------- */
+@media (max-width: 759px) {
+  :root { --ls-pad: 16px; }
+  .ls-top__user { display: none; }
+  .ls-title { font-size: 34px; }
+  .ls-counters { grid-template-columns: 1fr; }
+  .ls-counter { grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; }
+  .ls-counter__acts { grid-column: 1 / -1; }
+  .ls-counter__dots { height: 40px; width: calc(var(--w) * 40px / 7); }
+  .ls-states__items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ls-state__face { min-height: 54px; padding: 6px 10px; }
+  .ls-state__label { font-size: 14px; }
+  .ls-state__dots .l-dots { height: 26px; width: calc(var(--w) * 26px / 7); }
+  .ls-types th { width: auto; }
+  .ls-ticks { grid-template-columns: repeat(var(--n), minmax(3px, 10px)); }
+
+  .ls-table, .ls-table tbody, .ls-table thead, .ls-table td { display: block; }
+  .ls-table thead tr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 12px; background: var(--ls-bar); }
+  .ls-table thead tr::before { content: '並べ替え'; font-size: 13px; color: var(--ls-muted); }
+  .ls-table th { padding: 0; background: none; }
+  .ls-table th:not([aria-sort]) { display: none; }
+  .ls-sort { min-height: 32px; padding: 2px 10px; border: 1px solid #5b6258; font-size: 13px; }
+  .ls-table th:not([aria-sort='none']) .ls-sort { background: var(--ls-amber); color: var(--ls-ink); border-color: var(--ls-amber); }
+  .ls-table th:not([aria-sort='none']) .ls-sort span { color: inherit; }
+  .ls-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px; border-bottom: 1px solid var(--ls-row); }
+  .ls-table td { padding: 0; border: 0; }
+  .ls-table :is(.ls-type, .ls-issued, .ls-state-cell, .ls-counter-cell) { grid-column: 1 / -1; }
+  .ls-table td[data-label]::before { content: attr(data-label) '　'; font-family: var(--ls-font); font-size: 12px; color: var(--ls-muted); }
+  .ls-act { grid-column: 2; grid-row: 1; }
+  .ls-row.is-open { background: var(--ls-amber); color: var(--ls-ink); font-weight: 700; border-bottom: 0; }
+  .ls-row.is-open td { background: none; }
+  .ls-row.is-open td[data-label]::before { color: var(--ls-ink); }
+  .ls-detail-row { display: block; }
+  .ls-detail { grid-template-columns: 1fr; gap: 10px; padding: 14px 16px; }
+  .ls-detail__id { padding: 0 0 8px; border-right: 0; border-bottom: 1px solid #4e554b; }
+}
+
+/* ---------- 狭い幅（フォーム）：1列。手順の罫は左端に通したまま、章名を欄の上に置く ---------- */
+@media (max-width: 639px) {
+  .ls-form { margin-left: calc(var(--ls-pad) * -1); margin-right: calc(var(--ls-pad) * -1); }
+  .ls-frow { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .ls-titlebar { padding: 12px 16px; }
+  .ls-ftitle { font-size: 24px; }
+  .ls-now { min-height: 64px; padding: 0 16px; }
+  .ls-rail { padding: 14px 16px 10px 52px; }
+  .ls-rail::before { left: 24px; }
+  .ls-chapter .ls-rail::after { left: 24px; top: 26px; }
+  .ls-chapter:last-of-type .ls-rail::before { height: 29px; }
+  .ls-cells, .ls-errors { background: linear-gradient(var(--ls-amber-line), var(--ls-amber-line)) 24px 0 / 3px 100% no-repeat, var(--ls-cell); }
+  .ls-chapter:last-of-type .ls-cells { background: var(--ls-cell); }
+  .ls-fcell { padding: 14px 16px 12px 44px; }
+  .ls-errors { padding-left: 44px; box-shadow: none; }
+  .ls-chapter:last-of-type .ls-fcell { padding-left: 16px; }
+  .ls-foot { min-height: 0; }
+  .ls-next { flex-direction: row; flex-wrap: wrap; gap: 4px 18px; padding: 10px 16px; }
+  .ls-actions { gap: 10px; padding: 12px 16px 16px; }
+  .ls-connector { display: none; }
+  .ls-actions .ls-btn { width: 100%; }
+}
+
+/* ---------- 強制カラー：ドット文字と目盛りだけ置き換えを止め、選択・現在地は Highlight の枠で補う ---------- */
+@media (forced-colors: active) {
+  :is(.ls-ticks, .l-dots) { forced-color-adjust: none; }
+  .ls-ticks i { background: Canvas; border: 1px solid CanvasText; }
+  .ls-ticks i.on { background: CanvasText; }
+  .l-dots .on { fill: CanvasText !important; opacity: 1 !important; }
+  .l-dots .off { fill: CanvasText !important; opacity: 0.18 !important; }
+  .ls-state input:checked + .ls-state__face { border: 3px solid Highlight; }
+  .ls-row.is-open td { border-top: 2px solid Highlight; border-bottom: 2px solid Highlight; }
+  :is(.ls-now, .ls-counter.is-current) { border: 2px solid Highlight; }
+}

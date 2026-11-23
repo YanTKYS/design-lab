@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>窓口の呼び出し — 標示盤 Skill の適用見本</title>
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="ls-skip" href="#main">本文へ移動</a>
+
+  <header class="ls-top">
+    <span class="ls-top__org">架空市 市民課</span>
+    <span class="ls-top__system">窓口の呼び出し（職員用）</span>
+    <span class="ls-top__user">フロア案内係</span>
+  </header>
+
+  <main id="main" class="ls-main" tabindex="-1">
+    <div class="ls-head">
+      <h1 class="ls-title">窓口の呼び出し</h1>
+      <p class="ls-clock">11月24日（火）10:30 現在</p>
+    </div>
+    <p class="ls-lead">整理番号の呼び出しと、窓口での対応の進み具合を記録します。入力した内容はこのページの中だけで扱い、再読み込みすると見本の状態に戻ります。</p>
+    <p id="status" class="ls-status" role="status" aria-live="polite"></p>
+
+    <section class="ls-sec" aria-labelledby="counters-title">
+      <h2 class="ls-sec__title" id="counters-title">窓口</h2>
+      <ul class="ls-counters" id="counters"></ul>
+    </section>
+
+    <section class="ls-sec" aria-labelledby="waiting-title">
+      <h2 class="ls-sec__title" id="waiting-title">待っている人</h2>
+      <div class="ls-waiting">
+        <p class="ls-waiting__total"><span class="ls-waiting__label">待ち</span><span id="waiting-dots"></span><span class="ls-waiting__unit" aria-hidden="true">人</span><span class="visually-hidden" id="waiting-text"></span></p>
+        <table class="ls-types">
+          <caption>用件ごとの待ち人数<span>1目盛り＝1人</span></caption>
+          <thead class="visually-hidden"><tr><th scope="col">用件</th><th scope="col">目盛り</th><th scope="col">人数</th></tr></thead>
+          <tbody id="types"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="ls-sec" aria-labelledby="list-title">
+      <h2 class="ls-sec__title" id="list-title">整理番号の一覧</h2>
+      <fieldset class="ls-states">
+        <legend class="ls-states__label">状態</legend>
+        <div class="ls-states__items" id="states"></div>
+      </fieldset>
+      <p class="ls-count" id="count"></p>
+      <div id="table-box"></div>
+    </section>
+
+    <section class="ls-sec" aria-labelledby="form-title">
+      <div id="form-box"></div>
+    </section>
+  </main>
+
+  <script src="assets/dot-digits.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
