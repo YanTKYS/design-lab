@@ -123,7 +123,7 @@ body { margin: 0; background: var(--jr-paper); color: var(--jr-ink); font: var(-
 
   枠のない塗りだけのボタンには `border: 2px solid transparent` を付けておく（強制カラーでは枠が見える色に置き換わる）。
 - 列は「番号 → 名前 → 区分 → 日付 → 状態 → 操作」を基本に、業務に合わせる。状態のセルは記号と文字（`<span aria-hidden="true">●</span>貸出中`）。
-- 並べ替えは `th[aria-sort]` と列見出しのボタンだけ。別の並べ替えの部品を作らない。
+- 並べ替えは `th[aria-sort]` と列見出しのボタンだけ。別の並べ替えの部品を作らない。並べ替えできない列の `th` には `aria-sort` を付けない（狭い幅では `th[aria-sort]` だけを札として残すため。7 を参照）。
 
 ## 4. 章と入力欄
 
@@ -219,7 +219,7 @@ body { margin: 0; background: var(--jr-paper); color: var(--jr-ink); font: var(-
   .jr-table thead tr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 0; border-top: var(--jr-rule); border-bottom: var(--jr-rule); }
   .jr-table thead tr::before { content: '並べ替え'; font-size: 13px; font-weight: var(--jr-weight-strong); }
   .jr-table th { padding: 0; border: 0; }
-  .jr-table th:last-child { display: none; } /* 操作の列の見出し */
+  .jr-table th:not([aria-sort]) { display: none; } /* 並べ替えできない列（区分・状態・操作など）の見出しは札にしない */
   .jr-sort { min-height: 32px; padding: 2px 10px; border: 2px solid var(--jr-blue); border-radius: var(--jr-pill); font-size: 13px; }
   .jr-table th[aria-sort]:not([aria-sort='none']) .jr-sort { background: var(--jr-blue); color: var(--jr-on-blue); }
   .jr-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 10px; border-bottom: var(--jr-dot-rule); }
