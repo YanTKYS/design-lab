@@ -13,7 +13,7 @@
 
 ## 申請一覧
 
-キーワードと処理状態で絞り込み、列見出しで並べ替え、行の操作から詳細を開きます。キーワードは受付番号・申請者名とふりがな・申請種別・担当課を対象に、空白区切りで AND 検索します。全角／半角、大文字／小文字、カタカナ／ひらがなの違いを吸収します。申請者の並べ替えはふりがな順です。
+キーワードと処理状態で絞り込み、列見出しや並べ替えボタンで順序を変え、各申請の詳細を開きます。キーワードは受付番号・申請者名とふりがな・申請種別・担当課を対象に、空白区切りで AND 検索します。全角／半角、大文字／小文字、カタカナ／ひらがなの違いを吸収します。申請者の並べ替えはふりがな順です。
 
 詳細の表示方法はデザインによって別ページ・行の展開・ドロワー・ダイアログに分かれます。ダイアログでは Esc で閉じ、Tab で内部の操作対象を移動できます。「新規申請」から入力フォームへ進めます。
 
@@ -44,9 +44,9 @@
 | パラメータ | 内容 | 例 |
 | --- | --- | --- |
 | `screen` | 画面（省略時は申請一覧。`form`：入力フォーム、`dashboard`：ダッシュボード） | `screen=dashboard` |
-| `design` | 単独表示のデザイン ID（`dads` / `carbon` / `fluent` / `govuk` / `uswds` / `plain` / `material3` / `astryx` / `okinawa-thread`） | `design=govuk` |
+| `design` | 単独表示のデザイン ID（`dads` / `carbon` / `fluent` / `govuk` / `uswds` / `plain` / `material3` / `astryx` / `okinawa-thread` / `h-prime` / `j-risograph` / `k-shoreline` / `l-signage`） | `design=govuk` |
 | `mode`, `left`, `right` | 左右比較と左右のデザイン | `mode=compare&left=dads&right=carbon` |
-| `width` | 表示幅（`1280` / `1024` / `768` / `375`） | `width=1024` |
+| `width` | 表示幅（既定は `auto`。固定幅は `1280` / `1024` / `768` / `375`） | `width=1024` |
 | `q` | キーワード | `q=保育` |
 | `status` | 処理状態（`received` / `reviewing` / `returned` / `approved` / `rejected`） | `status=reviewing` |
 | `sort`, `order` | 並べ替えの列（`id` / `applicant` / `type` / `receivedAt` / `status`）と向き（`asc` / `desc`） | `sort=id&order=asc` |
