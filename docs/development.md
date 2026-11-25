@@ -43,7 +43,8 @@ CI のテスト手順は [`.github/workflows/test.yml`](../.github/workflows/tes
 
 ```
 site/                          公開するファイル一式
-  index.html
+  index.html                   13デザイン・3画面の比較サイトの入口
+  experiments/                 独立試作と4案の比較ハブ
   assets/css/site.css          比較サイトの枠（中立的なスタイル）
   assets/css/charts.css        ダッシュボードのグラフの構造（色・太さは各デザインが変数で指定）
   assets/css/designs/*.css     デザインごとのスタイル（.ds-<id> 配下に限定）
@@ -62,6 +63,9 @@ site/                          公開するファイル一式
   assets/js/designs/charts.js      棒・円・折れ線の部品（ラベルと値をテキストで持つ。外部ライブラリなし）
   assets/js/designs/dash-common.js 一覧へのリンクと集計値の印（data-kpi など）
   assets/js/designs/form-control.js  input / select / textarea / checkbox の属性（ラベル対応・aria）だけを揃える補助
+docs/                          現行ガイドと設計・探索資料
+examples/                      Skill作成時の固定適用見本と検証記録
+skills/README.md               配布元 design-skills への案内
 tests/
   server.mjs                   /design-lab/ サブパスで site/ を配信する確認用サーバー
   unit/                        node:test によるユニットテスト
@@ -116,9 +120,11 @@ tests/
 
 入力欄には必ず [`control()`](../site/assets/js/designs/form-control.js)を使い、ラベルと `id` / `for`、`aria-describedby`（補足・エラー）、`aria-invalid` を対応させます。ID は左右の画面で重複しないよう `ctx.uid` を接頭辞にします。オーバーレイは `position: fixed` で書けば、各画面の枠の中に表示されます。HTML に属性を直接書くときは、引用符を含む文字列を `${}` に渡さず [`attr()`](../site/assets/js/html.js) を使います（`html` ヘルパーは文字列をエスケープします）。
 
-### 独立した試作から移植するときの注意（折本で分かったこと）
+<a name="独立した試作から移植するときの注意折本で分かったこと"></a>
 
-J・K・L など、`site/experiments/` の独立した試作を比較デザインへ移すときに確かめる点です。
+### 独立した試作から移植するときの注意
+
+比較サイトと試作は共通のデータを使います。比較ペインに移植するときは、検索条件・入力値・表示幅をシェルと共有できるよう、次の点を確認します。
 
 - 試作の `startListPoc` などの制御は持ち込まない。状態は共通の `state`（URL）と `form`、見た目だけの一時状態は `ctx.ui`（`toggle-ui` / `set-ui`）に置く。
 - 共通のテストは、一覧に**該当する申請がすべて DOM にある**こと（`[data-id]` と `open-detail` が1件に1つ）を前提にしている。ページ送りをするなら、ほかの見開きを `hidden` にして全件を置く（折本の方式）。
