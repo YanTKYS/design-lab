@@ -18,18 +18,29 @@ jobs:
   test:
     uses: ./.github/workflows/test.yml
 
-  deploy:
+  # 公開用の成果物（github-pages）を作ってアップロードする。デプロイとは別のジョブにして、
+  # デプロイだけを再実行したときに同じ名前の成果物を二重にアップロードしないようにする
+  upload:
     needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v6
+      # ビルド不要の静的サイトなので site/ をそのまま公開する
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: upload
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      # ビルド不要の静的サイトなので site/ をそのまま公開する
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
+      # アップロード直後は、同じ実行の成果物の一覧にまだ出ないことがある（0件と判定されて失敗した）。
+      # 取得の前に少し待つ
+      - name: Wait for the uploaded artifact to be listed
+        run: sleep 20
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
