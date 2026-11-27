@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- ライセンスを整備：リポジトリ直下に標準の MIT License（`LICENSE`、Copyright (c) 2026 YanTKYS）を追加し、README に適用範囲（自作と確認できている実装・文書）と対象外（権利の確認がすんでいない `docs/`・`examples/` の画像、外部のデザインシステムそのもの・外部の資料・書体・開発用ライブラリ）を明記し、参照元が MIT の2つの CSS の通知を `THIRD_PARTY_NOTICES.md` に残した。公開サイトにも `LICENSE` と通知を置く（`pages.yml`）。コード・見た目・保存形式・依存の版は変更していない。
 - READMEを現行の比較サイトと利用ガイドの入口に整理し、独立試作・探索資料・固定適用見本の参照先を[研究資産の索引](docs/research-index.md)にまとめた。
 
 - 変更：5つの Agent Skill（`okinawa-thread-ui`・`h-prime-ui`・`j-risograph-ui`・`k-shoreline-ui`・`l-signage-ui`）の正本を [YanTKYS/design-skills](https://github.com/YanTKYS/design-skills) に一本化し、design-lab の `skills/` から Skill 本体を削除した。`skills/README.md` は移転先の案内にした。`examples/` の5つの適用見本（当時の固定コピーの `assets/` を含む）と検証記録・E2E は残し、検証記録の Skill へのリンクを移転先に直した。Skill と見本の `assets/` の一致を求めるユニットテストを外し、見本の検査（検証記録のリンク、比較サイトや外部を読み込まないこと、標示盤のドット文字の字形）を `tests/unit/examples.test.mjs` に残した。比較サイトは変更していない。

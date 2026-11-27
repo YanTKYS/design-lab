@@ -26,6 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v6
+      # 公開サイトにも MIT の許諾文と第三者の通知を置く（チェックアウトした作業用のコピーに足すだけで、リポジトリは変えない）
+      - name: Add license files to the site
+        run: cp LICENSE THIRD_PARTY_NOTICES.md site/
       # ビルド不要の静的サイトなので site/ をそのまま公開する
       - uses: actions/upload-pages-artifact@v5
         with:

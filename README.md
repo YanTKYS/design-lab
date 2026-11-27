@@ -35,6 +35,7 @@
 | 独自デザインを別のアプリに適用する | [配布用Agent Skillと導入方法（design-skills）](https://github.com/YanTKYS/design-skills)・[旧skillsパスの案内](skills/README.md) |
 | 原案・独立試作・固定の適用見本・検証記録を探す | [研究資産の索引](docs/research-index.md) |
 | 比較サイトを保守・拡張する | [開発・テスト・公開手順](docs/development.md)・[変更履歴](CHANGELOG.md) |
+| 利用・再配布の条件 | [ライセンス](#ライセンス)（[LICENSE](LICENSE)） |
 
 ## ローカルで動かす
 
@@ -47,3 +48,19 @@ npm test     # 別のターミナルでユニットテストを実行
 ```
 
 ブラウザで `http://localhost:4173/design-lab/` を開きます。
+
+## ライセンス
+
+- このリポジトリの**自作と確認できている部分**は [MIT License](LICENSE)（Copyright (c) 2026 YanTKYS）です。利用・改変・再配布・販売ができます。著作権表示と許諾文（`LICENSE` の全文）を残してください。無保証です。対象は次のとおりです。
+  - 比較サイトの実装（`site/`。自作の `site/assets/img/k-shore.svg` を含む）
+  - 文書（`README.md`・`CHANGELOG.md`・`docs/` と `examples/` の Markdown）・テスト・設定、`examples/` の HTML・CSS・JavaScript
+- **今回の許諾の対象外**（権利の確認がすんでいないもの、または外部の権利者の条件のままのもの）：
+  - `docs/` と `examples/` の**画像**（画面写真・図。`.png`・`.webp`・`.svg`、`k-shore.svg` と同じものを除く）。自作であることを個別に確認できていないため、確認がすむまで許諾の対象にしません。
+  - デジタル庁デザインシステム、IBM Carbon、Microsoft Fluent 2、GOV.UK Design System、U.S. Web Design System、Google Material Design 3、Meta Astryx の**デザインシステムそのもの**（名称・商標・ロゴ・書体・公開しているコード・トークン・資料）。比較サイトの8案は、それらの公開資料を参考にした独自実装で、公式のものではなく、公式への準拠も示しません。この MIT の許諾はそれらに及びません。
+  - 外部の資料へのリンク、資料から引用・参照した内容。
+  - 書体：CSS に名前を書いているだけで、書体のファイルは含みません（端末にあるものが使われます）。
+  - 開発に使うライブラリ（`package.json` の `@playwright/test` など）。このリポジトリには含まず、`npm ci` で取得します。それぞれの条件に従います。
+- 公開値を参照して書いた2つの CSS（デジタル庁デザインシステム、Meta Astryx）の参照元は、どちらも MIT License です。その著作権表示と許諾文は [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) に残しています。
+- 公開サイト（GitHub Pages）にも、`LICENSE` と `THIRD_PARTY_NOTICES.md` を、サイトのルート（[LICENSE](https://yantkys.github.io/design-lab/LICENSE)・[THIRD_PARTY_NOTICES.md](https://yantkys.github.io/design-lab/THIRD_PARTY_NOTICES.md)）に置きます（公開の手順で追加）。
+- 配布用の Agent Skill の正本は [design-skills](https://github.com/YanTKYS/design-skills)（MIT）です。そちらの許諾は変えていません。このリポジトリの `examples/` には、Skill を作ったときの固定の見本があり、同じ自作の素材を含みます。
+- 自治体と申請のデータはすべて架空です。
